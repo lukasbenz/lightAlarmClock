@@ -1,5 +1,6 @@
 #!/bin/bash
-
-lxterminal -e sudo bash ./home/GIT/lightAlarmClock/backend/launchBackend.sh
+source env/bin/activate
+cd ~/GIT/lightAlarmClock/
+python backend/src/restAPI.py&
 sleep 5
-lxterminal -e sudo bash ./home/GIT/lightAlarmClock/frontend/launchFrontend.sh
+python frontend/main.py&
