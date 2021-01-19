@@ -442,7 +442,7 @@ class VisuAlarmClock(App):
                 else:
                         print(response)
 
-        def on_touch_down(self, touch):
-                print("TOUCH TOUCH TOUCH TOUCH TOUCH TOUCH TOUCH TOUCH")
+        #def on_touch_down(self, touch):
+        #       print("TOUCH TOUCH TOUCH TOUCH TOUCH TOUCH TOUCH TOUCH")
 
-        Window.bind(on_touch_down=on_touch_down)
+        #Window.bind(on_touch_down=on_touch_down)

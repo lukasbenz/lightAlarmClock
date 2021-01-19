@@ -1,6 +1,6 @@
 
-import os
-os.add_dll_directory(r'C:\Program Files\VLC Plus Player')
+#import os
+#os.add_dll_directory(r'C:\Program Files\VLC Plus Player')
 
 import vlc
 
