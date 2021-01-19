@@ -1,4 +1,4 @@
-// NeoPixel Ring simple sketch (c) 2013 Shae Erisson
+ // NeoPixel Ring simple sketch (c) 2013 Shae Erisson
 // Released under the GPLv3 license to match the rest of the
 // Adafruit NeoPixel library
 
@@ -52,6 +52,9 @@ int startLed = 0;
 int endLed = 0;
 boolean newData = false;
 
+int bright = 255;
+int brightNorm = 1;
+
 Bounce debounceBtn1 = Bounce();
 Bounce debounceBtn2 = Bounce();
 
@@ -66,12 +69,11 @@ void setup() {
       clock_prescale_set(clock_div_1);
     #endif
     // END of Trinket-specific code.
-   
     pixels.begin(); // INITIALIZE NeoPixel strip object (REQUIRED)
     pixels.clear();
+    pixels.show();
 
     Serial.begin(9600);
-
 
 //ENCODER
     pinMode(encoderPinA, INPUT_PULLUP);
@@ -83,35 +85,20 @@ void setup() {
 //Buttons
     pinMode(btnMain, INPUT_PULLUP);
     pinMode(btnEnc1, INPUT_PULLUP);
-    
+   
     debounceBtn1.attach(btnMain);
     debounceBtn1.interval(10);
     debounceBtn2.attach(btnEnc1);
     debounceBtn2.interval(10);
 
-// Turn the onboard LD off by making the voltage LOW
-    //pinMode(LED_BUILTIN, OUTPUT);
-    //digitalWrite(LED_BUILTIN, LOW);
-     
-    intR =255;
-    intG =255;
-    intB = 255;
-    startLed = 0;
-    endLed = 10;
-    
 }
 
 //============
 
 void loop() 
-{  
-
-    //digitalWrite(LED_BUILTIN, LOW);    // turn the LED off by making the voltage LOW
-    
-    analogWrite(pinDispLight, 0);
-
+{
+ 
     rotating = true; // reset the debouncer
-    
     if (lastReportedPos != encoderPos)
     {
       //sendPosition();
@@ -124,7 +111,6 @@ void loop()
       { 
         sendNegEdge();
       }
-       
       lastReportedPos = encoderPos;
     }
     
@@ -148,11 +134,9 @@ void loop()
             //   because strtok() used in parseData() replaces the commas with \0
         parseData();
         setLedStripe();
-        //showParsedData();
+        setDisplayBrightness();
         newData = false;
     }
-
-    setLedStripe();
 }
 
 //============
@@ -169,7 +153,7 @@ Serial.println("enc,negEdge");
 
 void sendPosition()
 {
-Serial.print("enc1Pos,");
+Saerial.print("enc1Pos,");
 Serial.println(encoderPos,DEC);
 }
 //============
@@ -244,25 +228,45 @@ void parseData() {      // split the data into its parts
 
     char * strtokIndx; // this is used by strtok() as an index
 
-    strtokIndx = strtok(tempChars, ",");     // this continues where the previous call left off
-    intR = atoi(strtokIndx);        // convert this part to an integer
-
-    strtokIndx = strtok(NULL, ",");     // this continues where the previous call left off
-    intG = atoi(strtokIndx);        // convert this part to an integer
-
-    strtokIndx = strtok(NULL, ",");     // this continues where the previous call left off
-    intB = atoi(strtokIndx);        // convert this part to an integer
-
-    strtokIndx = strtok(NULL, ",");     // this continues where the previous call left off
-    startLed = atoi(strtokIndx);        // convert this part to an integer
-
-    strtokIndx = strtok(NULL, ",");     // this continues where the previous call left off
-    endLed = atoi(strtokIndx);        // convert this part to an integer
+    strtokIndx = strtok(tempChars, ",");
+    
+    if(strtokIndx == "ledStripe") {
+      strtokIndx = strtok(tempChars, ",");     
+      intR = atoi(strtokIndx);        
+  
+      strtokIndx = strtok(NULL, ",");     
+      intG = atoi(strtokIndx);        
+  
+      strtokIndx = strtok(NULL, ",");     
+      intB = atoi(strtokIndx);        
+  
+      strtokIndx = strtok(NULL, ",");     
+      startLed = atoi(strtokIndx);        
+  
+      strtokIndx = strtok(NULL, ",");     
+      endLed = atoi(strtokIndx);        
+    }
+    else if(strtokIndx == "display") {
+      strtokIndx = strtok(NULL, ",");
+      bright = atoi(strtokIndx);
+    }   
 }
 
-//============
+void setLedStripe() {
+  showParsedLedData();
+  // The first NeoPixel in a strand is #0, second is 1, all the way up
+  // to the count of pixels minus one.
+  for(int i=startLed; i<endLed; i++) { // For each pixel...
 
-void showParsedData(){
+    // pixels.Color() takes RGB values, from 0,0,0 up to 255,255,255
+    // Here we're using a moderately bright green color:
+    pixels.setPixelColor(i, pixels.Color(intR, intG, intB));
+    pixels.show();   // Send the updated pixel colors to the hardware.
+  }
+}
+
+
+void showParsedLedData(){
     Serial.print("R: ");
     Serial.println(intR);
     Serial.print("G: ");
@@ -275,14 +279,16 @@ void showParsedData(){
     Serial.println(endLed);
 }
 
-void setLedStripe() {
-  // The first NeoPixel in a strand is #0, second is 1, all the way up
-  // to the count of pixels minus one.
-  for(int i=startLed; i<endLed; i++) { // For each pixel...
 
-    // pixels.Color() takes RGB values, from 0,0,0 up to 255,255,255
-    // Here we're using a moderately bright green color:
-    pixels.setPixelColor(i, pixels.Color(intR, intG, intB));
-    pixels.show();   // Send the updated pixel colors to the hardware.
-  }
+void setDisplayBrightness(){
+  brightNorm = round((bright * 255) / 100);
+  showParsedDisplayData();
+  analogWrite(pinDispLight, brightNorm);
+}
+
+void showParsedDisplayData(){
+    Serial.print("brightness input 0-100: ");
+    Serial.println(bright);
+    Serial.print("brightness normalized 0-255: ");
+    Serial.println(brightNorm);
 }
