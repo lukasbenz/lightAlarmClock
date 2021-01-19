@@ -2,3 +2,5 @@
 env/
 .vscode/
 workspace.code-workspaceLOCAL.code-workspace
+backend/src/__pycache__/
+frontend/__pycache__/
