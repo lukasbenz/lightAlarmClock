@@ -1,0 +1,585 @@
+<ScreenHome>:
+    name: 'screenHomeID'
+    on_enter: root.enterPage()
+    on_leave: root.leavePage()
+    id_wakeUpTime: _id_wakeUpTime
+    id_clock: _id_clock
+    id_date: _id_date
+    id_switch_wakeUpTime: _id_switch_wakeUpTime
+    id_switch_light: _id_switch_light
+    
+    canvas.before:
+        Rectangle:
+            pos: self.pos
+            size: self.size
+            source: 'sysImages/home.png'
+
+    Label:
+        text: 'Wecker aktiv:'
+        bold: True
+        pos_hint: {"center_x":0.23, "center_y":0.92} 
+        font_size: 20
+        color: 1,1,1,1
+
+    Label:
+        id: _id_wakeUpTime
+        bold: True
+        pos_hint: {"center_x":0.35, "center_y":0.92} 
+        font_size: 20
+        color: 1,1,1,1
+
+    Switch: 
+        id: _id_switch_wakeUpTime
+        size_hint: 0.2,0.1
+        pos_hint: {"center_x":0.46, "center_y":0.92}
+        # Arranging a callback to the switch 
+        on_active: root.switch_wakeUpTime_callback(self, self.active) 
+
+    Label:
+        text: 'Licht An/Aus:'
+        bold: True
+        pos_hint: {"center_x":0.65, "center_y":0.92} 
+        font_size: 20
+        color: 1,1,1,1
+
+    Switch: 
+        id: _id_switch_light
+        size_hint: 0.2,0.1
+        pos_hint: {"center_x":0.79, "center_y":0.92}
+        # Arranging a callback to the switch 
+        on_active: root.switch_light_callback(self, self.active) 
+
+    Label:
+        id: _id_clock
+        bold: True
+        pos_hint: {"center_x":0.5, "center_y":0.63} 
+        font_size: 230
+        color: 1,1,1,1
+
+
+    Label:
+        id: _id_date
+        bold: True
+        pos_hint: {"center_x":0.5, "center_y":0.37} 
+        font_size: 40
+        color: 1,1,1,1
+
+    Button:
+        pos_hint: {"center_x":0.5, "center_y":0.56} 
+        background_color: 0,0,0,0
+        size_hint: 0.9, 0.55
+        on_release: root.btnDisplayState() 
+
+        canvas.before:
+            Color:
+                rgba: 1,1,1,0
+            Line:
+                width: 1
+                rectangle: self.x, self.y, self.width, self.height
+
+    Button:
+        pos_hint: {"center_x":0.165, "center_y":0.14} 
+        background_color: 0,0,0,0
+        size_hint: 0.2, 0.2
+        on_release: root.btnMenue1() 
+
+        canvas.before:
+            Color:
+                rgba: 1,1,1,0
+            Line:
+                width: 1
+                rectangle: self.x, self.y, self.width, self.height
+    
+    Button:  
+        pos_hint: {"center_x":0.5, "center_y":0.14} 
+        background_color: 0,0,0,0
+        size_hint: 0.2, 0.2
+        on_release: root.btnMenue2() 
+
+        canvas.before:
+            Color:
+                rgba: 1,1,1,0
+            Line:
+                width: 1
+                rectangle: self.x, self.y, self.width, self.height
+
+    Button:  
+        pos_hint: {"center_x":0.835, "center_y":0.14} 
+        background_color: 0,0,0,0
+        size_hint: 0.2, 0.2
+        on_release: root.btnMenue3() 
+
+        canvas.before:
+            Color:
+                rgba: 1,1,1,0
+            Line:
+                width: 1
+                rectangle: self.x, self.y, self.width, self.height
+
+<ScreenDisplayOff>:
+    name: 'screenDisplayOffID'
+    on_enter: root.enterPage()
+    on_leave: root.leavePage()
+    
+    canvas.before:
+        Rectangle:
+            pos: self.pos
+            size: self.size
+            source: 'sysImages/empty.png'
+
+    Button:
+        pos_hint: {"center_x":0.5, "center_y":0.5} 
+        background_color: 0,0,0,0
+        size_hint: 1, 1
+        on_release: root.btnDisplayState() 
+
+        canvas.before:
+            Color:
+                rgba: 1,1,1,1
+            Line:
+                width: 1
+                rectangle: self.x, self.y, self.width, self.height
+
+<ScreenAlarmClock>:
+    name: 'screenAlarmClockID'
+    on_enter: root.enterPage()
+    on_leave: root.leavePage()
+
+    id_wakeUpTime: _id_wakeUpTime
+    id_sunsetTime: _id_sunsetTime
+    id_clock: _id_clock
+
+    canvas.before:
+        Rectangle:
+            pos: self.pos
+            size: self.size
+            source: 'sysImages/alarmClock.png'
+
+    Label:
+        text: "Wecker"
+        bold: True
+        pos_hint: {"center_x":0.11, "center_y":0.935} 
+        font_size: 30
+        color: 1,1,1,1
+
+    Label:
+        id: _id_clock
+        bold: True
+        pos_hint: {"center_x":0.885, "center_y":0.935} 
+        font_size: 30
+        color: 1,1,1,1
+
+    Label:
+        id: _id_wakeUpTime
+        bold: True
+        pos_hint: {"center_x":0.3, "center_y":0.6} 
+        font_size: 60
+        color: 1,1,1,1
+
+    Label:
+        id: _id_sunsetTime
+        bold: True
+        pos_hint: {"center_x":0.7, "center_y":0.6} 
+        font_size: 60
+        color: 1,1,1,1
+
+
+    Button:  
+        pos_hint: {"center_x":0.085, "center_y":0.725} 
+        background_color: 0,0,0,0
+        size_hint: 0.13, 0.2
+        on_release: root.btn_wakeUpHoursTimeUp() 
+
+        canvas.before:
+            Color:
+                rgba: 0,0,0,0
+            Line:
+                width: 1
+                rectangle: self.x, self.y, self.width, self.height
+
+    Button:  
+        pos_hint: {"center_x":0.085, "center_y":0.476} 
+        background_color: 0,0,0,0
+        size_hint: 0.13, 0.2
+        on_release: root.btn_wakeUpHoursTimeDown() 
+
+        canvas.before:
+            Color:
+                rgba: 0,0,0,0
+            Line:
+                width: 1
+                rectangle: self.x, self.y, self.width, self.height
+
+    Button:  
+        pos_hint: {"center_x":0.5, "center_y":0.725} 
+        background_color: 0,0,0,0
+        size_hint: 0.13, 0.2
+        on_release: root.btn_wakeUpMinutesTimeUp() 
+
+        canvas.before:
+            Color:
+                rgba: 0,0,0,0
+            Line:
+                width: 1
+                rectangle: self.x, self.y, self.width, self.height
+
+    Button:  
+        pos_hint: {"center_x":0.5, "center_y":0.476} 
+        background_color: 0,0,0,0
+        size_hint: 0.13, 0.2
+        on_release: root.btn_wakeUpMinutesTimeDown() 
+
+        canvas.before:
+            Color:
+                rgba: 0,0,0,0
+            Line:
+                width: 1
+                rectangle: self.x, self.y, self.width, self.height
+
+    Button:  
+        pos_hint: {"center_x":0.905, "center_y":0.725} 
+        background_color: 0,0,0,0
+        size_hint: 0.13, 0.2
+        on_release: root.btn_SunlightMinutesTimeUp() 
+
+        canvas.before:
+            Color:
+                rgba: 0,0,0,0
+            Line:
+                width: 1
+                rectangle: self.x, self.y, self.width, self.height
+
+    Button:  
+        pos_hint: {"center_x":0.905, "center_y":0.476} 
+        background_color: 0,0,0,0
+        size_hint: 0.13, 0.2
+        on_release: root.btn_SunlightMinutesTimeDown() 
+
+        canvas.before:
+            Color:
+                rgba: 0,0,0,0
+            Line:
+                width: 1
+                rectangle: self.x, self.y, self.width, self.height
+
+    Button:  
+        pos_hint: {"center_x":0.505, "center_y":0.15} 
+        background_color: 0,0,0,0
+        size_hint: 0.15, 0.2
+        on_release: root.btn_backHome() 
+
+        canvas.before:
+            Color:
+                rgba: 0,0,0,0
+            Line:
+                width: 1
+                rectangle: self.x, self.y, self.width, self.height
+
+<ScreenRadio>:
+    name: 'screenRadioID'
+    on_enter: root.enterPage()
+    on_leave: root.leavePage()
+
+    id_clock: _id_clock
+
+    id_image: _id_image
+    id_slider_volume: _id_slider_volume
+    id_label_radio_info: _id_label_radio_info
+
+    canvas.before:
+        Rectangle:
+            pos: self.pos
+            size: self.size
+            source: 'sysImages/radio.png'
+
+    Label:
+        text: "Radio"
+        bold: True
+        pos_hint: {"center_x":0.1, "center_y":0.935} 
+        font_size: 30
+        color: 1,1,1,1
+
+    Label:
+        id: _id_clock
+        bold: True
+        pos_hint: {"center_x":0.883, "center_y":0.935} 
+        font_size: 30
+        color: 1,1,1,1
+
+    Button:  
+        pos_hint: {"center_x":0.105, "center_y":0.7} 
+        background_color: 0,0,0,0
+        size_hint: 0.14, 0.23
+        on_release: root.btn_back() 
+
+        canvas.before:
+            Color:
+                rgba: 0,0,0,0
+            Line:
+                width: 1
+                rectangle: self.x, self.y, self.width, self.height
+
+    Button:  
+        pos_hint: {"center_x":0.266, "center_y":0.7} 
+        background_color: 0,0,0,0
+        size_hint: 0.14, 0.23
+        on_release: root.btn_pause() 
+
+        canvas.before:
+            Color:
+                rgba: 0,0,0,0
+            Line:
+                width: 1
+                rectangle: self.x, self.y, self.width, self.height
+
+    Button:  
+        pos_hint: {"center_x":0.423, "center_y":0.7} 
+        background_color: 0,0,0,0
+        size_hint: 0.14, 0.23
+        on_release: root.btn_play() 
+
+        canvas.before:
+            Color:
+                rgba: 0,0,0,0
+            Line:
+                width: 1
+                rectangle: self.x, self.y, self.width, self.height
+
+    Button:  
+        pos_hint: {"center_x":0.574, "center_y":0.7} 
+        background_color: 0,0,0,0
+        size_hint: 0.14, 0.23
+        on_release: root.btn_next() 
+
+        canvas.before:
+            Color:
+                rgba: 0,0,0,0
+            Line:
+                width: 1
+                rectangle: self.x, self.y, self.width, self.height
+
+    Label:
+        id: _id_label_radio_info
+        source: "radioImages/err.png"
+        text: "radio informations"
+        bold: True
+        text_size: self.size
+        pos_hint: {"x":0.15, "y":0.48}
+        font_size: 20
+        color: 1,1,1,1
+
+    Image:
+        id: _id_image
+        size_hint: 0.35 , 0.35
+        pos_hint: {'center_x': 0.825, 'center_y': 0.68}
+        allow_stretch: True
+
+    Label:
+        text: "Vol: " + str(int(_id_slider_volume.value))
+        bold: True
+        pos_hint: {"center_x":0.1, "center_y":0.335}
+        font_size: 25
+        color: 1,1,1,1
+
+    Slider:  
+        id: _id_slider_volume        
+        orientation: "horizontal"
+        pos_hint: {"center_x":0.5, "center_y":0.335}
+        size_hint: 0.65,0.2
+        step: 1
+        min: 0  # minimum value of Slider 
+        max: 100 # maximum value of Slider 
+        value: 20  # initial value of Slider 
+        on_value: root.slider_volume_value(self.value)
+
+    Button:  
+        pos_hint: {"center_x":0.88, "center_y":0.335} 
+        background_color: 0,0,0,0
+        size_hint: 0.1, 0.13
+        on_release: root.btn_mute() 
+
+        canvas.before:
+            Color:
+                rgba: 1,1,1,0
+            Line:
+                width: 1
+                rectangle: self.x, self.y, self.width, self.height
+    
+    Button:  
+        pos_hint: {"center_x":0.505, "center_y":0.15} 
+        background_color: 0,0,0,0
+        size_hint: 0.15, 0.2
+        on_release: root.btn_backHome() 
+
+        canvas.before:
+            Color:
+                rgba: 0,0,0,0
+            Line:
+                width: 1
+                rectangle: self.x, self.y, self.width, self.height
+
+
+<ScreenSettings>:
+    name: 'screenSettingsID'
+    on_enter: root.enterPage()
+    on_leave: root.leavePage()
+
+    id_clock: _id_clock
+    id_slider_light: _id_slider_light
+    id_slider_display: _id_slider_display
+    id_switch_light: _id_switch_light
+    id_switch_ledStripe: _id_switch_ledStripe
+
+    canvas.before:
+        Rectangle:
+            pos: self.pos
+            size: self.size
+            source: 'sysImages/settings.png'
+
+    Label:
+        text: "Einstellungen"
+        bold: True
+        pos_hint: {"center_x":0.17, "center_y":0.935} 
+        font_size: 30
+        color: 1,1,1,1
+
+    Label:
+        id: _id_clock
+        bold: True
+        pos_hint: {"center_x":0.885, "center_y":0.935} 
+        font_size: 30
+        color: 1,1,1,1
+
+    Label:
+        text: "Helligkeit Licht: " + str(int(_id_slider_light.value))
+        bold: True
+        pos_hint: {"center_x":0.5, "center_y":0.87}
+        font_size: 20
+        color: 1,1,1,1
+
+    Slider: 
+        id: _id_slider_light           
+        orientation: "horizontal"
+        pos_hint: {"center_x":0.5, "center_y":0.8}
+        size_hint: 0.9,0.15
+        step: 1
+        min: 0  # minimum value of Slider 
+        max: 100 # maximum value of Slider 
+        #value: 20  # initial value of Slider 
+        on_value: root.slider_light_value(self.value)
+
+    Label:
+        text: "Helligkeit Bildschirm: " + str(int(_id_slider_display.value))
+        bold: True
+        pos_hint: {"center_x":0.5, "center_y":0.67}
+        font_size: 20
+        color: 1,1,1,1
+
+    Slider: 
+        id: _id_slider_display
+        orientation: "horizontal"
+        pos_hint: {"center_x":0.5, "center_y":0.6}
+        size_hint: 0.9,0.15
+        step: 1
+        min: 0  # minimum value of Slider 
+        max: 100 # maximum value of Slider 
+        #value: 20  # initial value of Slider 
+        on_value: root.slider_display_value(self.value)
+
+    Label:
+        text: "Licht AN / AUS"
+        bold: True
+        pos_hint: {"center_x":0.25, "center_y":0.45}
+        font_size: 20
+        color: 1,1,1,1
+          
+    Switch: 
+        size_hint: 0.2,0.2
+        id: _id_switch_light
+        pos_hint: {"center_x":0.25, "center_y":0.35}
+        # Arranging a callback to the switch 
+        on_active: root.switch_light_callback(self, self.active) 
+
+    Label:
+        text: "LED BAND AN / AUS"
+        bold: True
+        pos_hint: {"center_x":0.75, "center_y":0.45}
+        font_size: 20
+        color: 1,1,1,1
+          
+    Switch: 
+        size_hint: 0.2,0.2
+        id: _id_switch_ledStripe
+        pos_hint: {"center_x":0.75, "center_y":0.35}
+        # Arranging a callback to the switch 
+        on_active: root.switch_ledStripe_callback(self, self.active) 
+
+    Button:  
+        pos_hint: {"center_x":0.505, "center_y":0.15} 
+        background_color: 0,0,0,0
+        size_hint: 0.15, 0.2
+        on_release: root.btn_backHome() 
+
+        canvas.before:
+            Color:
+                rgba: 0,0,0,0
+            Line:
+                width: 1
+                rectangle: self.x, self.y, self.width, self.height
+
+
+<ScreenAlarmActive>:
+    name: 'screenAlarmActiveID'
+    on_enter: root.enterPage()
+    on_leave: root.leavePage()
+
+    id_clock: _id_clock
+    id_date: _id_date
+
+    canvas.before:
+        Rectangle:
+            pos: self.pos
+            size: self.size
+            source: 'sysImages/alarmActive.png'
+
+    Label:
+        id: _id_clock
+        bold: True
+        pos_hint: {"center_x":0.37, "center_y":0.74} 
+        font_size: 150
+        color: 1,1,1,1
+
+
+    Label:
+        id: _id_date
+        bold: True
+        pos_hint: {"center_x":0.37, "center_y":0.54} 
+        font_size: 30
+        color: 1,1,1,1
+
+
+    Button:
+        pos_hint: {"center_x":0.27, "center_y":0.18} 
+        background_color: 0,0,0,0
+        size_hint: 0.21, 0.25
+        on_release: root.btnExtend() 
+
+        canvas.before:
+            Color:
+                rgba: 1,1,1,0
+            Line:
+                width: 1
+                rectangle: self.x, self.y, self.width, self.height
+    
+    Button:  
+        pos_hint: {"center_x":0.74, "center_y":0.18} 
+        background_color: 0,0,0,0
+        size_hint: 0.19, 0.25
+        on_release: root.btnStop() 
+
+        canvas.before:
+            Color:
+                rgba: 1,1,1,0
+            Line:
+                width: 1
+                rectangle: self.x, self.y, self.width, self.height
