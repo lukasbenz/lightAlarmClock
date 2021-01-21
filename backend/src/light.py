@@ -1,6 +1,5 @@
 import time
 import threading
-import serial
 
 def limit(num, minimum=0, maximum=255):
         """Limits input 'num' between minimum and maximum values.
@@ -20,11 +19,7 @@ class Light():
     color=(1.0,0.4,0)
 
     def __init__(self):        
-        s = serial.Serial('/dev/ttyACM1', 9600) # Namen ggf. anpassen
-        #s.open()
-        #time.sleep() # der Arduino resettet nach einer Seriellen Verbindung, daher muss kurz gewartet werden
         print("init Light")
-        s.write(b'ledStripe,255,255,255,0,146')
         self.turnLightOff()
 
 

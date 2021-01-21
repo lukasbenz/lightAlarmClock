@@ -17,8 +17,8 @@
 // strandtest example for more information on possible values.
 Adafruit_NeoPixel pixels(146, 7, NEO_GRB + NEO_KHZ800);
 
-//27 intern
-//146 stripe
+//27 intern LEDs
+//28 - 146 Led stripe
 
 const byte numChars = 32;
 char receivedChars[numChars];
@@ -91,14 +91,13 @@ void setup() {
     pinMode(btnEnc1, INPUT_PULLUP);
    
     debounceBtn1.attach(btnMain);
-    debounceBtn1.interval(10);
+    debounceBtn1.interval(2);
     debounceBtn2.attach(btnEnc1);
-    debounceBtn2.interval(10);
+    debounceBtn2.interval(2);
 
 }
 
 //============
-bool test = true;
 void loop() 
 {
     rotating = true; // reset the debouncer
@@ -136,12 +135,10 @@ void loop()
         strcpy(tempChars, receivedChars);
             // this temporary copy is necessary to protect the original data
             //   because strtok() used in parseData() replaces the commas with \0
+        
         parseData();
-        setLedStripe();
-        setDisplayBrightness();
         newData = false;
     }
-  
 }
 
 //============
@@ -204,7 +201,6 @@ void recvWithStartEndMarkers() {
 
     while (Serial.available() > 0 && newData == false) {
         rc = Serial.read();
-
         if (recvInProgress == true) {
             if (rc != endMarker) {
                 receivedChars[ndx] = rc;
@@ -220,41 +216,42 @@ void recvWithStartEndMarkers() {
                 newData = true;
             }
         }
-
         else if (rc == startMarker) {
             recvInProgress = true;
         }
     }
+    
 }
 
 //============
 
 void parseData() {      // split the data into its parts
-
+    
     char * strtokIndx; // this is used by strtok() as an index
-
     strtokIndx = strtok(tempChars, ",");
     
-    if(strtokIndx == "ledStripe") {
-      strtokIndx = strtok(tempChars, ",");     
+    if (strcmp(strtokIndx,"led") == 0)
+    {
+      strtokIndx = strtok(NULL, ",");     
       intR = atoi(strtokIndx);        
-  
       strtokIndx = strtok(NULL, ",");     
       intG = atoi(strtokIndx);        
-  
       strtokIndx = strtok(NULL, ",");     
       intB = atoi(strtokIndx);        
-  
       strtokIndx = strtok(NULL, ",");     
       startLed = atoi(strtokIndx);        
-  
       strtokIndx = strtok(NULL, ",");     
-      endLed = atoi(strtokIndx);        
+      endLed = atoi(strtokIndx);
+      setLedStripe();
     }
-    else if(strtokIndx == "display") {
+    else if(strcmp(strtokIndx,"display") == 0) {
       strtokIndx = strtok(NULL, ",");
       bright = atoi(strtokIndx);
-    }   
+      setDisplayBrightness();
+    }
+    else {
+      Serial.println("ERROR IN IF STATEMENT");  
+    }
 }
 
 void setLedStripe() {
@@ -285,10 +282,11 @@ void showParsedLedData(){
 
 
 void setDisplayBrightness(){
-  brightNorm = round((bright * 255) / 100);
+  brightNorm = map(bright,0,100,255,0);
   showParsedDisplayData();
   analogWrite(pinDispLight, brightNorm);
 }
+
 
 void showParsedDisplayData(){
     Serial.print("brightness input 0-100: ");
