@@ -1,5 +1,4 @@
 #!/bin/bash
 
 source /home/pi/GIT/lightAlarmClock/env/bin/activate
-cd /home/pi/GIT/lightAlarmClock/
-python frontend/main.py
+python /home/pi/GIT/lightAlarmClock/frontend/main.py

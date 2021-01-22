@@ -1,7 +1,7 @@
 
 from kivy.config import Config
 Config.set('graphics', 'resizable', 'False')
-Config.set('graphics', 'fullscreen','False')
+Config.set('graphics', 'fullscreen','auto')
 Config.set('graphics', 'width', '800')
 Config.set('graphics', 'height', '480')
 
@@ -23,43 +23,48 @@ class ScreenHome(Screen):
         def enterPage(self,**kwargs):
                 
                 self.eventUpdateClock = Clock.schedule_interval(self.updateClock,1)
-
-                response = requests.get(url+'alarmClock/wakeUpTime')
-                json_data = json.loads(response.text)  
-                if response.status_code == 200:
-                        self.id_wakeUpTime.text = json_data['wakeUpTime'][:-3]
-                else:
-                        self.id_wakeUpTime.text = "err"
-                        print(response)
-
-                response = requests.get(url+'alarmClock/alarmState')
-                json_data = json.loads(response.text)  
-                if response.status_code == 200:
-                        self.id_switch_wakeUpTime.active = json_data['state']
-                else:
-                        print(response)
-
-                response = requests.get(url+'light/state')
-                json_data = json.loads(response.text)  
-                if response.status_code == 200:
-                        self.id_switch_light.active = json_data['state']
-                else:
-                        print(response)
                 
+                try:
+                        response = requests.get(url+'alarmClock/wakeUpTime')
+                        json_data = json.loads(response.text)  
+                        if response.status_code == 200:
+                                self.id_wakeUpTime.text = json_data['wakeUpTime'][:-3]
+                        else:
+                                self.id_wakeUpTime.text = "err"
+                                print(response)
+
+                        response = requests.get(url+'alarmClock/alarmState')
+                        json_data = json.loads(response.text)  
+                        if response.status_code == 200:
+                                self.id_switch_wakeUpTime.active = json_data['state']
+                        else:
+                                print(response)
+
+                        response = requests.get(url+'light/state')
+                        json_data = json.loads(response.text)  
+                        if response.status_code == 200:
+                                self.id_switch_light.active = json_data['state']
+                        else:
+                                print(response)
+                except:
+                        print("An exception occurred")
+
         def leavePage(self,**kwargs):
                 self.eventUpdateClock.cancel()
 
         def updateClock(self, *args):
-                response = requests.get(url+'alarmClock/dateTime')
-                json_data = json.loads(response.text)  
-                if response.status_code == 200:
-                        self.id_clock.text = json_data['time']
-                        self.id_date.text = json_data['date']
-                else:
-                        print(response)
-                        self.id_clock.text = "err"
-                        self.id_date.text = "err"
-
+                try:
+                        response = requests.get(url+'alarmClock/dateTime')
+                        json_data = json.loads(response.text)  
+                        if response.status_code == 200:
+                                self.id_clock.text = json_data['time']
+                                self.id_date.text = json_data['date']
+                        else:
+                                print(response)
+                                self.id_clock.text = "err"
+                                self.id_date.text = "err"
+                except:
+                        print("An exception occurred")
 
         def switch_wakeUpTime_callback(self, switchObject, switchValue):   
                 data = {'state': switchValue}
@@ -434,14 +439,17 @@ class VisuAlarmClock(App):
                 self.eventCheckAlarm = Clock.schedule_interval(self.checkAlarmActive,1)
 
         def checkAlarmActive(self,*args):
-                response = requests.get(url+'alarmClock/alarmActive')
-                json_data = json.loads(response.text)
-                if response.status_code == 200:
-                        if(json_data['state'] == 1):
-                                self.sm.current = "screenAlarmActiveID"
-                else:
-                        print(response)
-
+                try:
+                        response = requests.get(url+'alarmClock/alarmActive')
+                        json_data = json.loads(response.text)
+                        if response.status_code == 200:
+                                if(json_data['state'] == 1):
+                                        self.sm.current = "screenAlarmActiveID"
+                        else:
+                                print(response)
+                except:
+                        print("An exception occurred")
+        
         #def on_touch_down(self, touch):
         #       print("TOUCH TOUCH TOUCH TOUCH TOUCH TOUCH TOUCH TOUCH")
 
