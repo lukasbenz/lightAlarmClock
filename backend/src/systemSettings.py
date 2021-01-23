@@ -6,8 +6,13 @@ class SystemSettings():
     __displayBrightness = 10
     __displayState = True
     
-    def __init__(self):
-        pass
+    def __init__(self,arduinoConnection):
+        print("init system settings class")
+
+    def checkNewBtnDataAvaiable(self,input):
+        #print("SystemSettings: " + input)
+        inputSplit = input.split(",")
+        print(inputSplit)
 
     def getVolume(self):
         #print("get Volume: " + str(self.__volume))

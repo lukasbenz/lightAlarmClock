@@ -2,7 +2,7 @@ from internetRadio import InternetRadio
 from alarmClock import AlarmClock
 from systemSettings import SystemSettings
 from light import Light
-
+from serialArduino import ArduinoConnection
 import json
 import threading
 import time
@@ -11,10 +11,13 @@ class BackendFunctions():
 
        ######## init function ########
        def __init__(self):
+
+              self.arduinoConnection = ArduinoConnection()
+
               self.alarmClock = AlarmClock()
               self.internetRadio = InternetRadio() 
-              self.systemSettings = SystemSettings()
-              self.light = Light()
+              self.systemSettings = SystemSettings(self.arduinoConnection)
+              self.light = Light(self.arduinoConnection)
 
        #config thread
               self.loadConfig()
@@ -22,12 +25,18 @@ class BackendFunctions():
               self.tConfig = threading.Thread(target=self.saveConfig)
               self.tConfig.start()
 
+
        #alarm thread
               self.runAlarmThread = True
               self.tAlarm = threading.Thread(target=self.handleAlarm)
               self.tAlarm.start()
 
-              
+
+       #chekButtons Thread
+              self.runCheckButtonsThread = True
+              self.tButtons = threading.Thread(target=self.checkButtons)
+              self.tButtons.start()
+
 
        ######## config ########
        def loadConfig(self):
@@ -83,7 +92,15 @@ class BackendFunctions():
 
                      time.sleep(1)
 
-       
+       def checkButtons(self):
+              self.tButtons = threading.currentThread()
+              while self.runAlarmThread:
+                     if(self.arduinoConnection.hasNewData()):
+                            self.light.checkNewBtnDataAvaiable(self.arduinoConnection.getRecData())
+                            self.systemSettings.checkNewBtnDataAvaiable(self.arduinoConnection.getRecData())
+                            self.arduinoConnection.resetRecData()
+              #time.sleep(100)
+
 #handle sleep Mode
 
 

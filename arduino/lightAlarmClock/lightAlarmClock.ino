@@ -123,11 +123,11 @@ void loop()
 
     if(debounceBtn1.fell())
     {
-    Serial.println("mainBtn,pressed");     
+    Serial.println("mainBtn,pressed,");     
     }   
     if(debounceBtn2.fell())
     {
-      Serial.println("enc,pressed");     
+      Serial.println("enc,pressed,");     
     }
 
     recvWithStartEndMarkers();
@@ -145,19 +145,14 @@ void loop()
 
 void sendPosEdge()
 {
-Serial.println("enc,posEdge");
+Serial.println("enc,posEdge,");
 }
 
 void sendNegEdge()
 {
-Serial.println("enc,negEdge");
+Serial.println("enc,negEdge,");
 }
 
-void sendPosition()
-{
-Serial.print("enc1Pos,");
-Serial.println(encoderPos,DEC);
-}
 //============
 
 

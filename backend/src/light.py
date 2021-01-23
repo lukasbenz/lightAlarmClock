@@ -16,12 +16,25 @@ class Light():
     __runSunsetLoop = False
     __cycletimeMs = 1000
     
-    color=(1.0,0.4,0)
+    #color=(1.0,0.4,0)
+    color=(255,80,0,0,27)
 
-    def __init__(self):        
-        print("init Light")
+    def __init__(self,arduinoConnection):     
+        self.arduinoConnection = arduinoConnection   
+        print("init Light class")
         self.turnLightOff()
 
+    def checkNewBtnDataAvaiable(self,input):
+        inputSplit = input.split(",")
+        if(inputSplit[0] == "mainBtn"):
+            if(self.__state == True):
+                self.turnLightOff()
+                self.__state = False
+                print("turn light off")
+            else:
+                self.turnLightOn()
+                self.__state = True
+                print("turn light on")
 
     def getLightState(self):
         #print("get Light state: " + str(self.__state))
@@ -37,30 +50,12 @@ class Light():
 
     def turnLightOn(self):
         print("set Light On")
-
-        for i in range(self.__countLEDs):
-            self.__accessPixel(self.color[0],self.color[1],self.color[2],self.__brightness,i)
-
-        if self.debugMode:
-            print("r: "+str(self.r))
-            print("g: "+str(self.g))
-            print("b: "+str(self.b))
-            print("a: "+str(self.__brightness))
-        
+        self.__accessPixel(self.color[0],self.color[1],self.color[2],self.__brightness)
         self.__state = True
 
     def turnLightOff(self):
         print("set Light Off")
-        
-        for i in range(self.__countLEDs):
-            self.__accessPixel(0,0,0,self.__brightness,i)
-
-        if self.debugMode:            
-            print("r: "+str(self.r))
-            print("g: "+str(self.g))
-            print("b: "+str(self.b))
-            print("a: "+str(self.__brightness))
-
+        self.__accessPixel(0,0,0,self.__brightness)
         self.__state = False
 
     def getLedStripeState(self):
@@ -81,29 +76,35 @@ class Light():
         self.__useLedStripe = False
         print("set LED Stripe Off")
 
-    def __accessPixel(self,r,g,b,a,i):
-        self.r = limit(int(round(r * 255 * (a/100))))
-        self.g = limit(int(round(g * 255 * (a/100))))
-        self.b = limit(int(round(b * 255 * (a/100))))
+    def __accessPixel(self,r,g,b,a):
+        #self.r = limit(int(round(r * 255 * (a/100))))
+        #self.g = limit(int(round(g * 255 * (a/100))))
+        #self.b = limit(int(round(b * 255 * (a/100))))
         
-        if self.debugMode:
-            if self.r > 255:
-                print("warning: r: " + str(self.r) + "  > 255!")
-            elif self.r < 0:
-                print("warning: r: " + str(self.r) + "  < 0!")
-            if self.g > 255:
-                print("warning: g: " + str(self.g) + "  > 255!")
-            elif self.g < 0:
-                print("warning: g: " + str(self.g) + "  < 0!")
-            if self.b > 255:
-                print("warning: b: " + str(self.b) + " > 255!")
-            elif self.b < 0:
-                print("warning: b: " + str(self.b) + " < 0!")
+        #if self.debugMode:
+        #    if self.r > 255:
+        #        print("warning: r: " + str(self.r) + "  > 255!")
+        #    elif self.r < 0:
+        #        print("warning: r: " + str(self.r) + "  < 0!")
+        #    if self.g > 255:
+        #        print("warning: g: " + str(self.g) + "  > 255!")
+        #    elif self.g < 0:
+        #        print("warning: g: " + str(self.g) + "  < 0!")
+        #    if self.b > 255:
+        #        print("warning: b: " + str(self.b) + " > 255!")
+        #    elif self.b < 0:
+        #        print("warning: b: " + str(self.b) + " < 0!")
 
-        self.r = limit(self.r)
-        self.g = limit(self.g)
-        self.b = limit(self.b)
+        #self.r = limit(self.r)
+        #self.g = limit(self.g)
+        #self.b = limit(self.b)
 
+        if self.debugMode:            
+            print("r: "+str(r))
+            print("g: "+str(g))
+            print("b: "+str(b))
+            print("a: "+str(self.__brightness))
+        self.arduinoConnection.sendLedData(r,g,b,0,27)
         #self.pixels[i]=(self.r,self.g,self.b)
 
     def setSunsetTime(self,minutes):
