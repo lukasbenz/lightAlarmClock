@@ -24,18 +24,6 @@ class Light():
         print("init Light class")
         self.turnLightOff()
 
-    #def checkNewBtnDataAvaiable(self,input):
-    #    inputSplit = input.split(",")
-    #    if(inputSplit[0] == "mainBtn"):
-    #        if(self.__state == True):
-    #            self.turnLightOff()
-    #            self.__state = False
-    #            print("turn light off")
-    #        else:
-    #            self.turnLightOn()
-    #            self.__state = True
-    #            print("turn light on")
-
     def turnLightOn(self):
         print("set Light On")
         self.__accessPixel(self.color[0],self.color[1],self.color[2],self.__brightness)
@@ -102,7 +90,7 @@ class Light():
             print("b: "+str(b))
             print("a: "+str(a))
 
-        self.arduinoConnection.sendLedData(r,g,b,self.__startLed,self.__endLed)
+        self.arduinoConnection.writeData("<led," + str(r) + "," + str(g) + "," + str(b) + "," + str(self.__startLed) + "," + str(self.__endLed) + ">")
 
     def startSunset(self):
         self.timeout = time.time() + self.__sunsetTime #conv to seconds

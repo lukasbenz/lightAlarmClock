@@ -1,58 +1,28 @@
 import serial
 import threading
+import requests
+import json
+import numpy as np
 
 url = 'http://127.0.0.1:5000/api/'
 
 class ArduinoConnection():
     debugMode = False
     __runRecLoop = False
-    __newDataReceived = False
-    __receivedData = ""
 
     def __init__(self):        
         self.s = serial.Serial('/dev/ttyACM0', 9600)
         self.s.flushInput()
         print("init ArduinoConnection class")
-        self.startRecLoop()
+        self.__startRecLoop()
 
-    def startRecLoop(self):
+    def __startRecLoop(self):
         print("start recLoop with arduino")
         self.__runRecLoop = True
-        self.t = threading.Thread(target=self.recLoop)
+        self.t = threading.Thread(target=self.__recLoop)
         self.t.start()
 
-
-    def sendLedData(self,r,g,b,startLed,endLed):
-        self.__writeData("<led," + str(r) + "," + str(g) + "," + str(b) + "," + str(startLed) + "," + str(endLed) + ">")
-
-
-    def sendDisplayData(self,brightness):
-        self.__writeData("<display," + str(brightness) + ">")
-
-
-#    def setVolume(self):
-#        data = {'value': int(value)}
-#        r = requests.post(url+'system/volume', json=data)           
-#        print("RESPONSE")
-#        print(r)
-
-#    def setDiplayData
-
-
-#    def setMuteSystem():
-
-
-    def hasNewData(self):
-        return self.__newDataReceived
-
-    def getRecData(self):
-        return self.__receivedData
-
-    def resetRecData(self):
-        print("resetRecData")
-        self.__newDataReceived = False
-
-    def recLoop(self):
+    def __recLoop(self):
         self.t = threading.currentThread()
         while(self.__runRecLoop):
             rawData = self.s.readline()
@@ -60,30 +30,46 @@ class ArduinoConnection():
             if(self.debugMode):
                 print("rawRecData:" + str(rawData))
 
-            self.__receivedData = rawData.decode("utf-8")
+            inputSplit = rawData(",")
 
+            if(inputSplit[0] == "enc"):
+                    if(inputSplit[1] == "pressed"): #mute
+                        if(self.__mute):
+                            print("unmute")
+                        else:
+                            print("mute")            
+                    
+                    elif(inputSplit[1] == "posEdge"): #set volume
+                        self.__volume += 1
+                        self.__volume = np.clip(self.__volume, 0, 100)
+                        print("set system volume to: " + str(self.__volume))
+                    
+                    elif(inputSplit[1] == "negEdge"): #set volume
+                        self.__volume -= 1
+                        self.__volume = np.clip(self.__volume, 0, 100)
+                        print("set system volume to: " + str(self.__volume))
 
-
-
-
-
-            self.__newDataReceived = True
+                    else:
+                        print("unknown enc command from arduino")
+                
+            # light ON/OFF    
+            elif(inputSplit[0] == "mainBtn"):
+                if(self.__state == True):
+                    #self.turnLightOff()
+                    #self.__state = False
+                    print("turn light off")
+                else:
+                    #self.turnLightOn()
+                    #self.__state = True
+                    print("turn light on")
             
 
-    def __writeData(self,string):
+    def writeData(self,string):
         print("writeData: " + str(string))
         self.s.write(string.encode("utf-8"))
-
 
     def close(self):
         self.__runRecLoop = False
         if self.t.joinable():
             self.t.join()
         print("close serial")
-
-
-#light = Light()
-#light.startRecLoop()
-
-#light.writeData('<led,100,0,100,0,27>')
-#light.writeData('<display,0>')

@@ -1,7 +1,10 @@
 import flask
 from flask import request, jsonify
 
-from backendFunctions import BackendFunctions
+import json
+import threading
+import time
+import os
 
 from internetRadio import InternetRadio
 from alarmClock import AlarmClock
@@ -14,13 +17,87 @@ import logging
 log = logging.getLogger('werkzeug')
 log.setLevel(logging.ERROR)
 
-backend = BackendFunctions()
-
 app = flask.Flask(__name__)
 app.config["DEBUG"] = True
 
-
+arduinoConnection = ArduinoConnection()
 alarmClock = AlarmClock()
+internetRadio = InternetRadio()
+systemSettings = SystemSettings(arduinoConnection)
+light = Light(arduinoConnection)
+
+
+################## config ##################
+def loadConfig(self):
+    dir = os.path.dirname(__file__)
+    print("work dir: " + dir)
+    print("load config:")
+    with open(dir + '/config.json') as json_file:
+        data = json.load(json_file)
+
+        self.alarmClock.setWakeUpTime(data["wakeUpTime"])
+        self.alarmClock.setSunsetTime(data["sunsetTime"])
+        self.alarmClock.setAlarmState(data["alarmState"])
+        self.internetRadio.setRadioStation(data["radioStation"])
+        self.systemSettings.setVolume(data["volume"])
+        self.systemSettings.setDispBright(data["displayBrightness"])
+        self.light.setBrightness(data["lightBrightness"]),  
+        if(data["useLedStripe"]):
+            self.light.turnLedStripeOn()
+        else:
+            self.light.turnLedStripeOff()
+
+def saveConfig(self):
+        self.tConfig = threading.currentThread()
+        while self.runConfigThread:
+            jsonData = {
+                "wakeUpTime": self.alarmClock.getWakeUpTime(),
+                "sunsetTime": self.alarmClock.getSunsetTime(),
+                "alarmState": self.alarmClock.getAlarmState(),
+                "radioStation": self.internetRadio.getRadioStation(),
+                "volume": self.systemSettings.getVolume(),
+                "displayBrightness": self.systemSettings.getDispBright(),
+                "lightBrightness": self.light.getBrightness(),    
+                "useLedStripe": self.light.getLedStripeState()  
+                }
+
+            with open('config.json', 'w') as outfile:
+                json.dump(jsonData, outfile)
+                #print("save JsonFile to disk")
+            
+            time.sleep(5)
+
+################## handle Alarm ##################
+def handleAlarm(self):
+    self.tAlarm = threading.currentThread()
+    while self.runAlarmThread:
+        #start Sunset
+        if(self.alarmClock.getSunsetActive() == True):
+            self.light.setSunsetTime(self.alarmClock.getSunsetTime())
+            self.alarmClock.setSunsetActive(False)
+            self.light.startSunset()
+
+        #start Radio on Alarm
+        if(self.alarmClock.getAlarmActive() == True):
+            self.internetRadio.play()
+            self.light.turnLightOn()
+            time.sleep(2)
+            self.alarmClock.setAlarmActive(False)
+
+        time.sleep(1)
+
+
+################## start save config Thread ##################
+loadConfig()
+runConfigThread = True
+tConfig = threading.Thread(target=saveConfig)
+tConfig.start()
+
+################## start alarm handle thread ##################
+runAlarmThread = True
+tAlarm = threading.Thread(target=handleAlarm)
+tAlarm.start()
+
 
 ############################################ APLICATION PROGRAMMING INTERFACE ############################################
 
@@ -80,147 +157,228 @@ def alarmState():
             'state': alarmClock.getAlarmState()
             })
 
+@app.route('/api/alarmClock/snoozeMode/on', methods = ['GET','POST'])
+def SnoozeModeOn():
+    if request.method == 'POST':
+        alarmClock.setSnoozeModeOn()
+        return jsonify({
+            'state': alarmClock.getSnoozeState()
+            })
 
-
-@app.route('/api/alarmClock/snoozeMode', methods = ['GET','POST'])
-def apiSnoozeMode():
+@app.route('/api/alarmClock/snoozeMode/off', methods = ['GET','POST'])
+def SnoozeModeOff():
+    if request.method == 'POST':
+        alarmClock.setSnoozeModeOff()
+        return jsonify({
+            'state': alarmClock.getSnoozeState()
+            })
+    
+@app.route('/api/alarmClock/snoozeMode/state', methods = ['GET','POST'])
+def SnoozeModeState():
     if request.method == 'GET':
-        return jsonify(backend.getSnoozeState())
-
+        return jsonify({
+            'state': alarmClock.getSnoozeState()
+            })
+          
+@app.route('/api/alarmClock/snoozeMode/time', methods = ['GET','POST'])
+def SnoozeTime():
+    if request.method == 'GET':
+        return jsonify({
+            'value': alarmClock.setSnoozeTime()
+            })        
     elif request.method == 'POST':
-        return backend.setSnoozeState(request.get_json())
+        alarmClock.setWakeUpTime(request.get_json(['value']))
+        return jsonify({
+                     'value': alarmClock.getSnoozeTime()
+            })
 
-
-# RADIO STATION
-@app.route('/api/radio/stationName', methods = ['GET','POST'])
-def apiRadioStationName():
+@app.route('/api/alarmClock/active/off', methods = ['GET','POST'])
+def alarmActiveOff():
+    if request.method == 'POST':
+        alarmClock.setAlarmActiveOff()
+        return jsonify({
+            'state': alarmClock.getAlarmActive()
+            })
+    
+@app.route('/api/alarmClock/active/state', methods = ['GET','POST'])
+def alarmActiveState():
     if request.method == 'GET':
-        return jsonify(backend.getRadioStation())
+        return jsonify({
+            'state': alarmClock.getAlarmActive()
+            })
 
+
+################## RADIO STATION ##################
+@app.route('/api/radio/stationName', methods = ['GET','POST'])
+def radioStationName():
+    if request.method == 'GET':
+        return jsonify({
+            'state': internetRadio.getRadioStationInfo()
+            })
 
 @app.route('/api/radio/nextStation', methods = ['GET','POST'])
-def apiNextRadioStation():
+def nextRadioStation():
     if request.method == 'POST':
-        return backend.setNextRadioStation()
-
+        internetRadio.setNextRadioStation()
+        return jsonify({
+            'state': internetRadio.getRadioStationInfo()
+            })
 
 @app.route('/api/radio/prevStation', methods = ['GET','POST'])
-def apiPrevRadioStation():
+def prevRadioStation():
     if request.method == 'POST':
-        return backend.setPrevRadioStation()
-
+        internetRadio.setNextRadioStation()
+        return jsonify({
+            'state': internetRadio.getRadioStationInfo()
+            })
 
 @app.route('/api/radio/play', methods = ['GET','POST'])
-def apiPlayRadio():
+def playRadio():
     if request.method == 'POST':
-        return backend.playRadio()
-
+        internetRadio.play()
+        return jsonify({
+            'state': internetRadio.getRadioState()
+            })
 
 @app.route('/api/radio/stop', methods = ['GET','POST'])
-def apiStopRadio():
+def stopRadio():
     if request.method == 'POST':
-        return backend.stopRadio()
+        internetRadio.stop()
+        return jsonify({
+            'state': internetRadio.getRadioState()
+            })
 
-# VOLUME
-@app.route('/api/system/volume', methods = ['GET','POST'])
-def apiSysVolume():
+@app.route('/api/radio/state', methods = ['GET','POST'])
+def radioState():
     if request.method == 'GET':
-        return jsonify(backend.getVolume())
-
-    elif request.method == 'POST':
-        return backend.setVolume(request.get_json())
-
-
-@app.route('/api/system/volume/mute/on', methods = ['GET','POST'])
-def apiSysMute():
-    if request.method == 'POST':
-        return backend.setMuteSystem()
+        return jsonify({
+            'state': internetRadio.getRadioState()
+            })
 
 
-@app.route('/api/system/volume/mute/off', methods = ['GET','POST'])
-def apiSysUnmute():
-    if request.method == 'POST':
-        return backend.setUnmuteSystem()
-
-
-@app.route('/api/system/volume/mute/state', methods = ['GET','POST'])
-def apiSysMuteState():
-    if request.method == 'GET':
-        return jsonify(backend.getMuteSystemState())
-
-
-# DISPLAY
-@app.route('/api/system/display/brightness', methods = ['GET','POST'])
-def apiSysDisplayBrightness():
-    if request.method == 'GET':
-        return jsonify(backend.getDispBright())
-
-    elif request.method == 'POST':
-        return backend.setDispBright(request.get_json())
-
-
-@app.route('/api/system/display/on', methods = ['GET','POST'])
-def apiDispOn():
-    if request.method == 'POST':
-        return backend.setDispOn()
-
-
-@app.route('/api/system/display/off', methods = ['GET','POST'])
-def apiDispOff():
-    if request.method == 'POST':
-        return backend.setDispOff()
-
-
-@app.route('/api/system/display/state', methods = ['GET'])
-def apiDispState():
-    if request.method == 'GET':
-        return backend.getDispState()
-
-
+################## LIGHT ##################
 @app.route('/api/light/brightness', methods = ['GET','POST'])
-def apiLightBrightness():
+def lightBrightness():
     if request.method == 'GET':
-        return jsonify(backend.getLightBrightness())
-
+            return jsonify({
+            'value': light.getBrightness()
+            })
     elif request.method == 'POST':
-        return backend.setLightBrightness(request.get_json())
-
-
+        light.setBrightness(request.get_json(['value']))
+        return jsonify({
+            'value': light.getBrightness()
+            })
 
 @app.route('/api/light/on', methods = ['GET','POST'])
-def apiLightOn():
+def setLightOn():
     if request.method == 'POST':
-        return backend.turnLightOn()
-
+        return light.turnLightOn()
 
 @app.route('/api/light/off', methods = ['GET','POST'])
-def apiLightOff():
+def setLightOff():
     if request.method == 'POST':
-        return backend.turnLightOff()
-
+        return light.turnLightOff()
 
 @app.route('/api/light/state', methods = ['GET','POST'])
-def apiLightState():
+def getLightState():
     if request.method == 'GET':
-        return jsonify(backend.getLightState())
-
+        return jsonify(light.getLightState())
 
 @app.route('/api/light/ledStripe/on', methods = ['GET','POST'])
-def apiLedStripeOn():
+def setLedStripeOn():
     if request.method == 'POST':
-        return backend.turnLedStripeOn()
-
+        return light.turnLedStripeOn()
 
 @app.route('/api/light/ledStripe/off', methods = ['GET','POST'])
-def apiLedStripeOff():
+def setLedStripeOff():
     if request.method == 'POST':
-        return backend.turnLedStripeOff()
-
+        return light.turnLedStripeOff()
 
 @app.route('/api/light/ledStripe/state', methods = ['GET','POST'])
-def apiLedStripeState():
+def getLedStripeState():
     if request.method == 'GET':
-        return jsonify(backend.getLedStripeState())
+        return jsonify(light.getLedStripeState())
+
+
+################## VOLUME ##################
+@app.route('/api/system/volume', methods = ['GET','POST'])
+def sysVolume():
+    if request.method == 'GET':
+            return jsonify({
+            'value': systemSettings.getVolume()
+            })
+    elif request.method == 'POST':
+        systemSettings.getVolume(request.get_json(['value']))
+        return jsonify({
+            'value': systemSettings.getVolume()
+            })
+
+@app.route('/api/system/volume/mute/on', methods = ['GET','POST'])
+def setSysMute():
+    if request.method == 'POST':
+        systemSettings.mute()
+        return jsonify({
+            'value': systemSettings.getMuteState()
+            })
+
+@app.route('/api/system/volume/mute/off', methods = ['GET','POST'])
+def setSysUnmute():
+    if request.method == 'POST':
+        systemSettings.unmute()
+        return jsonify({
+            'value': systemSettings.getMuteState()
+            })
+
+@app.route('/api/system/volume/mute/state', methods = ['GET','POST'])
+def getSysMuteState():
+    if request.method == 'GET':
+        return jsonify({
+            'value': systemSettings.getMuteState()
+            })
+
+
+################## DISPLAY ##################
+@app.route('/api/system/display/brightness', methods = ['GET','POST'])
+def dispBrightness():
+    if request.method == 'GET':
+            return jsonify({
+            'value': systemSettings.getDispBright()
+            })
+    elif request.method == 'POST':
+        systemSettings.setDispBright(request.get_json(['value']))
+        return jsonify({
+            'value': systemSettings.getDispBright()
+            })
+
+@app.route('/api/system/display/on', methods = ['GET','POST'])
+def setDispOn():
+    if request.method == 'POST':
+        systemSettings.setDispOn()
+        return jsonify({
+            'value': systemSettings.getDispState()
+            })
+
+@app.route('/api/system/display/off', methods = ['GET','POST'])
+def setDispOff():
+    if request.method == 'POST':
+        systemSettings.setDispOff()
+        return jsonify({
+            'value': systemSettings.getDispState()
+            })
+
+@app.route('/api/system/display/state', methods = ['GET'])
+def getDispState():
+    if request.method == 'GET':
+            return jsonify({
+            'value': systemSettings.getDispState()
+            })
+
+
+
+
+
+
+
 
 
 # try:

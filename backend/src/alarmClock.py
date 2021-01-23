@@ -86,21 +86,25 @@ class AlarmClock():
         #print("get SunsetState: " + str(self.alarmState))
         return self.sunsetActive
 
-    def setAlarmActive(self,_input):
-        self.alarmActive = bool(_input)
-        print("set alarmActive: " + str(self.alarmActive))
+    def setAlarmOn(self):
+        self.alarmState = True
+        print("set __alarmClockState: " + str(self.__alarmClockState))
 
-    def getAlarmActive(self):
-        #print("get alarmActive: " + str(self.alarmActive))
-        return self.alarmActive
-
-    def setAlarmState(self, _input):
-        self.alarmState = bool(_input)
-        print("set alarmState: " + str(self.alarmState))
+    def setAlarmOff(self):
+        self.__alarmClockState = False
+        print("set alarmState: " + str(self.__alarmClockState))
 
     def getAlarmState(self):
-        #print("get alarmState: " + str(self.alarmState))
-        return self.alarmState
+        #print("get alarmState: " + str(self.__alarmClockState))
+        return self.__alarmClockState
+
+    def setSnoozeModeOn(self):
+        self.__snoozeState = True
+        print("set __snoozeState: " + str(self.__snoozeState))
+
+    def setSnoozeModeOff(self):
+        self.__snoozeState = False
+        print("set __snoozeState: " + str(self.snoozeTime))
 
     def getSnoozeTime(self):
         #print("get sunsetTime: " + str(self.sunsetTime))
@@ -108,15 +112,19 @@ class AlarmClock():
 
     def setSnoozeTime(self, _input):
         self.snoozeTime = _input
-        print("set sunsetTime: " + str(self.sunsetTime))
-            
+        print("set snoozeTime: " + str(self.snoozeTime))
+
     def getSnoozeState(self):
         #print("get snoozeState: " + str(self.snoozeState))
         return self.snoozeState
 
-    def setSnoozeState(self, _input):
-        self.snoozeState = bool(_input)
-        print("set snoozeState: " + str(self.snoozeState))
+    def setAlarmActiveOff(self,_input):
+        self.alarmActive = bool(_input)
+        print("set alarmActive: " + str(self.alarmActive))
+
+    def getAlarmActive(self):
+        #print("get alarmActive: " + str(self.alarmActive))
+        return self.alarmActive
 
     def procActTimeAndDate(self):
         timezone = pytz.timezone('Europe/Berlin')
@@ -125,7 +133,6 @@ class AlarmClock():
         self.currentTime = timezone_date_time_obj.strftime("%H:%M:%S")
         self.currentDay = timezone_date_time_obj.weekday()
 
-    
     def alarmClockLoop(self):
         self.t = threading.currentThread()
         
@@ -136,7 +143,7 @@ class AlarmClock():
             #print("sunsetStart: " + str(sunsetStartTime))
             #print("curr Time: " + self.currentTime)
 
-            if(self.alarmClockOn == True):
+            if(self.__alarmClockState == True):
                 if(str(sunsetStartTime) == self.currentTime):
                     self.sunsetActive = True
                 if(self.wakeUpTime == self.currentTime):

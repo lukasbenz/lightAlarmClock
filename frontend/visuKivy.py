@@ -1,7 +1,7 @@
 
 from kivy.config import Config
 Config.set('graphics', 'resizable', 'False')
-Config.set('graphics', 'fullscreen','auto')
+Config.set('graphics', 'fullscreen','False')
 Config.set('graphics', 'width', '800')
 Config.set('graphics', 'height', '480')
 
@@ -454,3 +454,6 @@ class VisuAlarmClock(App):
         #       print("TOUCH TOUCH TOUCH TOUCH TOUCH TOUCH TOUCH TOUCH")
 
         #Window.bind(on_touch_down=on_touch_down)
+
+visu = VisuAlarmClock()
+visu.run()

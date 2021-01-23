@@ -28,22 +28,6 @@ class InternetRadio():
     def __init__(self):
         print("init internet radio")
     
-    def __changeRadioStation(self):
-
-        restart = False
-        if(self.isPlaying == True):
-            self.stop()
-            restart = True   
-
-        self.stationName = self.switchRadioStations.get(self.stationIndex, "err")
-        media=self.instance.media_new(self.urlDict[self.stationName])
-        media.get_mrl()
-        self.player.set_media(media)
-        print("set radio station: " + self.stationName)
-
-        if(restart == True):
-            self.play()
-
     def getRadioStation(self):
         #print("get radio station: " + self.stationName)
         return self.stationIndex
@@ -72,6 +56,9 @@ class InternetRadio():
 
         print("set radio station: " + str(self.stationIndex) + ": " + self.stationName)
         self.__changeRadioStation()
+
+    def getRadioState(self):
+        return self.isPlaying
 
     def play(self):
         if(self.isPlaying == False):
