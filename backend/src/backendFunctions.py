@@ -45,7 +45,7 @@ class BackendFunctions():
        def loadConfig(self):
               print("work dir: " + dir)
               print("load config:")
-              with open('config.json') as json_file:
+              with open(dir + '/config.json') as json_file:
                      data = json.load(json_file)
 
               self.alarmClock.setWakeUpTime(data["wakeUpTime"])
