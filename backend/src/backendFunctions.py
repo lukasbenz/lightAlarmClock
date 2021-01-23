@@ -35,13 +35,7 @@ class BackendFunctions():
               self.tAlarm.start()
 
 
-       #chekButtons Thread
-              #self.runCheckButtonsThread = True
-              #self.tButtons = threading.Thread(target=self.checkButtons)
-              #self.tButtons.start()
-
-
-       ######## config ########
+       ################## config ##################
        def loadConfig(self):
               print("work dir: " + dir)
               print("load config:")
@@ -53,9 +47,13 @@ class BackendFunctions():
               self.alarmClock.setAlarmState(data["alarmState"])
               self.internetRadio.setRadioStation(data["radioStation"])
               self.systemSettings.setVolume(data["volume"])
-              self.systemSettings.setDisplayBrightness(data["displayBrightness"])
+              self.systemSettings.setDispBright(data["displayBrightness"])
               self.light.setBrightness(data["lightBrightness"]),
-              self.light.setLedStripeState(data["useLedStripe"])
+              
+              if(data["useLedStripe"]):
+                     self.light.turnLedStripeOn()
+              else:
+                     self.light.turnLedStripeOff()
 
        def saveConfig(self):
               self.tConfig = threading.currentThread()
@@ -66,7 +64,7 @@ class BackendFunctions():
                             "alarmState": self.alarmClock.getAlarmState(),
                             "radioStation": self.internetRadio.getRadioStation(),
                             "volume": self.systemSettings.getVolume(),
-                            "displayBrightness": self.systemSettings.getDisplayBrightness(),
+                            "displayBrightness": self.systemSettings.getDispBright(),
                             "lightBrightness": self.light.getBrightness(),    
                             "useLedStripe": self.light.getLedStripeState()  
                      }
@@ -77,7 +75,7 @@ class BackendFunctions():
                      time.sleep(5)
 
 
-       ######## handle Alarm ########
+       ################## handle Alarm ##################
        def handleAlarm(self):
               self.tAlarm = threading.currentThread()
               while self.runAlarmThread:
@@ -96,57 +94,10 @@ class BackendFunctions():
 
                      time.sleep(1)
 
-
-       #def checkButtons(self):
-       #       self.tButtons = threading.currentThread()
-       #       while self.runAlarmThread:
-       #              if(self.arduinoConnection.hasNewData()):
-       #                     self.light.checkNewBtnDataAvaiable(self.arduinoConnection.getRecData())
-
-                            #self.systemSettings.checkNewBtnDataAvaiable(self.arduinoConnection.getRecData())
-
-                            #self.arduinoConnection.resetRecData()
-
-              #time.sleep(100)
-
-#handle sleep Mode
-
-
-       ###################### APLICATION PROGRAMMING INTERFACE ######################
-
-       ######## ALARM CLOCK ########
-       #TIME DATE
-       def getTimeAndDate(self):
-              return  {
-                     'time': self.alarmClock.getTime(),
-                     'date': self.alarmClock.getDate()
-              }
-
-       #WAKE UP TIME
-       def getWakeUpTime(self):
-              return  {
-                     'wakeUpTime': self.alarmClock.getWakeUpTime()
-              }
-
-       def setWakeUpTime(self,data):
-              self.alarmClock.setWakeUpTime(data['wakeUpTime'])
-              return self.getWakeUpTime()
-
-
-       #SUNSET TIME
-       def getSunsetTime(self):
-              return  {
-                     'sunsetTime': self.alarmClock.getSunsetTime()
-              }
-
-       def setSunsetTime(self,data):
-              self.alarmClock.setSunsetTime(data['sunsetTime'])
-              return self.getSunsetTime()
-  
        #ALARM ACTIVE
        def getAlarmActive(self):
               return  {
-                     'state': self.alarmClock.getAlarmActive()
+                     'state': self.alarmClock.getAlarmActiveState()
               }
 
        def setAlarmActive(self,data):
@@ -174,7 +125,7 @@ class BackendFunctions():
               return self.getSnoozeState() 
 
 
-       ######## RADIO STATION ########
+       ################## RADIO STATION ##################
        def getRadioStation(self):
               return  {
                      'name': self.internetRadio.getRadioStationInfo()
@@ -197,8 +148,7 @@ class BackendFunctions():
               return "stop radio"
 
 
-       ######## System ########
-       # Volume
+       ################## VOLUME ##################
        def getVolume(self):
               return  {
                      'value': self.systemSettings.getVolume()
@@ -208,15 +158,28 @@ class BackendFunctions():
               self.systemSettings.setVolume(data['value'])
               return self.getVolume() 
 
-       # Display
-       def getDisplayBrightness(self):
+       def setMuteSystem(self):
+              self.systemSettings.setMuteSystem()
+              return "mute system ON"
+
+       def setUnmuteSystem(self):
+              self.systemSettings.setUnmuteSystem()
+              return "mute system OFF"
+
+       def getMuteSystemState(self):
               return  {
-                     'value': self.systemSettings.getDisplayBrightness()
+                     'value': self.systemSettings.getMuteState()
               }
 
-       def setDisplayBrightness(self,data):
-              self.systemSettings.setDisplayBrightness(data['value'])
-              return self.getDisplayBrightness()
+       ################## DISPLAY ##################
+       def getDispBright(self):
+              return  {
+                     'value': self.systemSettings.getDispBright()
+              }
+
+       def setDispBright(self,data):
+              self.systemSettings.setDispBright(data['value'])
+              return self.getDispBright()
 
        def turnDispOn(self):
               self.systemSettings.turnDispOn()
@@ -226,8 +189,21 @@ class BackendFunctions():
               self.systemSettings.turnDispOff()
               return "turn Display Off"
 
+       def getDispState(self):
+              return  {
+                     'value': self.systemSettings.getDispState()
+              }
+              
 
-       ######## LIGHT ########
+       ################## LIGHT ##################
+       def turnLightOn(self):
+              self.light.turnLightOn()
+              return "turn on light"
+
+       def turnLightOff(self):
+              self.light.turnLightOff()
+              return "turn off light"
+
        def getLightState(self):
               return  {
                      'state': self.light.getLightState()
@@ -240,20 +216,7 @@ class BackendFunctions():
 
        def setLightBrightness(self,data):
               self.light.setBrightness(data['value'])
-              return self.getDisplayBrightness()
-
-       def turnLightOn(self):
-              self.light.turnLightOn()
-              return "turn on light"
-
-       def turnLightOff(self):
-              self.light.turnLightOff()
-              return "turn off light"
-
-       def getLedStripeState(self):
-              return  {
-                     'state': self.light.getLedStripeState()
-              }
+              return self.getLightBrightness()
 
        def turnLedStripeOn(self):
               self.light.turnLedStripeOn()
@@ -263,8 +226,13 @@ class BackendFunctions():
               self.light.turnLedStripeOff()
               return "turn off led Stripe"
 
+       def getLedStripeState(self):
+              return  {
+                     'state': self.light.getLedStripeState()
+              }
 
-       ######## close function ########
+
+       ################## close function ##################
        def close(self):
               self.runConfigThread = False
               self.tConfig.join()

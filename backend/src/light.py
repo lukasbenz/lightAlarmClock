@@ -12,12 +12,12 @@ class Light():
     __useLedStripe = True
     __sunsetTime = 10
     __brightness = 100
-    __countLEDs = 10
     __runSunsetLoop = False
     __cycletimeMs = 1000
-    
+    __startLed = 0
+    __endLed = 146
     #color=(1.0,0.4,0)
-    color=(255,80,0,0,27)
+    color=(255,80,0)
 
     def __init__(self,arduinoConnection):     
         self.arduinoConnection = arduinoConnection   
@@ -36,6 +36,16 @@ class Light():
     #            self.__state = True
     #            print("turn light on")
 
+    def turnLightOn(self):
+        print("set Light On")
+        self.__accessPixel(self.color[0],self.color[1],self.color[2],self.__brightness)
+        self.__state = True
+
+    def turnLightOff(self):
+        print("set Light Off")
+        self.__accessPixel(0,0,0,self.__brightness)
+        self.__state = False
+
     def getLightState(self):
         #print("get Light state: " + str(self.__state))
         return self.__state
@@ -48,38 +58,25 @@ class Light():
         self.__brightness = _input
         print("set Light brightness: " + str(self.__brightness))
 
-    def turnLightOn(self):
-        print("set Light On")
-        self.__accessPixel(self.color[0],self.color[1],self.color[2],self.__brightness)
-        self.__state = True
+    def turnLedStripeOn(self):
+        self.__useLedStripe = True
+        self.__endLed = 146
+        print("set LED Stripe On")
 
-    def turnLightOff(self):
-        print("set Light Off")
-        self.__accessPixel(0,0,0,self.__brightness)
-        self.__state = False
+    def turnLedStripeOff(self):
+        self.__useLedStripe = False
+        self.__endLed = 27
+        print("set LED Stripe Off")
 
     def getLedStripeState(self):
         #print("get LED Stripe state: " + str(self.__useLedStripe))
         return self.__useLedStripe
 
-    def setLedStripeState(self,_input):
-        if(_input == True):
-            self.turnLedStripeOn()
-        else:
-            self.turnLedStripeOff()
-
-    def turnLedStripeOn(self):
-        self.__useLedStripe = True
-        print("set LED Stripe On")
-
-    def turnLedStripeOff(self):
-        self.__useLedStripe = False
-        print("set LED Stripe Off")
-
     def __accessPixel(self,r,g,b,a):
-        #self.r = limit(int(round(r * 255 * (a/100))))
-        #self.g = limit(int(round(g * 255 * (a/100))))
-        #self.b = limit(int(round(b * 255 * (a/100))))
+        
+        r = limit(int(round(r /(a))))
+        g = limit(int(round(g /(a))))
+        b = limit(int(round(b /(a))))
         
         #if self.debugMode:
         #    if self.r > 255:
@@ -103,18 +100,14 @@ class Light():
             print("r: "+str(r))
             print("g: "+str(g))
             print("b: "+str(b))
-            print("a: "+str(self.__brightness))
-        self.arduinoConnection.sendLedData(r,g,b,0,27)
-        #self.pixels[i]=(self.r,self.g,self.b)
+            print("a: "+str(a))
 
-    def setSunsetTime(self,minutes):
-        self.__sunsetTime = int(minutes)*60
-        print("Sunsest Time: " + str(self.__sunsetTime) + " sec")
+        self.arduinoConnection.sendLedData(r,g,b,self.__startLed,self.__endLed)
 
     def startSunset(self):
-        self.timeout = time.time() + self.__sunsetTime
+        self.timeout = time.time() + self.__sunsetTime #conv to seconds
 
-        print("Sunsest Loop started for " + str(self.__sunsetTime) + " sec")
+        print("Sunsest Loop started for " + str(self.__sunsetTime) + "sec")
         
         #calc iterations of Brightness
         self.__runSunsetLoop = True
@@ -147,8 +140,8 @@ class Light():
                 print("bTmp: "+str(bTmp))
                 print("aTmp: "+str(aTmp))
 
-            for i in range(self.__countLEDs):
-                self.__accessPixel(rTmp,gTmp,bTmp,aTmp,i)
+            #for i in range(self.__countLEDs):
+            self.__accessPixel(rTmp,gTmp,bTmp,aTmp,self.startLed,self.endLed)
             
             if self.debugMode:
                 print("r: "+str(self.r))

@@ -4,13 +4,17 @@ class SystemSettings():
 
     # init Values
     __volume = 0
-    __displayBrightness = 10
-    __displayState = True
     __mute = False
 
-    def __init__(self,arduinoConnection):
-        print("init system settings class")
+    __displayBrightness = 10
+    __displayOff = False
+    
 
+    def __init__(self,arduinoConnection):
+        self.arduinoConnection = arduinoConnection
+        print("init system settings class")
+    
+    '''
     def checkNewBtnDataAvaiable(self,input):
         inputSplit = input.split(",")
         if(inputSplit[0] == "enc"):
@@ -33,7 +37,8 @@ class SystemSettings():
             else:
                 print("unknown enc command from arduino")
         
-
+    '''
+    
     def getVolume(self):
         #print("get Volume: " + str(self.__volume))
         return self.__volume
@@ -42,21 +47,35 @@ class SystemSettings():
         self.__volume = _input
         print("set Volume: " + str(self.__volume))
 
-    def getDisplayBrightness(self):
+    def setMuteSystem(self):
+        self.__mute = True
+        print("Mute ON")
+
+    def setUnmuteSystem(self):
+        self.__mute = False
+        print("Mute OFF")
+
+    def getMuteState(self):
+        #print("get mute State: " + str(self.__mute))
+        return self.__mute
+
+    def getDispBright(self):
         #print("get DisplayBrightness: " + str(self.__displayBrightness))
         return self.__displayBrightness
 
-    def setDisplayBrightness(self,_input): 
+    def setDispBright(self,_input): 
         self.__displayBrightness = _input
         print("set DisplayBrightness: " + str(self.__displayBrightness))
         self.arduinoConnection.sendDisplayData(self.__displayBrightness)
 
-    def turnDispOn(self):
-        self.__displayState = True
+    def setDispOn(self):
+        self.__displayOff = False
         print("turn Display On")
 
-    def turnDispOff(self): 
-        self.__displayState = False
+    def setDispOff(self): 
+        self.__displayOff = True
         print("turn Display Off")
 
-
+    def getDispState(self):
+        return self.__displayOff
+        

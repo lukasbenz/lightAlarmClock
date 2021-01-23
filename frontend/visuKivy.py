@@ -137,7 +137,7 @@ class ScreenAlarmClock(Screen):
                                 self.updateSunsetTime()                            
                         else:
                                 print(response)
-                                self.id_wakeUpTime.text = 'err'
+                                self.id_sunsetTime.text = 'err'
 
                 def leavePage(self,**kwargs):
                         self.eventUpdateClock.cancel()
@@ -180,7 +180,7 @@ class ScreenAlarmClock(Screen):
                         newSunsetTime = strMinutes
                         self.id_sunsetTime.text = newSunsetTime + " min"
 
-                        data = {'sunsetTime': newSunsetTime}
+                        data = {'sunsetTime': newSunsetTime*60} # convert to seconds
                         r = requests.post(url+'alarmClock/sunsetTime', json=data)           
                         print("RESPONSE")
                         print(r)
