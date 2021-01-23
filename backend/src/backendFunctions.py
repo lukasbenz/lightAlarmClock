@@ -3,9 +3,12 @@ from alarmClock import AlarmClock
 from systemSettings import SystemSettings
 from light import Light
 from serialArduino import ArduinoConnection
+
 import json
 import threading
 import time
+import os
+dir = os.path.dirname(__file__)
 
 class BackendFunctions():
 
@@ -40,6 +43,7 @@ class BackendFunctions():
 
        ######## config ########
        def loadConfig(self):
+              print("work dir: " + dir)
               print("load config:")
               with open('config.json') as json_file:
                      data = json.load(json_file)
@@ -92,13 +96,17 @@ class BackendFunctions():
 
                      time.sleep(1)
 
+
        def checkButtons(self):
               self.tButtons = threading.currentThread()
               while self.runAlarmThread:
                      if(self.arduinoConnection.hasNewData()):
                             self.light.checkNewBtnDataAvaiable(self.arduinoConnection.getRecData())
+
                             self.systemSettings.checkNewBtnDataAvaiable(self.arduinoConnection.getRecData())
+
                             self.arduinoConnection.resetRecData()
+
               #time.sleep(100)
 
 #handle sleep Mode
