@@ -17,12 +17,12 @@ class SystemSettings():
             if(inputSplit[1] == "posEdge"):
                 self.__volume += 1
                 self.__volume = np.clip(self.__volume, 0, 100)
-                print("set system volume to: " + self.__volume)
+                print("set system volume to: " + str(self.__volume))
             
             elif(inputSplit[1] == "negEdge"):
                 self.__volume -= 1
                 self.__volume = np.clip(self.__volume, 0, 100)
-                print("set system volume to: " + self.__volume)
+                print("set system volume to: " + str(self.__volume))
 
             elif(inputSplit[1] == "pressed"):
                 if(self.__mute):
@@ -49,6 +49,7 @@ class SystemSettings():
     def setDisplayBrightness(self,_input): 
         self.__displayBrightness = _input
         print("set DisplayBrightness: " + str(self.__displayBrightness))
+        self.arduinoConnection.sendDisplayData(self.__displayBrightness)
 
     def turnDispOn(self):
         self.__displayState = True

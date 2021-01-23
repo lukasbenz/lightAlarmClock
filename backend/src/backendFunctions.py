@@ -36,9 +36,9 @@ class BackendFunctions():
 
 
        #chekButtons Thread
-              self.runCheckButtonsThread = True
-              self.tButtons = threading.Thread(target=self.checkButtons)
-              self.tButtons.start()
+              #self.runCheckButtonsThread = True
+              #self.tButtons = threading.Thread(target=self.checkButtons)
+              #self.tButtons.start()
 
 
        ######## config ########
@@ -97,15 +97,15 @@ class BackendFunctions():
                      time.sleep(1)
 
 
-       def checkButtons(self):
-              self.tButtons = threading.currentThread()
-              while self.runAlarmThread:
-                     if(self.arduinoConnection.hasNewData()):
-                            self.light.checkNewBtnDataAvaiable(self.arduinoConnection.getRecData())
+       #def checkButtons(self):
+       #       self.tButtons = threading.currentThread()
+       #       while self.runAlarmThread:
+       #              if(self.arduinoConnection.hasNewData()):
+       #                     self.light.checkNewBtnDataAvaiable(self.arduinoConnection.getRecData())
 
-                            self.systemSettings.checkNewBtnDataAvaiable(self.arduinoConnection.getRecData())
+                            #self.systemSettings.checkNewBtnDataAvaiable(self.arduinoConnection.getRecData())
 
-                            self.arduinoConnection.resetRecData()
+                            #self.arduinoConnection.resetRecData()
 
               #time.sleep(100)
 

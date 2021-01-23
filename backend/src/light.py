@@ -24,17 +24,17 @@ class Light():
         print("init Light class")
         self.turnLightOff()
 
-    def checkNewBtnDataAvaiable(self,input):
-        inputSplit = input.split(",")
-        if(inputSplit[0] == "mainBtn"):
-            if(self.__state == True):
-                self.turnLightOff()
-                self.__state = False
-                print("turn light off")
-            else:
-                self.turnLightOn()
-                self.__state = True
-                print("turn light on")
+    #def checkNewBtnDataAvaiable(self,input):
+    #    inputSplit = input.split(",")
+    #    if(inputSplit[0] == "mainBtn"):
+    #        if(self.__state == True):
+    #            self.turnLightOff()
+    #            self.__state = False
+    #            print("turn light off")
+    #        else:
+    #            self.turnLightOn()
+    #            self.__state = True
+    #            print("turn light on")
 
     def getLightState(self):
         #print("get Light state: " + str(self.__state))

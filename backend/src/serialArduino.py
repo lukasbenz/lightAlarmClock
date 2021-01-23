@@ -1,6 +1,8 @@
 import serial
 import threading
 
+url = 'http://127.0.0.1:5000/api/'
+
 class ArduinoConnection():
     debugMode = False
     __runRecLoop = False
@@ -28,6 +30,18 @@ class ArduinoConnection():
         self.__writeData("<display," + str(brightness) + ">")
 
 
+#    def setVolume(self):
+#        data = {'value': int(value)}
+#        r = requests.post(url+'system/volume', json=data)           
+#        print("RESPONSE")
+#        print(r)
+
+#    def setDiplayData
+
+
+#    def setMuteSystem():
+
+
     def hasNewData(self):
         return self.__newDataReceived
 
@@ -47,6 +61,12 @@ class ArduinoConnection():
                 print("rawRecData:" + str(rawData))
 
             self.__receivedData = rawData.decode("utf-8")
+
+
+
+
+
+
             self.__newDataReceived = True
             
 
