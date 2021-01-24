@@ -87,12 +87,12 @@ class AlarmClock():
         return self.__sunsetState
 
     def setAlarmOn(self):
-        self.alarmState = True
+        self.__alarmClockState = True
         print("set __alarmClockState: " + str(self.__alarmClockState))
 
     def setAlarmOff(self):
         self.__alarmClockState = False
-        print("set alarmState: " + str(self.__alarmClockState))
+        print("set __alarmClockState: " + str(self.__alarmClockState))
 
     def getAlarmState(self):
         #print("get alarmState: " + str(self.__alarmClockState))
@@ -104,7 +104,7 @@ class AlarmClock():
 
     def setSnoozeModeOff(self):
         self.__snoozeState = False
-        print("set __snoozeState: " + str(self.snoozeTime))
+        print("set __snoozeState: " + str(self.__snoozeState))
 
     def getSnoozeTime(self):
         #print("get sunsetTime: " + str(self.sunsetTime))
@@ -116,7 +116,7 @@ class AlarmClock():
 
     def getSnoozeState(self):
         #print("get snoozeState: " + str(self.snoozeState))
-        return self.snoozeState
+        return self.__snoozeState
 
     def setAlarmActiveOff(self,_input):
         self.__alarmActiveState = bool(_input)

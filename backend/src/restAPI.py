@@ -86,7 +86,6 @@ def handleAlarm():
         #start Radio on Alarm
         if(alarmClock.getAlarmActiveState() == True):
             internetRadio.play()
-            light.turnLightOn()
             time.sleep(2)
             alarmClock.setAlarmActive(False)
 
@@ -164,7 +163,7 @@ def alarmState():
             })
 
 @app.route('/api/alarmClock/snoozeMode/on', methods = ['GET','POST'])
-def SnoozeModeOn():
+def snoozeModeOn():
     if request.method == 'POST':
         alarmClock.setSnoozeModeOn()
         return jsonify({
@@ -172,7 +171,7 @@ def SnoozeModeOn():
             })
 
 @app.route('/api/alarmClock/snoozeMode/off', methods = ['GET','POST'])
-def SnoozeModeOff():
+def snoozeModeOff():
     if request.method == 'POST':
         alarmClock.setSnoozeModeOff()
         return jsonify({
@@ -278,17 +277,25 @@ def lightBrightness():
 @app.route('/api/light/on', methods = ['GET','POST'])
 def setLightOn():
     if request.method == 'POST':
-        return light.turnLightOn()
+        light.turnLightOn()
+        return jsonify({
+            'state': light.getLightState()
+            })
 
 @app.route('/api/light/off', methods = ['GET','POST'])
 def setLightOff():
     if request.method == 'POST':
-        return light.turnLightOff()
+        light.turnLightOff()
+        return jsonify({
+            'state': light.getLightState()
+            })
 
 @app.route('/api/light/state', methods = ['GET','POST'])
 def getLightState():
     if request.method == 'GET':
-        return jsonify(light.getLightState())
+        return jsonify({
+            'state': light.getLightState()
+            })
 
 @app.route('/api/light/ledStripe/on', methods = ['GET','POST'])
 def setLedStripeOn():
@@ -378,6 +385,7 @@ def getDispState():
             return jsonify({
             'value': systemSettings.getDispState()
             })
+
 
 # try:
 app.run()

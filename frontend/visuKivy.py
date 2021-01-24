@@ -28,12 +28,12 @@ class ScreenHome(Screen):
                         response = requests.get(url+'alarmClock/wakeUpTime')
                         json_data = json.loads(response.text)  
                         if response.status_code == 200:
-                                self.id_wakeUpTime.text = json_data['wakeUpTime'][:-3]
+                                self.id_wakeUpTime.text = json_data['value'][:-3]
                         else:
                                 self.id_wakeUpTime.text = "err"
                                 print(response)
 
-                        response = requests.get(url+'alarmClock/alarmState')
+                        response = requests.get(url+'alarmClock/state')
                         json_data = json.loads(response.text)  
                         if response.status_code == 200:
                                 self.id_switch_wakeUpTime.active = json_data['state']
@@ -47,7 +47,7 @@ class ScreenHome(Screen):
                         else:
                                 print(response)
                 except:
-                        print("An exception occurred")
+                        print("An exception occurred 1")
 
         def leavePage(self,**kwargs):
                 self.eventUpdateClock.cancel()
@@ -64,22 +64,16 @@ class ScreenHome(Screen):
                                 self.id_clock.text = "err"
                                 self.id_date.text = "err"
                 except:
-                        print("An exception occurred")
+                        print("An exception occurred 2")
 
-        def switch_wakeUpTime_callback(self, switchObject, switchValue):   
-                data = {'state': switchValue}
-                r = requests.post(url+'alarmClock/alarmState', json=data)           
-                print("RESPONSE")
-                print(r)
-
-                if(switchValue == 0):
-                        data = {'state': 0}
-                        r = requests.post(url+'alarmClock/snoozeMode', json=data)           
-                        print("RESPONSE")
-                        print(r)
-
-
-        def switch_light_callback(self, switchObject, switchValue):   
+        def switchAlarmClockCallback(self, switchObject, switchValue):
+                if(switchValue == True):
+                        requests.post(url+'alarmClock/on') 
+                else:
+                        requests.post(url+'alarmClock/snoozeMode/off') 
+                        requests.post(url+'alarmClock/off') 
+                        
+        def switchLightCallback(self, switchObject, switchValue):   
                 if(switchValue == True):
                         requests.post(url+'light/on') 
                 else:
@@ -440,7 +434,7 @@ class VisuAlarmClock(App):
 
         def checkAlarmActive(self,*args):
                 try:
-                        response = requests.get(url+'alarmClock/alarmActive')
+                        response = requests.get(url+'alarmClock/active/state')
                         json_data = json.loads(response.text)
                         if response.status_code == 200:
                                 if(json_data['state'] == 1):
@@ -448,7 +442,7 @@ class VisuAlarmClock(App):
                         else:
                                 print(response)
                 except:
-                        print("An exception occurred")
+                        print("An exception occurred 3")
         
         #def on_touch_down(self, touch):
         #       print("TOUCH TOUCH TOUCH TOUCH TOUCH TOUCH TOUCH TOUCH")

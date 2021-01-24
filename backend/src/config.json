@@ -5,6 +5,6 @@
     "radioStation": 3, 
     "volume": 36, 
     "displayBrightness": 23, 
-    "lightBrightness": 0, 
+    "lightBrightness": 100, 
     "useLedStripe": false
 }

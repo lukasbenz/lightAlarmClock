@@ -33,7 +33,7 @@
         size_hint: 0.2,0.1
         pos_hint: {"center_x":0.46, "center_y":0.92}
         # Arranging a callback to the switch 
-        on_active: root.switch_wakeUpTime_callback(self, self.active) 
+        on_active: root.switchAlarmClockCallback(self, self.active) 
 
     Label:
         text: 'Licht An/Aus:'
@@ -47,7 +47,7 @@
         size_hint: 0.2,0.1
         pos_hint: {"center_x":0.79, "center_y":0.92}
         # Arranging a callback to the switch 
-        on_active: root.switch_light_callback(self, self.active) 
+        on_active: root.switchLightCallback(self, self.active) 
 
     Label:
         id: _id_clock

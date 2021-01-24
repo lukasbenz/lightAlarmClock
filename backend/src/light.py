@@ -1,5 +1,6 @@
 import time
 import threading
+import numpy as np
 
 def limit(num, minimum=0, maximum=255):
         """Limits input 'num' between minimum and maximum values.
@@ -25,12 +26,14 @@ class Light():
 
     def turnLightOn(self):
         print("set Light On")
-        self.__accessPixel(self.__color[0],self.__color[1],self.__color[2],self.__brightness)
+        self.__color=(255,120,10) 
+        self.__accessPixel()
         self.__state = True
-
+        
     def turnLightOff(self):
         print("set Light Off")
-        self.__accessPixel(0,0,0,self.__brightness)
+        self.__color=(0,0,0) 
+        self.__accessPixel()
         self.__state = False
 
     def getLightState(self):
@@ -67,17 +70,21 @@ class Light():
         #print("get LED Stripe state: " + str(self.__useLedStripe))
         return self.__useLedStripe
 
-    def __accessPixel(self,r,g,b,a):
-    
-        r = limit(int(round(r/(a))))
-        g = limit(int(round(g/(a))))
-        b = limit(int(round(b/(a))))
+    def __accessPixel(self):
+        
+        brightnessConverted = np.interp(self.__brightness,[0,100],[255,1])
+        print("bright converted" + str(brightnessConverted))
+        print("raw: " + str(self.__brightness))
+
+        r = limit(int(round(self.__color[0] / brightnessConverted)))
+        g = limit(int(round(self.__color[1] / brightnessConverted)))
+        b = limit(int(round(self.__color[2] / brightnessConverted)))
         
         if self.debugMode:            
             print("r: "+str(r))
             print("g: "+str(g))
             print("b: "+str(b))
-            print("a: "+str(a))
+            print("a: "+str(brightnessConverted))
 
         self.arduinoConnection.writeData("<led," + str(r) + "," + str(g) + "," + str(b) + "," + str(self.__startLed) + "," + str(self.__endLed) + ">")
 
