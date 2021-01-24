@@ -16,8 +16,7 @@ class Light():
     __cycletimeMs = 1000
     __startLed = 0
     __endLed = 146
-    #color=(1.0,0.4,0)
-    color=(255,80,0)
+    __color=(255,120,10)
 
     def __init__(self,arduinoConnection):     
         self.arduinoConnection = arduinoConnection   
@@ -26,7 +25,7 @@ class Light():
 
     def turnLightOn(self):
         print("set Light On")
-        self.__accessPixel(self.color[0],self.color[1],self.color[2],self.__brightness)
+        self.__accessPixel(self.__color[0],self.__color[1],self.__color[2],self.__brightness)
         self.__state = True
 
     def turnLightOff(self):
@@ -46,6 +45,14 @@ class Light():
         self.__brightness = _input
         print("set Light brightness: " + str(self.__brightness))
 
+    def setSunsetTime(self,_input):
+        self.sunsetTime = _input
+        print("set sunsetTime: " + str(self.__sunsetTime))
+    
+    def getSunsetTime(self):
+        #print("get sunsetTime: " + str(self.sunsetTime))
+        return self.__sunsetTime
+
     def turnLedStripeOn(self):
         self.__useLedStripe = True
         self.__endLed = 146
@@ -61,29 +68,11 @@ class Light():
         return self.__useLedStripe
 
     def __accessPixel(self,r,g,b,a):
+    
+        r = limit(int(round(r/(a))))
+        g = limit(int(round(g/(a))))
+        b = limit(int(round(b/(a))))
         
-        r = limit(int(round(r /(a))))
-        g = limit(int(round(g /(a))))
-        b = limit(int(round(b /(a))))
-        
-        #if self.debugMode:
-        #    if self.r > 255:
-        #        print("warning: r: " + str(self.r) + "  > 255!")
-        #    elif self.r < 0:
-        #        print("warning: r: " + str(self.r) + "  < 0!")
-        #    if self.g > 255:
-        #        print("warning: g: " + str(self.g) + "  > 255!")
-        #    elif self.g < 0:
-        #        print("warning: g: " + str(self.g) + "  < 0!")
-        #    if self.b > 255:
-        #        print("warning: b: " + str(self.b) + " > 255!")
-        #    elif self.b < 0:
-        #        print("warning: b: " + str(self.b) + " < 0!")
-
-        #self.r = limit(self.r)
-        #self.g = limit(self.g)
-        #self.b = limit(self.b)
-
         if self.debugMode:            
             print("r: "+str(r))
             print("g: "+str(g))
@@ -99,10 +88,10 @@ class Light():
         
         #calc iterations of Brightness
         self.__runSunsetLoop = True
-        self.t = threading.Thread(target=self.ledSunsetLoop)
+        self.t = threading.Thread(target=self.__sunsetLoop)
         self.t.start()
 
-    def ledSunsetLoop(self):
+    def __sunsetLoop(self):
         self.t = threading.currentThread()
 
         iterations = self.__sunsetTime / (self.__cycletimeMs / 1000)
@@ -117,9 +106,9 @@ class Light():
         
         while self.__runSunsetLoop:
             
-            rTmp = rTmp + (self.color[0] / iterations * 4)
-            gTmp = gTmp + (self.color[1] / iterations)
-            bTmp = bTmp + (self.color[2] / iterations)
+            rTmp = rTmp + (self.__color[0] / iterations * 4)
+            gTmp = gTmp + (self.__color[1] / iterations)
+            bTmp = bTmp + (self.__color[2] / iterations)
             aTmp = self.__brightness
 
             if self.debugMode:

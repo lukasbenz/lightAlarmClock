@@ -15,7 +15,7 @@ class AlarmClock():
     __snoozeState = False
     __sunsetState = False
     __alarmClockState = False
-    __alarmActive = False
+    __alarmActiveState = False
 
     def __init__(self):
         print("init alarmClock and start loop")
@@ -78,13 +78,13 @@ class AlarmClock():
         #print("get sunsetTime: " + str(self.sunsetTime))
         return self.sunsetTime
 
-    def setSunsetActive(self, _input):
-        self.sunsetState = bool(_input)
-        print("set SunsetState: " + str(self.alarmState))
+    def setSunsetOff(self, _input):
+        self.__sunsetState = False
+        print("set SunsetState: " + str(self.__sunsetState))
 
     def getSunsetActive(self):
         #print("get SunsetState: " + str(self.alarmState))
-        return self.sunsetActive
+        return self.__sunsetState
 
     def setAlarmOn(self):
         self.alarmState = True
@@ -119,12 +119,12 @@ class AlarmClock():
         return self.snoozeState
 
     def setAlarmActiveOff(self,_input):
-        self.alarmActive = bool(_input)
-        print("set alarmActive: " + str(self.alarmActive))
+        self.__alarmActiveState = bool(_input)
+        print("set alarmActive: " + str(self.__alarmActiveState))
 
-    def getAlarmActive(self):
-        #print("get alarmActive: " + str(self.alarmActive))
-        return self.alarmActive
+    def getAlarmActiveState(self):
+        #print("get alarmActive: " + str(self.__alarmActiveState))
+        return self.__alarmActiveState
 
     def procActTimeAndDate(self):
         timezone = pytz.timezone('Europe/Berlin')
@@ -147,7 +147,7 @@ class AlarmClock():
                 if(str(sunsetStartTime) == self.currentTime):
                     self.sunsetActive = True
                 if(self.wakeUpTime == self.currentTime):
-                    self.alarmActive = True
+                    self.__alarmActiveState = True
 
             time.sleep(1.0)
 

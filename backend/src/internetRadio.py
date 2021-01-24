@@ -10,6 +10,7 @@ class InternetRadio():
     player=instance.media_player_new()
     stationIndex = 1
 
+    stationName = ""
     switchRadioStations = {
             1: "DASDING",
             2: "YOU FM",
@@ -75,3 +76,6 @@ class InternetRadio():
             print("stop internet radio")
         else:
             print("internet radio is already stopped")
+
+    def __changeRadioStation(self):
+        pass

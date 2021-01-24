@@ -28,61 +28,67 @@ light = Light(arduinoConnection)
 
 
 ################## config ##################
-def loadConfig(self):
+def loadConfig():
     dir = os.path.dirname(__file__)
     print("work dir: " + dir)
     print("load config:")
     with open(dir + '/config.json') as json_file:
         data = json.load(json_file)
 
-        self.alarmClock.setWakeUpTime(data["wakeUpTime"])
-        self.alarmClock.setSunsetTime(data["sunsetTime"])
-        self.alarmClock.setAlarmState(data["alarmState"])
-        self.internetRadio.setRadioStation(data["radioStation"])
-        self.systemSettings.setVolume(data["volume"])
-        self.systemSettings.setDispBright(data["displayBrightness"])
-        self.light.setBrightness(data["lightBrightness"]),  
-        if(data["useLedStripe"]):
-            self.light.turnLedStripeOn()
+        alarmClock.setWakeUpTime(data["wakeUpTime"])
+        alarmClock.setSunsetTime(data["sunsetTime"])
+        
+        if(data["alarmState"]):
+            alarmClock.setAlarmOn()
         else:
-            self.light.turnLedStripeOff()
+            alarmClock.setAlarmOff()
 
-def saveConfig(self):
-        self.tConfig = threading.currentThread()
-        while self.runConfigThread:
-            jsonData = {
-                "wakeUpTime": self.alarmClock.getWakeUpTime(),
-                "sunsetTime": self.alarmClock.getSunsetTime(),
-                "alarmState": self.alarmClock.getAlarmState(),
-                "radioStation": self.internetRadio.getRadioStation(),
-                "volume": self.systemSettings.getVolume(),
-                "displayBrightness": self.systemSettings.getDispBright(),
-                "lightBrightness": self.light.getBrightness(),    
-                "useLedStripe": self.light.getLedStripeState()  
-                }
+        internetRadio.setRadioStation(data["radioStation"])
+        systemSettings.setVolume(data["volume"])
+        systemSettings.setDispBright(data["displayBrightness"])
+        light.setBrightness(data["lightBrightness"]),  
+        
+        if(data["useLedStripe"]):
+            light.turnLedStripeOn()
+        else:
+            light.turnLedStripeOff()
 
-            with open('config.json', 'w') as outfile:
-                json.dump(jsonData, outfile)
-                #print("save JsonFile to disk")
+def saveConfig():
+    tConfig = threading.currentThread()
+    while runConfigThread:
+        jsonData = {
+        "wakeUpTime": alarmClock.getWakeUpTime(),
+        "sunsetTime": alarmClock.getSunsetTime(),
+        "alarmState": alarmClock.getAlarmState(),
+        "radioStation": internetRadio.getRadioStation(),
+        "volume": systemSettings.getVolume(),
+        "displayBrightness": systemSettings.getDispBright(),
+        "lightBrightness": light.getBrightness(),    
+        "useLedStripe": light.getLedStripeState()  
+        }
+
+        with open('config.json', 'w') as outfile:
+            json.dump(jsonData, outfile)
+            #print("save JsonFile to disk")
             
-            time.sleep(5)
+        time.sleep(5)
 
 ################## handle Alarm ##################
-def handleAlarm(self):
-    self.tAlarm = threading.currentThread()
-    while self.runAlarmThread:
+def handleAlarm():
+    tAlarm = threading.currentThread()
+    while runAlarmThread:
         #start Sunset
-        if(self.alarmClock.getSunsetActive() == True):
-            self.light.setSunsetTime(self.alarmClock.getSunsetTime())
-            self.alarmClock.setSunsetActive(False)
-            self.light.startSunset()
-
+        if(alarmClock.getSunsetActive() == True):
+            light.setSunsetTime(alarmClock.getSunsetTime())
+            light.startSunset()
+            alarmClock.setSunsetActive(False)
+            
         #start Radio on Alarm
-        if(self.alarmClock.getAlarmActive() == True):
-            self.internetRadio.play()
-            self.light.turnLightOn()
+        if(alarmClock.getAlarmActiveState() == True):
+            internetRadio.play()
+            light.turnLightOn()
             time.sleep(2)
-            self.alarmClock.setAlarmActive(False)
+            alarmClock.setAlarmActive(False)
 
         time.sleep(1)
 
@@ -204,7 +210,7 @@ def alarmActiveOff():
 def alarmActiveState():
     if request.method == 'GET':
         return jsonify({
-            'state': alarmClock.getAlarmActive()
+            'state': alarmClock.getAlarmActiveState()
             })
 
 
@@ -372,14 +378,6 @@ def getDispState():
             return jsonify({
             'value': systemSettings.getDispState()
             })
-
-
-
-
-
-
-
-
 
 # try:
 app.run()
