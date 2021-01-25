@@ -102,7 +102,7 @@ class Light():
         self.t = threading.Thread(target=self.__sunsetLoop)
         self.t.start()
 
-    def startStartLoop(self):
+    #def startWelcomeLoop(self):
 
         self.timeoutMainLoop = time.time() + self.__startLoopSec
         print("Sunsest Loop started for " + str(self.__startLoopSec) + "sec")
@@ -138,7 +138,7 @@ class Light():
             
             time.sleep(self.__cycletimeMs/1000)
 
-    def __startLoop(self):
+    #def __startLoop(self):
         self.tStartLoop = threading.currentThread()
 
         iterations = self.__startLoopSec / (self.__cycletimeMs / 1000)
