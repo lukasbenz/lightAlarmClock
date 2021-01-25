@@ -20,21 +20,20 @@ class SystemSettings():
         return self.__volume
 
     def setVolume(self,_input): 
-        self.__volume = _input
+        self.__volume = int(_input)
         print("set Volume: " + str(self.__volume))
 
-    def mute(self):
+    def muteOn(self):
         self.__mute = True
-        print("Mute ON")
+        print("Mute System ON")
 
-    def unmute(self):
+    def muteOff(self):
         self.__mute = False
-        print("Mute OFF")
+        print("Mute System OFF")
 
     def getMuteState(self):
         #print("get mute State: " + str(self.__mute))
         return self.__mute
-
 
     #DISPLAY
     def getDispBright(self):
@@ -42,16 +41,17 @@ class SystemSettings():
         return self.__displayBrightness
 
     def setDispBright(self,_input): 
-        self.__displayBrightness = _input
-        print("set DisplayBrightness: " + str(self.__displayBrightness))
+        self.__displayBrightness = int(_input)
         self.arduinoConnection.writeData("<display," + str(self.__displayBrightness) + ">")
 
     def setDispOn(self):
         self.__displayOff = False
+        self.arduinoConnection.writeData("<display," + str(self.__displayBrightness) + ">")
         print("turn Display On")
 
     def setDispOff(self): 
         self.__displayOff = True
+        self.arduinoConnection.writeData("<display,0>")
         print("turn Display Off")
 
     def getDispState(self):

@@ -10,18 +10,18 @@ url = 'http://127.0.0.1:5000/api/'
 class ArduinoConnection():
     debugMode = False
     __runRecLoop = False
-    s = None
-    
+        
     def __init__(self):        
         try:
             self.s = serial.Serial('/dev/ttyACM0', 9600)
             self.s.flushInput()
             print("init ArduinoConnection class")
-            self.__startRecLoop()
+            self.startRecLoop()
+
         except:
             print("EXCEPTION ERROR init serial - no Arduino available")
 
-    def __startRecLoop(self):
+    def startRecLoop(self):
         print("start recLoop with arduino")
         self.__runRecLoop = True
         self.t = threading.Thread(target=self.__recLoop)
@@ -33,47 +33,53 @@ class ArduinoConnection():
             try:
                 rawData = self.s.readline()
                 rawData.strip()
-                rawData =""
+
                 if(self.debugMode):
-                    #print("rawRecData:" + str(rawData))
+                    print("rawRecData:" + str(rawData))
                     pass
 
                 inputSplit = rawData(",")
 
+                #use encoder so control system Volume
                 if(inputSplit[0] == "enc"):
                         if(inputSplit[1] == "pressed"): #mute
-                            if(self.__mute):
-                                print("unmute")
-                            else:
-                                print("mute")            
+                            response = requests.get(url+'system/volume/mute/state')
+                            json_data = json.loads(response.text)  
+                            if response.status_code == 200:
+                                if(json_data['state']): #if TRUE system ist muted - so unmute it
+                                        requests.post(url+'system/volume/mute/off')
+                                else: #if FALSE system is unmuted - so mute it
+                                        requests.post(url+'system/volume/mute/on')         
                         
+
                         elif(inputSplit[1] == "posEdge"): #set volume
                             self.__volume += 1
                             self.__volume = np.clip(self.__volume, 0, 100)
-                            print("set system volume to: " + str(self.__volume))
-                        
+                            data = {'value': self.__volume}
+                            requests.post(url+'system/volume', json=data)
+
+
                         elif(inputSplit[1] == "negEdge"): #set volume
                             self.__volume -= 1
                             self.__volume = np.clip(self.__volume, 0, 100)
-                            print("set system volume to: " + str(self.__volume))
-
+                            data = {'value': self.__volume}
+                            requests.post(url+'system/volume', json=data)
                         else:
                             print("unknown enc command from arduino")
                     
-                # light ON/OFF    
+
+                # use main Button to turn light ON/OFF    
                 elif(inputSplit[0] == "mainBtn"):
-                    if(self.__state == True):
-                        #self.turnLightOff()
-                        #self.__state = False
-                        print("turn light off")
-                    else:
-                        #self.turnLightOn()
-                        #self.__state = True
-                        print("turn light on")
-                
+                    response = requests.get(url+'light/state')
+                    json_data = json.loads(response.text)  
+                    if response.status_code == 200:
+                        if(json_data['state']): #if TRUE light is ON - so turn it off
+                                requests.post(url+'light/off')
+                        else: #if FALSE light is OFF - so turn it on
+                                requests.post(url+'light/on')         
+                                         
             except:
                 print("EXCEPTION ERROR in recLoop")
-    
     
     def writeData(self,string):
         try:
@@ -86,4 +92,4 @@ class ArduinoConnection():
         self.__runRecLoop = False
         if self.t.joinable():
             self.t.join()
-        print("close serial")
+        print("close serial arduino connection")

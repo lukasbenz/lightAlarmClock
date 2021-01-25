@@ -9,8 +9,8 @@ def limit(num, minimum=0, maximum=255):
 
 class Light():
     debugMode = True
-    __state = False
-    __useLedStripe = True
+    __lightstate = False
+    __ledStripeState = True
     __sunsetTime = 10
     __brightness = 100
     __runSunsetLoop = False
@@ -18,7 +18,8 @@ class Light():
     __startLed = 0
     __endLed = 146
     __color=(255,120,10)
-
+    __startLoopSec = 2
+    
     def __init__(self,arduinoConnection):     
         self.arduinoConnection = arduinoConnection   
         print("init Light class")
@@ -28,57 +29,60 @@ class Light():
         print("set Light On")
         self.__color=(255,120,10) 
         self.__accessPixel()
-        self.__state = True
+        self.__lightstate = True
         
     def turnLightOff(self):
         print("set Light Off")
         self.__color=(0,0,0) 
         self.__accessPixel()
-        self.__state = False
+        self.__lightstate = False
 
     def getLightState(self):
-        #print("get Light state: " + str(self.__state))
-        return self.__state
+        #print("get Light state: " + str(self.__lightstate))
+        return self.__lightstate
 
     def getBrightness(self):
         #print("get Light brightness: " + str(self.__brightness))
         return self.__brightness
 
     def setBrightness(self,_input): 
-        self.__brightness = _input
+        self.__brightness = int(_input)
         print("set Light brightness: " + str(self.__brightness))
 
-    def setSunsetTime(self,_input):
-        self.sunsetTime = _input
-        print("set sunsetTime: " + str(self.__sunsetTime))
-    
-    def getSunsetTime(self):
-        #print("get sunsetTime: " + str(self.sunsetTime))
-        return self.__sunsetTime
+        #if light already on change brightness
+        if(self.__lightstate):
+            self.__accessPixel()
 
+    def setSunsetTime(self,_input):
+        self.sunsetTimeSeconds = _input*60
+        print("set sunsetTime: " + str(self.sunsetTimeSeconds))
+    
     def turnLedStripeOn(self):
-        self.__useLedStripe = True
+        self.__ledStripeState = True
         self.__endLed = 146
         print("set LED Stripe On")
 
+        if(self.__lightstate):
+            self.__accessPixel()
+
     def turnLedStripeOff(self):
-        self.__useLedStripe = False
+        self.__ledStripeState = False
         self.__endLed = 27
         print("set LED Stripe Off")
 
+        if(self.__lightstate):
+            self.__accessPixel()
+            
     def getLedStripeState(self):
-        #print("get LED Stripe state: " + str(self.__useLedStripe))
-        return self.__useLedStripe
+        #print("get LED Stripe state: " + str(self.__ledStripeState))
+        return self.__ledStripeState
 
     def __accessPixel(self):
-        
-        brightnessConverted = np.interp(self.__brightness,[0,100],[255,1])
-        print("bright converted" + str(brightnessConverted))
-        print("raw: " + str(self.__brightness))
+        brightnessConverted = np.interp(self.__brightness,[0,100],[0.1,1])
 
-        r = limit(int(round(self.__color[0] / brightnessConverted)))
-        g = limit(int(round(self.__color[1] / brightnessConverted)))
-        b = limit(int(round(self.__color[2] / brightnessConverted)))
+        r = limit( round(self.__color[0] * brightnessConverted) ) 
+        g = limit( round(self.__color[1] * brightnessConverted) ) 
+        b = limit( round(self.__color[2] * brightnessConverted) ) 
         
         if self.debugMode:            
             print("r: "+str(r))
@@ -89,14 +93,25 @@ class Light():
         self.arduinoConnection.writeData("<led," + str(r) + "," + str(g) + "," + str(b) + "," + str(self.__startLed) + "," + str(self.__endLed) + ">")
 
     def startSunset(self):
-        self.timeout = time.time() + self.__sunsetTime #conv to seconds
+        self.timeout = time.time() + self.sunsetTimeSeconds #conv to seconds
 
-        print("Sunsest Loop started for " + str(self.__sunsetTime) + "sec")
+        print("Sunsest Loop started for " + str(self.sunsetTimeSeconds) + "sec")
         
         #calc iterations of Brightness
         self.__runSunsetLoop = True
         self.t = threading.Thread(target=self.__sunsetLoop)
         self.t.start()
+
+
+    def startStartLoop(self):
+
+        self.timeoutMainLoop = time.time() + self.__startLoopSec
+        print("Sunsest Loop started for " + str(self.__startLoopSec) + "sec")
+
+        #calc iterations of Brightness
+        self.__runStartLoop = True
+        self.tStartLoop = threading.Thread(target=self.__startLoop)
+        self.tStartLoop.start()
 
     def __sunsetLoop(self):
         self.t = threading.currentThread()
@@ -106,7 +121,6 @@ class Light():
         if self.debugMode:
             print("iterations: " + str(iterations))
         
-        aTmp = 0.0 
         rTmp = 0.0 
         gTmp = 0.0
         bTmp = 0.0
@@ -116,27 +130,40 @@ class Light():
             rTmp = rTmp + (self.__color[0] / iterations * 4)
             gTmp = gTmp + (self.__color[1] / iterations)
             bTmp = bTmp + (self.__color[2] / iterations)
-            aTmp = self.__brightness
-
-            if self.debugMode:
-                print("rTmp: "+str(rTmp))
-                print("gTmp: "+str(gTmp))
-                print("bTmp: "+str(bTmp))
-                print("aTmp: "+str(aTmp))
-
-            #for i in range(self.__countLEDs):
-            self.__accessPixel(rTmp,gTmp,bTmp,aTmp,self.startLed,self.endLed)
             
-            if self.debugMode:
-                print("r: "+str(self.r))
-                print("g: "+str(self.g))
-                print("b: "+str(self.b))
-                print("a: "+str(aTmp))
+            self.__accessPixel()
 
             if(time.time() >= self.timeout):
                 print("sunset Loop closed")
                 break
             
+            time.sleep(self.__cycletimeMs/1000)
+
+
+    def __startLoop(self):
+        self.tStartLoop = threading.currentThread()
+
+        iterations = self.__startLoopSec / (self.__cycletimeMs / 1000)
+            
+        if self.debugMode:
+            print("iterations: " + str(iterations))
+            
+        rTmp = 0.0 
+        gTmp = 0.0
+        bTmp = 0.0
+            
+        while self.__runSunsetLoop:
+                
+            rTmp = rTmp + (self.__color[0] / iterations)
+            gTmp = gTmp + (self.__color[1] / iterations)
+            bTmp = bTmp + (self.__color[2] / iterations)
+                
+            self.__accessPixel()
+
+            if(time.time() >= self.timeoutMainLoop):
+                print("sunset Loop closed")
+                break
+                
             time.sleep(self.__cycletimeMs/1000)
 
     def close(self):

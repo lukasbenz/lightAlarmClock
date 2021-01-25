@@ -8,7 +8,7 @@ import threading
 class AlarmClock():
 
     wakeUpTime = "00:00:00"
-    sunsetTime = 30
+    sunsetTime = "30"
     snoozeTime = 10
 
     # init private Values
@@ -60,6 +60,7 @@ class AlarmClock():
         year = self.currentDate[:4]
 
         resultStr = dayReadable + ", " + dayDate + ". " + monthReadable + " " + year
+        
         return resultStr
 
     def setWakeUpTime(self,_input): 
@@ -72,7 +73,7 @@ class AlarmClock():
 
     def setSunsetTime(self,_input):
         self.sunsetTime = _input
-        print("set sunsetTime: " + str(self.sunsetTime))
+        print("set sunsetTime: " + self.sunsetTime)
     
     def getSunsetTime(self):
         #print("get sunsetTime: " + str(self.sunsetTime))
@@ -108,11 +109,11 @@ class AlarmClock():
 
     def getSnoozeTime(self):
         #print("get sunsetTime: " + str(self.sunsetTime))
-        return self.snoozeTime
+        return str(self.snoozeTime)
 
     def setSnoozeTime(self, _input):
         self.snoozeTime = _input
-        print("set snoozeTime: " + str(self.snoozeTime))
+        print("set snoozeTime: " + self.snoozeTime)
 
     def getSnoozeState(self):
         #print("get snoozeState: " + str(self.snoozeState))
@@ -139,7 +140,7 @@ class AlarmClock():
         while self.runAlarmClock:
             self.procActTimeAndDate()
 
-            sunsetStartTime = datetime.strptime(self.wakeUpTime,"%H:%M:%S") - datetime.strptime(str(self.sunsetTime),"%M")
+            sunsetStartTime = datetime.strptime(self.wakeUpTime,"%H:%M:%S") - datetime.strptime(self.sunsetTime,"%M")
             #print("sunsetStart: " + str(sunsetStartTime))
             #print("curr Time: " + self.currentTime)
 

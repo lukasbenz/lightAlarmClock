@@ -20,51 +20,69 @@ class ScreenHome(Screen):
         def __init__(self,**kwargs):
                 super(ScreenHome, self).__init__(**kwargs)
                 
-        def enterPage(self,**kwargs):
-                
-                self.eventUpdateClock = Clock.schedule_interval(self.updateClock,1)
-                
+        def enterPage(self,**kwargs):  
+                self.eventUpdatePage = Clock.schedule_interval(self.updatePage,0.1)
+
+                #wakeup time
+                response = requests.get(url+'alarmClock/time')
+                json_data = json.loads(response.text)  
+                if response.status_code == 200:
+                        wakeUpTimeTmp = json_data['value']
+                        self.id_wakeUpTime.text = wakeUpTimeTmp[:-3]                          
+                else:
+                        self.id_wakeUpTime.text = 'err'
+                        
+                #alarm clock state
+                response = requests.get(url+'alarmClock/state')
+                json_data = json.loads(response.text)  
+                if response.status_code == 200:
+                        self.id_switch_wakeUpTime.active = json_data['state']
+                else:
+                        print(response)
+
+        def leavePage(self,**kwargs):
+                self.eventUpdatePage.cancel()
+
+        def updatePage(self, *args):
                 try:
-                        response = requests.get(url+'alarmClock/wakeUpTime')
+                        #time
+                        response = requests.get(url+'time')
                         json_data = json.loads(response.text)  
                         if response.status_code == 200:
-                                self.id_wakeUpTime.text = json_data['value'][:-3]
+                                self.id_clock.text = json_data['value']
                         else:
-                                self.id_wakeUpTime.text = "err"
-                                print(response)
+                                self.id_clock.text = "err"
 
-                        response = requests.get(url+'alarmClock/state')
+                        #date
+                        response = requests.get(url+'date')
                         json_data = json.loads(response.text)  
                         if response.status_code == 200:
-                                self.id_switch_wakeUpTime.active = json_data['state']
+                                self.id_date.text = json_data['value']
                         else:
-                                print(response)
+                                self.id_date.text = "err"
 
+
+                        #light state
                         response = requests.get(url+'light/state')
                         json_data = json.loads(response.text)  
                         if response.status_code == 200:
                                 self.id_switch_light.active = json_data['state']
                         else:
                                 print(response)
-                except:
-                        print("An exception occurred 1")
 
-        def leavePage(self,**kwargs):
-                self.eventUpdateClock.cancel()
-
-        def updateClock(self, *args):
-                try:
-                        response = requests.get(url+'alarmClock/dateTime')
+                        #muted
+                        response = requests.get(url+'system/volume/mute/state')
                         json_data = json.loads(response.text)  
                         if response.status_code == 200:
-                                self.id_clock.text = json_data['time']
-                                self.id_date.text = json_data['date']
+                                if(json_data['state'] == True):
+                                        self.id_muted.text = "MUTED"
+                                else:
+                                        self.id_muted.text = ""
+
                         else:
-                                print(response)
-                                self.id_clock.text = "err"
-                                self.id_date.text = "err"
+                                self.id_muted.text = "err"
                 except:
-                        print("An exception occurred 2")
+                        print("exception updating page")
 
         def switchAlarmClockCallback(self, switchObject, switchValue):
                 if(switchValue == True):
@@ -97,128 +115,126 @@ class ScreenDisplayOff(Screen):
                 super(ScreenDisplayOff, self).__init__(**kwargs)
                 
         def enterPage(self,**kwargs):
-                requests.post(url+'system/displayOff')           
+                requests.post(url+'system/display/off')           
 
         def leavePage(self,**kwargs):
-                requests.post(url+'system/displayOn') 
+                requests.post(url+'system/display/on') 
 
         def btnDisplayState(self, *args):
                 self.parent.current = "screenHomeID"
 
 class ScreenAlarmClock(Screen):
+
                 def __init__(self,**kwargs):
                         super(ScreenAlarmClock, self).__init__(**kwargs)
 
                 def enterPage(self,**kwargs):
-                        self.eventUpdateClock = Clock.schedule_interval(self.updateClock,1)
+                        self.eventUpdatePage = Clock.schedule_interval(self.updatePage,0.1)
 
-                        response = requests.get(url+'alarmClock/wakeUpTime')
+                def leavePage(self,**kwargs):
+                        self.eventUpdatePage.cancel()
+
+                def updatePage(self, *args):
+                        #time
+                        response = requests.get(url+'time')
                         json_data = json.loads(response.text)  
                         if response.status_code == 200:
-                                wakeUpTimeTmp = json_data['wakeUpTime'] 
-                                print(wakeUpTimeTmp)
-                                self.hours = int(wakeUpTimeTmp[:2])
-                                self.minutes = int(wakeUpTimeTmp[3:5]) 
-                                self.updateWakeUpTime()                            
+                                self.id_clock.text = json_data['value']
                         else:
-                                print(response)
+                                self.id_clock.text = "err"
+
+                        #wakeup time
+                        response = requests.get(url+'alarmClock/time')
+                        json_data = json.loads(response.text)  
+                        if response.status_code == 200:
+                                wakeUpTimeTmp = json_data['value'] 
+                                self.hours = int(wakeUpTimeTmp[:2])
+                                self.minutes = int(wakeUpTimeTmp[3:5])
+                                self.convertWakeUpTime()
+                                self.id_wakeUpTime.text = self.newWakeUpTime[:-3]                          
+                        else:
                                 self.id_wakeUpTime.text = 'err'
 
+                        #sunset time
                         response = requests.get(url+'alarmClock/sunsetTime')
                         json_data = json.loads(response.text)  
                         if response.status_code == 200:
-                                self.sunsetMinutes = int(json_data['sunsetTime'])
-                                self.updateSunsetTime()                            
+                                self.sunsetMinutes = int(json_data['value'])
+                                self.displaySunsetTime()                           
                         else:
-                                print(response)
                                 self.id_sunsetTime.text = 'err'
 
-                def leavePage(self,**kwargs):
-                        self.eventUpdateClock.cancel()
-
-                def updateClock(self, *args):
-                        response = requests.get(url+'alarmClock/dateTime')
-                        json_data = json.loads(response.text)  
-                        if response.status_code == 200:
-                                self.id_clock.text = json_data['time']
-                        else:
-                                print(response)
-                                self.id_clock.text = "err"
-
-                def updateWakeUpTime(self):
+                def convertWakeUpTime(self):
                         if(self.hours<10):
                                 strHours = '0' + str(self.hours)
                         else:
-                              strHours = str(self.hours)
-                        
+                                strHours = str(self.hours)
+                                
                         if(self.minutes<10):
                                 strMinutes = '0' + str(self.minutes)
                         else:
-                              strMinutes = str(self.minutes)
-                             
-                        newWakeUpTime = strHours + ":" + strMinutes + ":00"
-                        self.id_wakeUpTime.text = newWakeUpTime[:-3]
+                                strMinutes = str(self.minutes)
+                                
+                        self.newWakeUpTime = strHours + ":" + strMinutes + ":00"
 
-                        data = {'wakeUpTime': newWakeUpTime}
-                        r = requests.post(url+'alarmClock/wakeUpTime', json=data)           
-                        print("RESPONSE")
-                        print(r)
-                                        
-                def updateSunsetTime(self):
+                def sendWakeUpTime(self):
+                        data = {'value': self.newWakeUpTime}
+                        r = requests.post(url+'alarmClock/time', json=data)           
 
+                def displaySunsetTime(self):
                         if(self.sunsetMinutes<10):
                                 strMinutes = '0' + str(self.sunsetMinutes)
                         else:
                               strMinutes = str(self.sunsetMinutes)
-                             
-                        newSunsetTime = strMinutes
-                        self.id_sunsetTime.text = newSunsetTime + " min"
-
-                        data = {'sunsetTime': newSunsetTime*60} # convert to seconds
-                        r = requests.post(url+'alarmClock/sunsetTime', json=data)           
-                        print("RESPONSE")
-                        print(r)
+                
+                        self.id_sunsetTime.text = strMinutes + " min"
 
                 def btn_wakeUpHoursTimeUp(self, *args):
                         self.hours += 1
 
                         if(self.hours>23):
                                 self.hours = 0
-                        self.updateWakeUpTime()
-                               
+
+                        self.convertWakeUpTime()
+                        self.sendWakeUpTime()
+
                 def btn_wakeUpHoursTimeDown(self, *args):
                         self.hours -= 1
 
                         if(self.hours<0):
                                 self.hours = 23                    
-                        self.updateWakeUpTime()
+                        self.convertWakeUpTime()
+                        self.sendWakeUpTime()
 
                 def btn_wakeUpMinutesTimeUp(self, *args):
                         self.minutes += 1
                         if(self.minutes>59):
                                 self.minutes = 0
-                        self.updateWakeUpTime()
+                        self.convertWakeUpTime()
+                        self.sendWakeUpTime()
 
                 def btn_wakeUpMinutesTimeDown(self, *args):
                         self.minutes -= 1
                         if(self.minutes<0):
                                 self.minutes = 59
-                        self.updateWakeUpTime()
+                        self.convertWakeUpTime()
+                        self.sendWakeUpTime()
 
                 def btn_SunlightMinutesTimeUp(self, *args):
                         self.sunsetMinutes += 5
                         if(self.sunsetMinutes>60):
                                 self.sunsetMinutes = 0
-                        self.updateSunsetTime()
+                        data = {'value': str(self.sunsetMinutes)}
+                        r = requests.post(url+'alarmClock/sunsetTime', json=data)
 
                 def btn_SunlightMinutesTimeDown(self, *args):
                         self.sunsetMinutes -= 5
                         if(self.sunsetMinutes<0):
                                 self.sunsetMinutes = 60
-                        self.updateSunsetTime()
+                        data = {'value': str(self.sunsetMinutes)}
+                        r = requests.post(url+'alarmClock/sunsetTime', json=data)
          
                 def btn_backHome(self, *args):
-
                         self.parent.current = "screenHomeID"
 
 class ScreenRadio(Screen):
@@ -227,9 +243,23 @@ class ScreenRadio(Screen):
                         super(ScreenRadio, self).__init__(**kwargs)
                         
                 def enterPage(self, *args):
-                        self.eventUpdateClock = Clock.schedule_interval(self.updateClock,1)
-
+                        self.eventUpdatePage = Clock.schedule_interval(self.updatePage,0.1)
                         self.updateRadioInfo()
+
+
+                def leavePage(self,**kwargs):
+                        self.eventUpdatePage.cancel()
+
+                def updatePage(self, *args):
+                        #time
+                        response = requests.get(url+'alarmClock/time')
+                        json_data = json.loads(response.text)  
+                        if response.status_code == 200:
+                                self.id_clock.text = json_data['value']
+                        else:
+                                self.id_clock.text = "err"
+
+                        #Volume
                         response = requests.get(url+'system/volume')
                         json_data = json.loads(response.text)  
                         if response.status_code == 200:
@@ -238,29 +268,27 @@ class ScreenRadio(Screen):
                                 print(response)
                                 self.id_wakeUpTime.text = 'err'
 
-                def leavePage(self,**kwargs):
-                        self.eventUpdateClock.cancel()
-
-                def updateClock(self, *args):
-                        response = requests.get(url+'alarmClock/dateTime')
+                        #muted
+                        response = requests.get(url+'system/volume/mute/state')
                         json_data = json.loads(response.text)  
                         if response.status_code == 200:
-                                self.id_clock.text = json_data['time']
+                                if(json_data['state'] == True):
+                                        self.id_muted.text = "MUTED"
+                                else:
+                                        self.id_muted.text = ""
                         else:
-                                print(response)
-                                self.id_clock.text = "err"
+                                self.id_muted.text = "err"
 
                 def updateRadioInfo(self,**kwargs):
                         response = requests.get(url+'radio/stationName')
                         json_data = json.loads(response.text)  
                         if response.status_code == 200:
-                                self.id_label_radio_info.text = json_data['name']
-                                self.id_image.source = 'radioImages/' + json_data['name'] + '.png'                                
+                                self.id_label_radio_info.text = json_data['value']
+                                self.id_image.source = 'radioImages/' + json_data['value'] + '.png'                                
                         else:
                                 print(response)
-                                self.id_wakeUpTime.text = 'err'
+                                self.id_label_radio_info.text = 'err'
 
-                        
                 def btn_back(self, *args):
                         requests.post(url+'radio/prevStation')  
                         self.updateRadioInfo()
@@ -282,17 +310,17 @@ class ScreenRadio(Screen):
                         print("btn_next")
 
                 def btn_mute(self, *args):
-                        self.id_slider_volume.value = 0
-                        data = {'value': 0}
-                        r = requests.post(url+'system/volume', json=data)           
-                        print("RESPONSE")
-                        print(r)  
+                        response = requests.get(url+'system/volume/mute/state')
+                        json_data = json.loads(response.text)  
+                        if response.status_code == 200:
+                                if(json_data['state']): #if TRUE system ist muted - so unmute it
+                                        requests.post(url+'system/volume/mute/off')
+                                else: #if FALSE system is unmuted - so mute it
+                                        requests.post(url+'system/volume/mute/on')
 
                 def slider_volume_value(self, value):  
                         data = {'value': int(value)}
                         r = requests.post(url+'system/volume', json=data)           
-                        print("RESPONSE")
-                        print(r)
                         
                 def btn_backHome(self, *args):
                         self.parent.current = "screenHomeID"
@@ -303,9 +331,9 @@ class ScreenSettings(Screen):
                         super(ScreenSettings, self).__init__(**kwargs)
 
                 def enterPage(self, **kwargs):
-                        self.eventUpdateClock = Clock.schedule_interval(self.updateClock,1)
+                        self.eventUpdatePage = Clock.schedule_interval(self.updatePage,1)
 
-                        response = requests.get(url+'system/displayBrightness')
+                        response = requests.get(url+'system/display/brightness')
                         json_data = json.loads(response.text)  
                         if response.status_code == 200:
                                 self.id_slider_display.value = json_data['value']
@@ -334,29 +362,27 @@ class ScreenSettings(Screen):
                                 print(response)
           
                 def leavePage(self,**kwargs):
-                        self.eventUpdateClock.cancel()
+                        self.eventUpdatePage.cancel()
 
-
-                def updateClock(self, *args):
-                        response = requests.get(url+'alarmClock/dateTime')
+                def updatePage(self, *args):
+                        #time
+                        response = requests.get(url+'time')
                         json_data = json.loads(response.text)  
                         if response.status_code == 200:
-                                self.id_clock.text = json_data['time']
+                                self.id_clock.text = json_data['value']
                         else:
                                 print(response)
                                 self.id_clock.text = "err"
 
                 def slider_light_value(self, value):  
-                        data = {'value': int(value)}
+                        data = {'value': value}
                         r = requests.post(url+'light/brightness', json=data)           
-                        print("RESPONSE")
-                        print(r)
+
 
                 def slider_display_value(self, value):  
-                        data = {'value': int(value)}
-                        r = requests.post(url+'system/displayBrightness', json=data)           
-                        print("RESPONSE")
-                        print(r)
+                        data = {'value': value}
+                        r = requests.post(url+'system/display/brightness', json=data)           
+
 
                 def switch_ledStripe_callback(self, switchObject, switchValue): 
                         if(switchValue == True):
@@ -395,17 +421,14 @@ class ScreenAlarmActive(Screen):
                         self.id_clock.text = "err"
                         self.id_date.text = "err"
 
-        def btnExtend(self, *args):
+        def btnSnooze(self, *args):
                 data = {'state': 1}
                 r = requests.post(url+'alarmClock/snoozeMode', json=data)           
-                print("RESPONSE")
-                print(r)
 
                 self.parent.current = "screenHomeID"
 
         def btnStop(self, *args):
                 self.parent.current = "screenHomeID"
- 
  
 class VisuAlarmClock(App):   
 

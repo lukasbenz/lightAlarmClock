@@ -18,14 +18,14 @@ log = logging.getLogger('werkzeug')
 log.setLevel(logging.ERROR)
 
 app = flask.Flask(__name__)
-app.config["DEBUG"] = True
+
 
 arduinoConnection = ArduinoConnection()
+
 alarmClock = AlarmClock()
 internetRadio = InternetRadio()
 systemSettings = SystemSettings(arduinoConnection)
 light = Light(arduinoConnection)
-
 
 ################## config ##################
 def loadConfig():
@@ -60,14 +60,15 @@ def saveConfig():
         "wakeUpTime": alarmClock.getWakeUpTime(),
         "sunsetTime": alarmClock.getSunsetTime(),
         "alarmState": alarmClock.getAlarmState(),
-        "radioStation": internetRadio.getRadioStation(),
+        "radioStation": internetRadio.getRadioStationName(),
         "volume": systemSettings.getVolume(),
         "displayBrightness": systemSettings.getDispBright(),
         "lightBrightness": light.getBrightness(),    
         "useLedStripe": light.getLedStripeState()  
         }
 
-        with open('config.json', 'w') as outfile:
+        dir = os.path.dirname(__file__)
+        with open(dir + '/config.json', 'w') as outfile:
             json.dump(jsonData, outfile)
             #print("save JsonFile to disk")
             
@@ -91,38 +92,34 @@ def handleAlarm():
 
         time.sleep(1)
 
-
-################## start save config Thread ##################
-loadConfig()
-runConfigThread = True
-tConfig = threading.Thread(target=saveConfig)
-tConfig.start()
-
-################## start alarm handle thread ##################
-runAlarmThread = True
-tAlarm = threading.Thread(target=handleAlarm)
-tAlarm.start()
-
-
 ############################################ APLICATION PROGRAMMING INTERFACE ############################################
 
-################## ALARM CLOCK ##################
-@app.route('/api/alarmClock/dateTime', methods = ['GET'])
-def timeAndDate():
+################## SYSTEM TIME / DATE ##################  
+@app.route('/api/time', methods = ['GET'])
+def getTime():
     if request.method == 'GET':
         return jsonify({
-                'time': alarmClock.getTime(),
-                'date': alarmClock.getDate()
+                'value': alarmClock.getTime()
             })
-            
-@app.route('/api/alarmClock/wakeUpTime', methods = ['GET','POST'])
+
+@app.route('/api/date', methods = ['GET'])
+def getDate():
+    if request.method == 'GET':
+        return jsonify({
+                'value': alarmClock.getDate()
+            })
+
+
+################## ALARM CLOCK ##################         
+@app.route('/api/alarmClock/time', methods = ['GET','POST'])
 def wakeUpTime():
     if request.method == 'GET':
         return jsonify({
             'value': alarmClock.getWakeUpTime()
             })        
     elif request.method == 'POST':
-        alarmClock.setWakeUpTime(request.get_json(['value']))
+
+        alarmClock.setWakeUpTime(request.get_json()['value'])
         return jsonify({
                      'value': alarmClock.getWakeUpTime()
             })
@@ -134,7 +131,7 @@ def sunsetTime():
             'value': alarmClock.getSunsetTime()
             })
     elif request.method == 'POST':
-        alarmClock.setSunsetTime(request.get_json(['value']))
+        alarmClock.setSunsetTime(request.get_json()['value'])
         return jsonify({
             'value': alarmClock.getSunsetTime()
             })
@@ -189,10 +186,10 @@ def SnoozeModeState():
 def SnoozeTime():
     if request.method == 'GET':
         return jsonify({
-            'value': alarmClock.setSnoozeTime()
+            'value': alarmClock.getSnoozeTime()
             })        
     elif request.method == 'POST':
-        alarmClock.setWakeUpTime(request.get_json(['value']))
+        alarmClock.setSnoozeTime(request.get_json(['value']))
         return jsonify({
                      'value': alarmClock.getSnoozeTime()
             })
@@ -212,13 +209,12 @@ def alarmActiveState():
             'state': alarmClock.getAlarmActiveState()
             })
 
-
 ################## RADIO STATION ##################
 @app.route('/api/radio/stationName', methods = ['GET','POST'])
 def radioStationName():
     if request.method == 'GET':
         return jsonify({
-            'state': internetRadio.getRadioStationInfo()
+            'value': internetRadio.getRadioStationName()
             })
 
 @app.route('/api/radio/nextStation', methods = ['GET','POST'])
@@ -226,7 +222,7 @@ def nextRadioStation():
     if request.method == 'POST':
         internetRadio.setNextRadioStation()
         return jsonify({
-            'state': internetRadio.getRadioStationInfo()
+            'value': internetRadio.getRadioStationName()
             })
 
 @app.route('/api/radio/prevStation', methods = ['GET','POST'])
@@ -234,7 +230,7 @@ def prevRadioStation():
     if request.method == 'POST':
         internetRadio.setNextRadioStation()
         return jsonify({
-            'state': internetRadio.getRadioStationInfo()
+            'value': internetRadio.getRadioStationName()
             })
 
 @app.route('/api/radio/play', methods = ['GET','POST'])
@@ -269,7 +265,7 @@ def lightBrightness():
             'value': light.getBrightness()
             })
     elif request.method == 'POST':
-        light.setBrightness(request.get_json(['value']))
+        light.setBrightness(request.get_json()['value'])
         return jsonify({
             'value': light.getBrightness()
             })
@@ -300,18 +296,25 @@ def getLightState():
 @app.route('/api/light/ledStripe/on', methods = ['GET','POST'])
 def setLedStripeOn():
     if request.method == 'POST':
-        return light.turnLedStripeOn()
+        light.turnLedStripeOn()
+        return jsonify({
+            'state': light.getLedStripeState()
+            })
 
 @app.route('/api/light/ledStripe/off', methods = ['GET','POST'])
 def setLedStripeOff():
     if request.method == 'POST':
-        return light.turnLedStripeOff()
+        light.turnLedStripeOff()
+        return jsonify({
+            'state': light.getLedStripeState()
+            })
 
 @app.route('/api/light/ledStripe/state', methods = ['GET','POST'])
 def getLedStripeState():
     if request.method == 'GET':
-        return jsonify(light.getLedStripeState())
-
+        return jsonify({
+            'state': light.getLedStripeState()
+            })
 
 ################## VOLUME ##################
 @app.route('/api/system/volume', methods = ['GET','POST'])
@@ -321,7 +324,7 @@ def sysVolume():
             'value': systemSettings.getVolume()
             })
     elif request.method == 'POST':
-        systemSettings.getVolume(request.get_json(['value']))
+        systemSettings.setVolume(request.get_json()['value'])
         return jsonify({
             'value': systemSettings.getVolume()
             })
@@ -329,26 +332,25 @@ def sysVolume():
 @app.route('/api/system/volume/mute/on', methods = ['GET','POST'])
 def setSysMute():
     if request.method == 'POST':
-        systemSettings.mute()
+        systemSettings.muteOn()
         return jsonify({
-            'value': systemSettings.getMuteState()
+            'state': systemSettings.getMuteState()
             })
 
 @app.route('/api/system/volume/mute/off', methods = ['GET','POST'])
 def setSysUnmute():
     if request.method == 'POST':
-        systemSettings.unmute()
+        systemSettings.muteOff()
         return jsonify({
-            'value': systemSettings.getMuteState()
+            'state': systemSettings.getMuteState()
             })
 
 @app.route('/api/system/volume/mute/state', methods = ['GET','POST'])
 def getSysMuteState():
     if request.method == 'GET':
         return jsonify({
-            'value': systemSettings.getMuteState()
+            'state': systemSettings.getMuteState()
             })
-
 
 ################## DISPLAY ##################
 @app.route('/api/system/display/brightness', methods = ['GET','POST'])
@@ -358,7 +360,7 @@ def dispBrightness():
             'value': systemSettings.getDispBright()
             })
     elif request.method == 'POST':
-        systemSettings.setDispBright(request.get_json(['value']))
+        systemSettings.setDispBright(request.get_json()['value'])
         return jsonify({
             'value': systemSettings.getDispBright()
             })
@@ -383,11 +385,25 @@ def setDispOff():
 def getDispState():
     if request.method == 'GET':
             return jsonify({
-            'value': systemSettings.getDispState()
+            'state': systemSettings.getDispState()
             })
 
 
 # try:
+
+################## start save config Thread ##################
+loadConfig()
+runConfigThread = True
+tConfig = threading.Thread(target=saveConfig)
+tConfig.start()
+
+################## start alarm handle thread ##################
+runAlarmThread = True
+tAlarm = threading.Thread(target=handleAlarm)
+tAlarm.start()
+
+#try
+app.config["DEBUG"] = True
 app.run()
 # except KeyboardInterrupt:
 #     print('interrupted!')
