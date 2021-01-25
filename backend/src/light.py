@@ -12,7 +12,7 @@ class Light():
     __lightstate = False
     __ledStripeState = True
     __sunsetTime = 10
-    __brightness = 100
+    __brightness = 10
     __runSunsetLoop = False
     __cycletimeMs = 1000
     __startLed = 0
@@ -102,7 +102,6 @@ class Light():
         self.t = threading.Thread(target=self.__sunsetLoop)
         self.t.start()
 
-
     def startStartLoop(self):
 
         self.timeoutMainLoop = time.time() + self.__startLoopSec
@@ -139,7 +138,6 @@ class Light():
             
             time.sleep(self.__cycletimeMs/1000)
 
-
     def __startLoop(self):
         self.tStartLoop = threading.currentThread()
 
@@ -153,18 +151,26 @@ class Light():
         bTmp = 0.0
             
         while self.__runSunsetLoop:
-                
-            rTmp = rTmp + (self.__color[0] / iterations)
-            gTmp = gTmp + (self.__color[1] / iterations)
-            bTmp = bTmp + (self.__color[2] / iterations)
-                
-            self.__accessPixel()
+            if(time.time() >= self.timeoutMainLoop/2):  
 
-            if(time.time() >= self.timeoutMainLoop):
+                rTmp = rTmp + (self.__color[0] / iterations)
+                gTmp = gTmp + (self.__color[1] / iterations)
+                bTmp = bTmp + (self.__color[2] / iterations)
+                
+            else:
+                rTmp = rTmp - (self.__color[0] / iterations)
+                gTmp = gTmp - (self.__color[1] / iterations)
+                bTmp = bTmp - (self.__color[2] / iterations)
+
+            if(time.time() >= self.timeout):
                 print("sunset Loop closed")
                 break
+
+            self.__accessPixel()
                 
             time.sleep(self.__cycletimeMs/1000)
+
+        self.turnLedStripeOff()
 
     def close(self):
         self.__runSunsetLoop = False
