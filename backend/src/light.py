@@ -26,7 +26,7 @@ class Light():
 
     def turnLightOn(self):
         print("set Light On")
-        self.__color=(255,120,10) 
+        self.__color=(255,200,100) 
         self.__accessPixel()
         self.__lightstate = True
         
@@ -77,7 +77,7 @@ class Light():
         
         self.__startLed = 0
         self.__endLed = 27
-        self.__color=(255,120,10)
+        self.__color=(255,200,100)
          
     def getLedStripeState(self):
         #print("get LED Stripe state: " + str(self.__ledStripeState))
@@ -128,7 +128,7 @@ class Light():
         gTmp = 0
         bTmp = 0
         
-        targetColor=(255,100,0) 
+        targetColor=(255,80,0) 
         
         while self.__runSunsetLoop:
             
