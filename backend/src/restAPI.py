@@ -409,8 +409,8 @@ time.sleep(1)
 
 #try
 app.config["DEBUG"] = True
-app.run(host='192.168.2.112')
-#app.run()
+#app.run(host='192.168.2.112')
+app.run()
 # except KeyboardInterrupt:
 #     print('interrupted!')
 #     BackendFunctions.close()

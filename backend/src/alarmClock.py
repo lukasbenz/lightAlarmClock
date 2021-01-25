@@ -142,7 +142,7 @@ class AlarmClock():
 
             sunsetStartTime = datetime.strptime(self.wakeUpTime,"%H:%M:%S") - datetime.strptime(self.sunsetTime,"%M")
             # print("") 
-            print("current Time: " + self.currentTime)
+            # print("current Time: " + self.currentTime)
             # print("wakeup Time: " + str(self.wakeUpTime))
             # print("sunset Time: " + str(sunsetStartTime))
             # print("")
