@@ -11,13 +11,12 @@ class Light():
     debugMode = True
     __lightstate = False
     __ledStripeState = True
-    __sunsetTime = 10
-    __brightness = 10
     __runSunsetLoop = False
     __cycletimeMs = 1000
     __startLed = 0
     __endLed = 146
-    __color=(255,120,10)
+    __brightness = 100
+    
     __startLoopSec = 2
     
     def __init__(self,arduinoConnection):     
@@ -54,25 +53,32 @@ class Light():
             self.__accessPixel()
 
     def setSunsetTime(self,_input):
-        self.sunsetTimeSeconds = _input*60
-        print("set sunsetTime: " + str(self.sunsetTimeSeconds))
+        self.sunsetTimeSeconds = int(_input)*60
+        print("set sunsetTime: " + str(self.sunsetTimeSeconds) + " sec")
     
     def turnLedStripeOn(self):
         self.__ledStripeState = True
         self.__endLed = 146
         print("set LED Stripe On")
 
-        if(self.__lightstate):
+        if(self.__lightstate):    
             self.__accessPixel()
-
+        
     def turnLedStripeOff(self):
         self.__ledStripeState = False
-        self.__endLed = 27
+        
         print("set LED Stripe Off")
 
         if(self.__lightstate):
+            self.__startLed = 28
+            self.__endLed = 146
+            self.__color=(0,0,0)
             self.__accessPixel()
-            
+        
+        self.__startLed = 0
+        self.__endLed = 27
+        self.__color=(255,120,10)
+         
     def getLedStripeState(self):
         #print("get LED Stripe state: " + str(self.__ledStripeState))
         return self.__ledStripeState
@@ -94,42 +100,43 @@ class Light():
 
     def startSunset(self):
         self.timeout = time.time() + self.sunsetTimeSeconds #conv to seconds
-
-        print("Sunsest Loop started for " + str(self.sunsetTimeSeconds) + "sec")
+        print("Sunsest Loop started for " + str(self.sunsetTimeSeconds) + "sec *******************************************************+") 
         
-        #calc iterations of Brightness
         self.__runSunsetLoop = True
         self.t = threading.Thread(target=self.__sunsetLoop)
         self.t.start()
 
-    #def startWelcomeLoop(self):
+    # def startWelcomeLoop(self):
 
-        self.timeoutMainLoop = time.time() + self.__startLoopSec
-        print("Sunsest Loop started for " + str(self.__startLoopSec) + "sec")
+    #     self.timeoutMainLoop = time.time() + self.__startLoopSec
+    #     print("Sunsest Loop started for " + str(self.__startLoopSec) + "sec")
 
-        #calc iterations of Brightness
-        self.__runStartLoop = True
-        self.tStartLoop = threading.Thread(target=self.__startLoop)
-        self.tStartLoop.start()
+    #     #calc iterations of Brightness
+    #     self.__runStartLoop = True
+    #     self.tStartLoop = threading.Thread(target=self.__startLoop)
+    #     self.tStartLoop.start()
 
     def __sunsetLoop(self):
         self.t = threading.currentThread()
 
-        iterations = self.__sunsetTime / (self.__cycletimeMs / 1000)
+        iterations = self.sunsetTimeSeconds / (self.__cycletimeMs / 1000)
         
         if self.debugMode:
             print("iterations: " + str(iterations))
         
-        rTmp = 0.0 
-        gTmp = 0.0
-        bTmp = 0.0
+        rTmp = 0 
+        gTmp = 0
+        bTmp = 0
+        
+        targetColor=(255,100,0) 
         
         while self.__runSunsetLoop:
             
-            rTmp = rTmp + (self.__color[0] / iterations * 4)
-            gTmp = gTmp + (self.__color[1] / iterations)
-            bTmp = bTmp + (self.__color[2] / iterations)
-            
+            rTmp = rTmp + (targetColor[0] / iterations * 4)
+            gTmp = gTmp + (targetColor[1] / iterations)
+            bTmp = bTmp + (targetColor[2] / iterations)
+        
+            self.__color=(rTmp,gTmp,bTmp) 
             self.__accessPixel()
 
             if(time.time() >= self.timeout):
@@ -138,7 +145,7 @@ class Light():
             
             time.sleep(self.__cycletimeMs/1000)
 
-    #def __startLoop(self):
+    def __startLoop(self):
         self.tStartLoop = threading.currentThread()
 
         iterations = self.__startLoopSec / (self.__cycletimeMs / 1000)
