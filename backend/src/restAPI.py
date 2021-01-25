@@ -19,7 +19,6 @@ log.setLevel(logging.ERROR)
 
 app = flask.Flask(__name__)
 
-
 arduinoConnection = ArduinoConnection()
 alarmClock = AlarmClock()
 internetRadio = InternetRadio()
@@ -78,6 +77,9 @@ def handleAlarm():
     tAlarm = threading.currentThread()
     while runAlarmThread:
         #start Sunset
+        
+        print(str(alarmClock.getSunsetActive()))
+
         if(alarmClock.getSunsetActive() == True):
             light.setSunsetTime(alarmClock.getSunsetTime())
             light.startSunset()
@@ -89,7 +91,7 @@ def handleAlarm():
             time.sleep(2)
             alarmClock.setAlarmActive(False)
 
-        time.sleep(1)
+        time.sleep(0.5)
 
 ############################################ APLICATION PROGRAMMING INTERFACE ############################################
 
@@ -402,7 +404,8 @@ tAlarm.start()
 
 #try
 app.config["DEBUG"] = True
-app.run()
+app.run(host='192.168.2.112')
+#app.run()
 # except KeyboardInterrupt:
 #     print('interrupted!')
 #     BackendFunctions.close()

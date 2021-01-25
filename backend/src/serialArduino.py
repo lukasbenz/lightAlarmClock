@@ -8,7 +8,7 @@ import numpy as np
 url = 'http://127.0.0.1:5000/api/'
 
 class ArduinoConnection():
-    debugMode = False
+    debugMode = True
     __runRecLoop = False
         
     def __init__(self):        
@@ -51,13 +51,11 @@ class ArduinoConnection():
                                 else: #if FALSE system is unmuted - so mute it
                                         requests.post(url+'system/volume/mute/on')         
                         
-
                         elif(inputSplit[1] == "posEdge"): #set volume
                             self.__volume += 1
                             self.__volume = np.clip(self.__volume, 0, 100)
                             data = {'value': self.__volume}
                             requests.post(url+'system/volume', json=data)
-
 
                         elif(inputSplit[1] == "negEdge"): #set volume
                             self.__volume -= 1

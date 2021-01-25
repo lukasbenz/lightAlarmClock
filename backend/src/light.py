@@ -17,7 +17,7 @@ class Light():
     __cycletimeMs = 1000
     __startLed = 0
     __endLed = 146
-    __color=(255,120,10)
+    
     __startLoopSec = 2
     
     def __init__(self,arduinoConnection):     
@@ -62,17 +62,24 @@ class Light():
         self.__endLed = 146
         print("set LED Stripe On")
 
-        if(self.__lightstate):
+        if(self.__lightstate):    
             self.__accessPixel()
-
+        
     def turnLedStripeOff(self):
         self.__ledStripeState = False
-        self.__endLed = 27
+        
         print("set LED Stripe Off")
 
         if(self.__lightstate):
+            self.__startLed = 28
+            self.__endLed = 146
+            self.__color=(0,0,0)
             self.__accessPixel()
-            
+        
+        self.__startLed = 0
+        self.__endLed = 27
+        self.__color=(255,120,10)
+         
     def getLedStripeState(self):
         #print("get LED Stripe state: " + str(self.__ledStripeState))
         return self.__ledStripeState
