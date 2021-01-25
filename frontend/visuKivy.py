@@ -411,14 +411,20 @@ class ScreenAlarmActive(Screen):
                 self.eventUpdatePage.cancel()
 
         def updatePage(self, *args):
-                response = requests.get(url+'alarmClock/dateTime')
+                #time
+                response = requests.get(url+'time')
                 json_data = json.loads(response.text)  
                 if response.status_code == 200:
-                        self.id_clock.text = json_data['time']
-                        self.id_date.text = json_data['date']
+                        self.id_clock.text = json_data['value']
                 else:
-                        print(response)
                         self.id_clock.text = "err"
+
+                #date
+                response = requests.get(url+'date')
+                json_data = json.loads(response.text)  
+                if response.status_code == 200:
+                        self.id_date.text = json_data['value']
+                else:
                         self.id_date.text = "err"
 
         def btnSnooze(self, *args):
