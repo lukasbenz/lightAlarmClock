@@ -91,15 +91,25 @@ void setup() {
     pinMode(btnEnc1, INPUT_PULLUP);
    
     debounceBtn1.attach(btnMain);
-    debounceBtn1.interval(2);
+    debounceBtn1.interval(1);
     debounceBtn2.attach(btnEnc1);
-    debounceBtn2.interval(2);
+    debounceBtn2.interval(1);
 
 }
 
 //============
 void loop() 
 {
+    //startLed=0;
+    //endLed=146;
+    //intR = intR + 1;
+    //intG = intG + 1;
+    //intB = intB + 1;
+    
+    //setLedStripe();
+    
+    //time.sleep(1)
+        
     rotating = true; // reset the debouncer
     if (lastReportedPos != encoderPos)
     {
@@ -117,7 +127,6 @@ void loop()
     }
   
     //Button check positive edges
-    
     debounceBtn1.update();
     debounceBtn2.update();
 
@@ -237,7 +246,11 @@ void parseData() {      // split the data into its parts
       startLed = atoi(strtokIndx);        
       strtokIndx = strtok(NULL, ",");     
       endLed = atoi(strtokIndx);
+
+      if(intR <= 255 && intR >= 0 && intG <= 255 && intG >= 0 && intB <= 255 && intB >= 0)
+      {
       setLedStripe();
+      }
     }
     else if(strcmp(strtokIndx,"display") == 0) {
       strtokIndx = strtok(NULL, ",");
@@ -245,12 +258,12 @@ void parseData() {      // split the data into its parts
       setDisplayBrightness();
     }
     else {
-      Serial.println("ERROR IN IF STATEMENT");  
+      //Serial.println("ERROR IN IF STATEMENT");  
     }
 }
 
 void setLedStripe() {
-  showParsedLedData();
+  //showParsedLedData();
   // The first NeoPixel in a strand is #0, second is 1, all the way up
   // to the count of pixels minus one.
   for(int i=startLed; i<endLed; i++) { // For each pixel...
@@ -278,7 +291,7 @@ void showParsedLedData(){
 
 void setDisplayBrightness(){
   brightNorm = map(bright,0,100,255,0);
-  showParsedDisplayData();
+  //showParsedDisplayData();
   analogWrite(pinDispLight, brightNorm);
 }
 

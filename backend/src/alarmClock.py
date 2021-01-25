@@ -141,15 +141,16 @@ class AlarmClock():
             self.procActTimeAndDate()
 
             sunsetStartTime = datetime.strptime(self.wakeUpTime,"%H:%M:%S") - datetime.strptime(self.sunsetTime,"%M")
-            print("") 
-            print("curren Time: " + self.currentTime)
-            print("wakeup Time: " + str(self.wakeUpTime))
-            print("sunset Time: " + str(sunsetStartTime))
-            print("")
+            # print("") 
+            print("current Time: " + self.currentTime)
+            # print("wakeup Time: " + str(self.wakeUpTime))
+            # print("sunset Time: " + str(sunsetStartTime))
+            # print("")
 
             if(self.__alarmClockState == True):
                 if(str(sunsetStartTime) == self.currentTime):
-                    self.sunsetActive = True
+                    self.__sunsetState = True
+
                 if(self.wakeUpTime == self.currentTime):
                     self.__alarmActiveState = True
 
