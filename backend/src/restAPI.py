@@ -21,7 +21,6 @@ app = flask.Flask(__name__)
 
 
 arduinoConnection = ArduinoConnection()
-
 alarmClock = AlarmClock()
 internetRadio = InternetRadio()
 systemSettings = SystemSettings(arduinoConnection)
@@ -209,6 +208,7 @@ def alarmActiveState():
             'state': alarmClock.getAlarmActiveState()
             })
 
+
 ################## RADIO STATION ##################
 @app.route('/api/radio/stationName', methods = ['GET','POST'])
 def radioStationName():
@@ -388,8 +388,6 @@ def getDispState():
             'state': systemSettings.getDispState()
             })
 
-
-# try:
 
 ################## start save config Thread ##################
 loadConfig()
