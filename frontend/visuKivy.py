@@ -13,7 +13,7 @@ from kivy.clock import Clock
 import requests
 import json
 
-url = 'http://127.0.0.1:5000/api/'
+url = 'http://192.168.2.112:5000/api/'
 
 class ScreenHome(Screen):
 
@@ -21,7 +21,7 @@ class ScreenHome(Screen):
                 super(ScreenHome, self).__init__(**kwargs)
                 
         def enterPage(self,**kwargs):  
-                self.eventUpdatePage = Clock.schedule_interval(self.updatePage,0.1)
+                self.eventUpdatePage = Clock.schedule_interval(self.updatePage,0.5)
 
                 #wakeup time
                 response = requests.get(url+'alarmClock/time')
@@ -129,9 +129,11 @@ class ScreenAlarmClock(Screen):
                         super(ScreenAlarmClock, self).__init__(**kwargs)
 
                 def enterPage(self,**kwargs):
-                        self.eventUpdatePage = Clock.schedule_interval(self.updatePage,0.1)
+                        requests.post(url+'alarmClock/off') 
+                        self.eventUpdatePage = Clock.schedule_interval(self.updatePage,0.5)
 
                 def leavePage(self,**kwargs):
+                        requests.post(url+'alarmClock/on') 
                         self.eventUpdatePage.cancel()
 
                 def updatePage(self, *args):
@@ -221,14 +223,14 @@ class ScreenAlarmClock(Screen):
                         self.sendWakeUpTime()
 
                 def btn_SunlightMinutesTimeUp(self, *args):
-                        self.sunsetMinutes += 5
+                        self.sunsetMinutes += 1
                         if(self.sunsetMinutes>60):
                                 self.sunsetMinutes = 0
                         data = {'value': str(self.sunsetMinutes)}
                         r = requests.post(url+'alarmClock/sunsetTime', json=data)
 
                 def btn_SunlightMinutesTimeDown(self, *args):
-                        self.sunsetMinutes -= 5
+                        self.sunsetMinutes -= 1
                         if(self.sunsetMinutes<0):
                                 self.sunsetMinutes = 60
                         data = {'value': str(self.sunsetMinutes)}
@@ -243,7 +245,7 @@ class ScreenRadio(Screen):
                         super(ScreenRadio, self).__init__(**kwargs)
                         
                 def enterPage(self, *args):
-                        self.eventUpdatePage = Clock.schedule_interval(self.updatePage,0.1)
+                        self.eventUpdatePage = Clock.schedule_interval(self.updatePage,0.5)
                         self.updateRadioInfo()
 
 
@@ -331,7 +333,7 @@ class ScreenSettings(Screen):
                         super(ScreenSettings, self).__init__(**kwargs)
 
                 def enterPage(self, **kwargs):
-                        self.eventUpdatePage = Clock.schedule_interval(self.updatePage,1)
+                        self.eventUpdatePage = Clock.schedule_interval(self.updatePage,0.5)
 
                         response = requests.get(url+'system/display/brightness')
                         json_data = json.loads(response.text)  
@@ -378,11 +380,9 @@ class ScreenSettings(Screen):
                         data = {'value': value}
                         r = requests.post(url+'light/brightness', json=data)           
 
-
                 def slider_display_value(self, value):  
                         data = {'value': value}
                         r = requests.post(url+'system/display/brightness', json=data)           
-
 
                 def switch_ledStripe_callback(self, switchObject, switchValue): 
                         if(switchValue == True):
@@ -405,29 +405,35 @@ class ScreenAlarmActive(Screen):
                 super(ScreenAlarmActive, self).__init__(**kwargs)
 
         def enterPage(self,**kwargs):
-                self.eventUpdateClock = Clock.schedule_interval(self.updateClock,1) 
+                self.eventUpdatePage = Clock.schedule_interval(self.updatePage,0.5) 
 
         def leavePage(self,**kwargs):
-                self.eventUpdateClock.cancel()
+                self.eventUpdatePage.cancel()
 
-        def updateClock(self, *args):
-                response = requests.get(url+'alarmClock/dateTime')
+        def updatePage(self, *args):
+                #time
+                response = requests.get(url+'time')
                 json_data = json.loads(response.text)  
                 if response.status_code == 200:
-                        self.id_clock.text = json_data['time']
-                        self.id_date.text = json_data['date']
+                        self.id_clock.text = json_data['value']
                 else:
-                        print(response)
                         self.id_clock.text = "err"
+
+                #date
+                response = requests.get(url+'date')
+                json_data = json.loads(response.text)  
+                if response.status_code == 200:
+                        self.id_date.text = json_data['value']
+                else:
                         self.id_date.text = "err"
 
         def btnSnooze(self, *args):
-                data = {'state': 1}
-                r = requests.post(url+'alarmClock/snoozeMode', json=data)           
-
+                requests.post(url+'alarmClock/snoozeMode/on')           
+                requests.post(url+'/alarmClock/active/off')
                 self.parent.current = "screenHomeID"
 
         def btnStop(self, *args):
+                requests.post(url+'/alarmClock/active/off')
                 self.parent.current = "screenHomeID"
  
 class VisuAlarmClock(App):   
