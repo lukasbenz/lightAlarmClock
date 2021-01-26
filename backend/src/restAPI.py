@@ -392,10 +392,10 @@ def getDispState():
 
 
 ################## start save config Thread ##################
-loadConfig()
-runConfigThread = True
-tConfig = threading.Thread(target=saveConfig)
-tConfig.start()
+#loadConfig()
+#runConfigThread = True
+#tConfig = threading.Thread(target=saveConfig)
+#tConfig.start()
 
 ################## start alarm handle thread ##################
 runAlarmThread = True
@@ -408,7 +408,7 @@ time.sleep(1)
 #light.startSunset()
 
 #try
-app.config["DEBUG"] = True
+app.config["DEBUG"] = False
 #app.run(host='192.168.2.112')
 app.run()
 # except KeyboardInterrupt:
