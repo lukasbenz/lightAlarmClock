@@ -76,7 +76,7 @@ class Light():
             self.__accessPixel()
         
         self.__startLed = 0
-        self.__endLed = 27
+        self.__endLed = 28
         self.__color=(255,200,100)
          
     def getLedStripeState(self):

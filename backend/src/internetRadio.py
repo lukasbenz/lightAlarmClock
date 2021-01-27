@@ -10,7 +10,7 @@ class InternetRadio():
     player=instance.media_player_new()
     stationIndex = 1
 
-    stationName = ""
+    stationName = "DASDING"
     switchRadioStations = {
             1: "DASDING",
             2: "YOU FM",
