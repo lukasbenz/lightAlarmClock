@@ -11,6 +11,7 @@ class InternetRadio():
     stationIndex = 1
 
     stationName = "DASDING"
+
     switchRadioStations = {
             1: "DASDING",
             2: "YOU FM",
@@ -28,6 +29,7 @@ class InternetRadio():
 
     def __init__(self):
         print("init internet radio")
+        self.__changeRadioStation()
     
     def getRadioStationIndex(self):
         #print("get radio station index: " + self.stationIndex)

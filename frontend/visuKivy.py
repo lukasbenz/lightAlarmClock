@@ -1,7 +1,7 @@
 
 from kivy.config import Config
 Config.set('graphics', 'resizable', 'False')
-Config.set('graphics', 'fullscreen','auto')
+Config.set('graphics', 'fullscreen','False')
 Config.set('graphics', 'width', '800')
 Config.set('graphics', 'height', '480')
 
@@ -429,11 +429,11 @@ class ScreenAlarmActive(Screen):
 
         def btnSnooze(self, *args):
                 requests.post(url+'alarmClock/snoozeMode/on')           
-                requests.post(url+'/alarmClock/active/off')
+                #requests.post(url+'/alarmClock/active/off')
                 self.parent.current = "screenHomeID"
 
         def btnStop(self, *args):
-                requests.post(url+'/alarmClock/active/off')
+                #requests.post(url+'/alarmClock/active/off')
                 self.parent.current = "screenHomeID"
  
 class VisuAlarmClock(App):   

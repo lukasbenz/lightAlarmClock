@@ -7,8 +7,8 @@ import threading
 
 class AlarmClock():
 
-    wakeUpTime = "00:00:00"
-    sunsetTime = "30"
+    wakeUpTime = "06:45:00"
+    sunsetTime = "15"
     snoozeTime = 10
 
     # init private Values
@@ -119,8 +119,8 @@ class AlarmClock():
         #print("get snoozeState: " + str(self.snoozeState))
         return self.__snoozeState
 
-    def setAlarmActiveOff(self,_input):
-        self.__alarmActiveState = bool(_input)
+    def setAlarmActiveOff(self):
+        self.__alarmActiveState = False
         print("set alarmActive: " + str(self.__alarmActiveState))
 
     def getAlarmActiveState(self):
@@ -141,11 +141,12 @@ class AlarmClock():
             self.procActTimeAndDate()
 
             sunsetStartTime = datetime.strptime(self.wakeUpTime,"%H:%M:%S") - datetime.strptime(self.sunsetTime,"%M")
-            # print("") 
-            # print("current Time: " + self.currentTime)
-            # print("wakeup Time: " + str(self.wakeUpTime))
-            # print("sunset Time: " + str(sunsetStartTime))
-            # print("")
+            
+            print("") 
+            print("current Time: " + self.currentTime)
+            print("wakeup Time: " + str(self.wakeUpTime))
+            print("sunset Time: " + str(sunsetStartTime))
+            print("")
 
             if(self.__alarmClockState == True):
                 if(str(sunsetStartTime) == self.currentTime):

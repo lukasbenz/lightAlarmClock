@@ -13,7 +13,6 @@ class SystemSettings():
         self.arduinoConnection = arduinoConnection
         print("init system settings class")
 
-
     #VOLUME
     def getVolume(self):
         #print("get Volume: " + str(self.__volume))

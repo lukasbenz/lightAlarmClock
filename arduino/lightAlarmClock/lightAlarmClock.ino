@@ -91,9 +91,9 @@ void setup() {
     pinMode(btnEnc1, INPUT_PULLUP);
    
     debounceBtn1.attach(btnMain);
-    debounceBtn1.interval(1);
+    debounceBtn1.interval(10);
     debounceBtn2.attach(btnEnc1);
-    debounceBtn2.interval(1);
+    debounceBtn2.interval(10);
 
 }
 

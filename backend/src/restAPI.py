@@ -78,7 +78,8 @@ def handleAlarm():
     while runAlarmThread:
         #start Sunset
         
-        #print(str(alarmClock.getSunsetActive()))
+        #print("SunsetState")
+        print(str(alarmClock.getAlarmActiveState()))
 
         if(alarmClock.getSunsetActive() == True):
             light.setSunsetTime(alarmClock.getSunsetTime())
@@ -87,7 +88,7 @@ def handleAlarm():
             
         #start Radio on Alarm
         if(alarmClock.getAlarmActiveState() == True):
-            #internetRadio.play()
+            internetRadio.play()
             time.sleep(2)
             alarmClock.setAlarmActiveOff()
 
@@ -200,7 +201,7 @@ def alarmActiveOff():
     if request.method == 'POST':
         alarmClock.setAlarmActiveOff()
         return jsonify({
-            'state': alarmClock.getAlarmActive()
+            'state': alarmClock.getAlarmActiveState()
             })
     
 @app.route('/api/alarmClock/active/state', methods = ['GET','POST'])
