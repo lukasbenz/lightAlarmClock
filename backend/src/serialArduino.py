@@ -3,14 +3,12 @@ import serial
 import threading
 import requests
 import json
-import numpy as np
 
 url = 'http://127.0.0.1:5000/api/'
 
 class ArduinoConnection():
-    debugMode = True
+    debugMode = False
     __runRecLoop = False
-    __volume = 50
 
     def __init__(self):        
         try:
@@ -56,16 +54,23 @@ class ArduinoConnection():
                                         requests.post(url+'system/volume/mute/on')         
                         
                         elif(inputSplit[1] == "negEdge"): #set volume
-                            self.__volume += 1
-                            self.__volume = np.clip(self.__volume, 0, 100)
-                            data = {'value': int(self.__volume)}
-                            requests.post(url+'system/volume', json=data)
+                            response = requests.get(url+'system/volume')
+                            json_data = json.loads(response.text)  
+                            if response.status_code == 200:
+                                volumeTmp = int(json_data['value'])
+                                volumeTmp += 5
+                                data = {'value': int(volumeTmp)}
+                                requests.post(url+'system/volume', json=data)
 
                         elif(inputSplit[1] == "posEdge"): #set volume
-                            self.__volume -= 1
-                            self.__volume = np.clip(self.__volume, 0, 100)
-                            data = {'value': int(self.__volume)}
-                            requests.post(url+'system/volume', json=data)
+                            response = requests.get(url+'system/volume')
+                            json_data = json.loads(response.text)  
+                            if response.status_code == 200:
+                                volumeTmp = int(json_data['value'])
+                                volumeTmp -= 5
+                                data = {'value': int(volumeTmp)}
+                                requests.post(url+'system/volume', json=data)
+
                         else:
                             print("unknown enc command from arduino")
                     

@@ -74,12 +74,13 @@ def saveConfig():
 
 ################## handle Alarm ##################
 def handleAlarm():
+    #TODO TRY CATCH EXCEPTIONS
     tAlarm = threading.currentThread()
     while runAlarmThread:
         #start Sunset
         
         #print("SunsetState")
-        print(str(alarmClock.getAlarmActiveState()))
+        #print(str(alarmClock.getAlarmActiveState()))
 
         if(alarmClock.getSunsetActive() == True):
             light.setSunsetTime(alarmClock.getSunsetTime())
@@ -393,10 +394,10 @@ def getDispState():
 
 
 ################## start save config Thread ##################
-#loadConfig()
-#runConfigThread = True
-#tConfig = threading.Thread(target=saveConfig)
-#tConfig.start()
+loadConfig()
+runConfigThread = True
+tConfig = threading.Thread(target=saveConfig)
+tConfig.start()
 
 ################## start alarm handle thread ##################
 runAlarmThread = True

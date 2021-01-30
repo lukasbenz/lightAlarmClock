@@ -1,4 +1,5 @@
 import numpy as np
+import alsaaudio
 
 class SystemSettings():
 
@@ -11,6 +12,7 @@ class SystemSettings():
     
     def __init__(self,arduinoConnection):
         self.arduinoConnection = arduinoConnection
+        self.mixer = alsaaudio.Mixer('Master')
         print("init system settings class")
 
     #VOLUME
@@ -19,16 +21,22 @@ class SystemSettings():
         return self.__volume
 
     def setVolume(self,_input): 
-        self.__volume = int(_input)
-        print("set Volume: " + str(self.__volume))
+        if(not self.__mute):
+            self.__volume = int(np.clip(int(_input), 0, 50))
+            print("set Volume: " + str(self.__volume))
+            self.mixer.setvolume(self.__volume)
+        else:
+            print("system muted!")
 
     def muteOn(self):
         self.__mute = True
-        print("Mute System ON")
-
+        self.mixer.setvolume(0)
+        print("system muted")
+    
     def muteOff(self):
         self.__mute = False
-        print("Mute System OFF")
+        self.mixer.setvolume(self.__volume)
+        print("system unmuted")
 
     def getMuteState(self):
         #print("get mute State: " + str(self.__mute))

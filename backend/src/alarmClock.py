@@ -79,7 +79,7 @@ class AlarmClock():
         #print("get sunsetTime: " + str(self.sunsetTime))
         return self.sunsetTime
 
-    def setSunsetOff(self, _input):
+    def setSunsetOff(self):
         self.__sunsetState = False
         print("set SunsetState: " + str(self.__sunsetState))
 
@@ -142,11 +142,11 @@ class AlarmClock():
 
             sunsetStartTime = datetime.strptime(self.wakeUpTime,"%H:%M:%S") - datetime.strptime(self.sunsetTime,"%M")
             
-            print("") 
-            print("current Time: " + self.currentTime)
-            print("wakeup Time: " + str(self.wakeUpTime))
-            print("sunset Time: " + str(sunsetStartTime))
-            print("")
+            #print("") 
+            #print("current Time: " + self.currentTime)
+            #print("wakeup Time: " + str(self.wakeUpTime))
+            #print("sunset Time: " + str(sunsetStartTime))
+            #print("")
 
             if(self.__alarmClockState == True):
                 if(str(sunsetStartTime) == self.currentTime):

@@ -16,8 +16,9 @@ class Light():
     __startLed = 0
     __endLed = 146
     __brightness = 100
-    
-    __startLoopSec = 2
+    #Pink __lightColor = (255,100,100)
+    __lightColor = (255,160,40)
+    __onOffLoop = 2
     
     def __init__(self,arduinoConnection):     
         self.arduinoConnection = arduinoConnection   
@@ -25,10 +26,10 @@ class Light():
         self.turnLightOff()
 
     def turnLightOn(self):
-        print("set Light On")
-        self.__color=(255,150,50) 
-        self.__accessPixel()
-        self.__lightstate = True
+          print("set Light On")
+          self.__color = self.__lightColor
+          self.__accessPixel()
+          self.__lightstate = True
         
     def turnLightOff(self):
         print("set Light Off")
@@ -77,7 +78,7 @@ class Light():
         
         self.__startLed = 0
         self.__endLed = 28
-        self.__color=(255,150,50)
+        self.__color=self.__lightColor
          
     def getLedStripeState(self):
         #print("get LED Stripe state: " + str(self.__ledStripeState))
@@ -101,7 +102,9 @@ class Light():
     def startSunset(self):
         self.timeout = time.time() + self.sunsetTimeSeconds #conv to seconds
         print("Sunsest Loop started for " + str(self.sunsetTimeSeconds) + "sec *******************************************************+") 
-        self.__lightstate = True
+        
+        #self.__lightstate = True
+        
         self.__runSunsetLoop = True
         self.t = threading.Thread(target=self.__sunsetLoop)
         self.t.start()
@@ -128,11 +131,11 @@ class Light():
         gTmp = 0
         bTmp = 0
         
-        targetColor=(255,100,10) 
+        targetColor = (255,110,0)
         
         while self.__runSunsetLoop:
             
-            rTmp = rTmp + (targetColor[0] / iterations)
+            rTmp = rTmp + (targetColor[0] / iterations*2)
             gTmp = gTmp + (targetColor[1] / iterations)
             bTmp = bTmp + (targetColor[2] / iterations)
         

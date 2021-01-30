@@ -21,7 +21,7 @@ class ScreenHome(Screen):
                 super(ScreenHome, self).__init__(**kwargs)
                 
         def enterPage(self,**kwargs):  
-                self.eventUpdatePage = Clock.schedule_interval(self.updatePage,0.5)
+                self.eventUpdatePage = Clock.schedule_interval(self.updatePage,0.1)
 
                 #wakeup time
                 response = requests.get(url+'alarmClock/time')
@@ -130,7 +130,7 @@ class ScreenAlarmClock(Screen):
 
                 def enterPage(self,**kwargs):
                         requests.post(url+'alarmClock/off') 
-                        self.eventUpdatePage = Clock.schedule_interval(self.updatePage,0.5)
+                        self.eventUpdatePage = Clock.schedule_interval(self.updatePage,0.1)
 
                 def leavePage(self,**kwargs):
                         requests.post(url+'alarmClock/on') 
@@ -245,7 +245,7 @@ class ScreenRadio(Screen):
                         super(ScreenRadio, self).__init__(**kwargs)
                         
                 def enterPage(self, *args):
-                        self.eventUpdatePage = Clock.schedule_interval(self.updatePage,0.5)
+                        self.eventUpdatePage = Clock.schedule_interval(self.updatePage,0.1)
                         self.updateRadioInfo()
 
 
@@ -254,7 +254,7 @@ class ScreenRadio(Screen):
 
                 def updatePage(self, *args):
                         #time
-                        response = requests.get(url+'alarmClock/time')
+                        response = requests.get(url+'time')
                         json_data = json.loads(response.text)  
                         if response.status_code == 200:
                                 self.id_clock.text = json_data['value']
@@ -333,7 +333,7 @@ class ScreenSettings(Screen):
                         super(ScreenSettings, self).__init__(**kwargs)
 
                 def enterPage(self, **kwargs):
-                        self.eventUpdatePage = Clock.schedule_interval(self.updatePage,0.5)
+                        self.eventUpdatePage = Clock.schedule_interval(self.updatePage,0.1)
 
                         response = requests.get(url+'system/display/brightness')
                         json_data = json.loads(response.text)  
