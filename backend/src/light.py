@@ -122,31 +122,38 @@ class Light():
     def __sunsetLoop(self):
         self.t = threading.currentThread()
 
-        iterations = self.sunsetTimeSeconds / (self.__cycletimeMs / 1000)
-        
-        if self.debugMode:
-            print("iterations: " + str(iterations))
+        #iterations = self.sunsetTimeSeconds / (self.__cycletimeMs / 1000)
+        iterations = self.sunsetTimeSeconds
+
+        #if self.debugMode:
+            #print("iterations: " + str(iterations))
         
         rTmp = 0 
         gTmp = 0
         bTmp = 0
         
-        targetColor = (255,110,0)
+        targetColor = (255,100,0)
         
         while self.__runSunsetLoop:
-            
-            rTmp = rTmp + (targetColor[0] / iterations*2)
-            gTmp = gTmp + (targetColor[1] / iterations)
-            bTmp = bTmp + (targetColor[2] / iterations)
+            #first half of the time only red color
+            if(time.time() < (self.timeout / 2)):
+                rTmp = rTmp + (targetColor[0] / iterations)
+
+            #second half smoothly add green to reach yellow color
+            else:
+                rTmp = rTmp + (targetColor[0] / iterations)
+                gTmp = gTmp + (targetColor[1] / iterations * 2)
         
-            self.__color=(rTmp,gTmp,bTmp) 
+            self.__color=(rTmp,gTmp,0) 
             self.__accessPixel()
 
             if(time.time() >= self.timeout):
                 print("sunset Loop closed")
                 break
             
-            time.sleep(self.__cycletimeMs/1000)
+            time.sleep(1) #1 second cycle
+
+            #time.sleep(self.__cycletimeMs/1000)
 
     # def __startLoop(self):
     #     self.tStartLoop = threading.currentThread()
