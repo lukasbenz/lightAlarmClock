@@ -100,7 +100,6 @@ class Light():
         self.arduinoConnection.writeData("<led," + str(r) + "," + str(g) + "," + str(b) + "," + str(self.__startLed) + "," + str(self.__endLed) + ">")
 
     def startSunset(self):
-        self.timeout = time.time() + self.sunsetTimeSeconds #conv to seconds
         print("Sunsest Loop started for " + str(self.sunsetTimeSeconds) + "sec *******************************************************+") 
         
         #self.__lightstate = True
@@ -122,6 +121,9 @@ class Light():
     def __sunsetLoop(self):
         self.t = threading.currentThread()
 
+        timeout = time.time() + self.sunsetTimeSeconds #conv to seconds
+        timeoutHalf = time.time() + self.sunsetTimeSeconds/2 #conv to seconds
+        
         #iterations = self.sunsetTimeSeconds / (self.__cycletimeMs / 1000)
         iterations = self.sunsetTimeSeconds
 
@@ -136,23 +138,23 @@ class Light():
         
         while self.__runSunsetLoop:
             #first half of the time only red color
-            if(time.time() < (self.timeout / 2)):
+            if(time.time() < timeoutHalf):
                 rTmp = rTmp + (targetColor[0] / iterations)
 
             #second half smoothly add green to reach yellow color
             else:
                 rTmp = rTmp + (targetColor[0] / iterations)
                 gTmp = gTmp + (targetColor[1] / iterations * 2)
-        
-            self.__color=(rTmp,gTmp,0) 
+                bTmp = bTmp + (targetColor[2] / iterations * 2)
+
+            self.__color=(rTmp,gTmp,bTmp) 
             self.__accessPixel()
 
-            if(time.time() >= self.timeout):
+            if(time.time() > timeout):
                 print("sunset Loop closed")
                 break
             
             time.sleep(1) #1 second cycle
-
             #time.sleep(self.__cycletimeMs/1000)
 
     # def __startLoop(self):
