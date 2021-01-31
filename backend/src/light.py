@@ -19,6 +19,7 @@ class Light():
         #self.__onOffLoop = True
         #self.tonOffLoop = threading.Thread(target=self.__smoothOnOffLoop)
         #self.tonOffLoop.start()
+        self.turnLightOff()
         print("init Light class")
 
     def turnLightOn(self):
@@ -88,9 +89,9 @@ class Light():
         g = round(self.__color[1] * brightnessConverted)  
         b = round(self.__color[2] * brightnessConverted)  
 
-        np.clip(r, 0, 255, out=r)
-        np.clip(g, 0, 255, out=g)
-        np.clip(b, 0, 255, out=b)
+        r = np.clip(r, 0, 255)
+        g = np.clip(g, 0, 255)
+        b = np.clip(b, 0, 255)
                 
         if self.debugMode:            
             print("r: "+str(r))

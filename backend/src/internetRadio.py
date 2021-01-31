@@ -6,7 +6,7 @@ import vlc
 
 class InternetRadio():
     isPlaying = False
-    instance = vlc.Instance('--input-repeat=-1', '--fullscreen')
+    instance = vlc.Instance('--input-repeat=-1, --aout=alsa --alsa-audio-device=equal')
     player=instance.media_player_new()
     stationIndex = 1
 
@@ -28,7 +28,10 @@ class InternetRadio():
     }
 
     def __init__(self):
+
         print("init internet radio")
+        #list=self.instance.audio_output_enumerate_devices()
+        #print(list)
         self.__changeRadioStation()
     
     def getRadioStationIndex(self):

@@ -12,7 +12,8 @@ class SystemSettings():
     
     def __init__(self,arduinoConnection):
         self.arduinoConnection = arduinoConnection
-        self.mixer = alsaaudio.Mixer('Master')
+        self.mixer = alsaaudio.Mixer()
+        
         print("init system settings class")
 
     #VOLUME
