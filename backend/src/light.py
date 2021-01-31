@@ -2,28 +2,24 @@ import time
 import threading
 import numpy as np
 
-def limit(num, minimum=0, maximum=255):
-        """Limits input 'num' between minimum and maximum values.
-        Default minimum value is 1 and maximum value is 255."""
-        return max(min(num, maximum), minimum)
-
 class Light():
     debugMode = True
     __lightstate = False
     __ledStripeState = True
     __runSunsetLoop = False
-    __cycletimeMs = 1000
     __startLed = 0
     __endLed = 146
     __brightness = 100
     #Pink __lightColor = (255,100,100)
     __lightColor = (255,160,40)
-    __onOffLoop = 2
-    
+    #__onOffLoopSec = 1
+
     def __init__(self,arduinoConnection):     
         self.arduinoConnection = arduinoConnection   
+        #self.__onOffLoop = True
+        #self.tonOffLoop = threading.Thread(target=self.__smoothOnOffLoop)
+        #self.tonOffLoop.start()
         print("init Light class")
-        self.turnLightOff()
 
     def turnLightOn(self):
           print("set Light On")
@@ -85,12 +81,17 @@ class Light():
         return self.__ledStripeState
 
     def __accessPixel(self):
-        brightnessConverted = np.interp(self.__brightness,[0,100],[0.1,1])
-
-        r = limit( round(self.__color[0] * brightnessConverted) ) 
-        g = limit( round(self.__color[1] * brightnessConverted) ) 
-        b = limit( round(self.__color[2] * brightnessConverted) ) 
         
+        brightnessConverted = np.interp(self.__brightness,[0,100],[0,1])
+
+        r = round(self.__color[0] * brightnessConverted) 
+        g = round(self.__color[1] * brightnessConverted)  
+        b = round(self.__color[2] * brightnessConverted)  
+
+        np.clip(r, 0, 255, out=r)
+        np.clip(g, 0, 255, out=g)
+        np.clip(b, 0, 255, out=b)
+                
         if self.debugMode:            
             print("r: "+str(r))
             print("g: "+str(g))
@@ -108,15 +109,6 @@ class Light():
         self.t = threading.Thread(target=self.__sunsetLoop)
         self.t.start()
 
-    # def startWelcomeLoop(self):
-
-    #     self.timeoutMainLoop = time.time() + self.__startLoopSec
-    #     print("Sunsest Loop started for " + str(self.__startLoopSec) + "sec")
-
-    #     #calc iterations of Brightness
-    #     self.__runStartLoop = True
-    #     self.tStartLoop = threading.Thread(target=self.__startLoop)
-    #     self.tStartLoop.start()
 
     def __sunsetLoop(self):
         self.t = threading.currentThread()
@@ -134,7 +126,7 @@ class Light():
         gTmp = 0
         bTmp = 0
         
-        targetColor = (255,100,0)
+        targetColor = (255,110,0)
         
         while self.__runSunsetLoop:
             #first half of the time only red color
@@ -157,39 +149,26 @@ class Light():
             time.sleep(1) #1 second cycle
             #time.sleep(self.__cycletimeMs/1000)
 
-    # def __startLoop(self):
-    #     self.tStartLoop = threading.currentThread()
+    #def __smoothOnOffLoop(self):
+        self.tStartLoop = threading.currentThread()
+        iterations = self.__onOffLoopSec / 100
 
-    #     iterations = self.__startLoopSec / (self.__cycletimeMs / 1000)
+        rTmp = self.__color[0]
+        gTmp = self.__color[1]
+        bTmp = self.__color[2]
+        
+        while self.__runSunsetLoop:
+            rTmp = rTmp - (self.__color[0] / iterations)
+            gTmp = gTmp - (self.__color[1] / iterations)
+            bTmp = bTmp - (self.__color[2] / iterations)
+
+            self.__color=(rTmp,gTmp,bTmp) 
+            self.__accessPixel()
             
-    #     if self.debugMode:
-    #         print("iterations: " + str(iterations))
-            
-    #     rTmp = 0.0 
-    #     gTmp = 0.0
-    #     bTmp = 0.0
-            
-    #     while self.__runSunsetLoop:
-    #         if(time.time() >= self.timeoutMainLoop/2):  
+            if(time.time() >= self.timeout):
+                pass
 
-    #             rTmp = rTmp + (self.__color[0] / iterations)
-    #             gTmp = gTmp + (self.__color[1] / iterations)
-    #             bTmp = bTmp + (self.__color[2] / iterations)
-                
-    #         else:
-    #             rTmp = rTmp - (self.__color[0] / iterations)
-    #             gTmp = gTmp - (self.__color[1] / iterations)
-    #             bTmp = bTmp - (self.__color[2] / iterations)
-
-    #         if(time.time() >= self.timeout):
-    #             print("sunset Loop closed")
-    #             break
-
-    #         self.__accessPixel()
-                
-    #         time.sleep(self.__cycletimeMs/1000)
-
-    #     self.turnLedStripeOff()
+            time.sleep(100)
 
     def close(self):
         self.__runSunsetLoop = False
