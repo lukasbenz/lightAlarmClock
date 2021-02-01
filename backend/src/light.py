@@ -11,7 +11,7 @@ class Light():
     __endLed = 146
     __brightness = 100
     #Pink __lightColor = (255,100,100)
-    __lightColor = (255,160,40)
+    __lightColor = (255,120,20)
     #__onOffLoopSec = 1
 
     def __init__(self,arduinoConnection):     
@@ -132,11 +132,11 @@ class Light():
         while self.__runSunsetLoop:
             #first half of the time only red color
             if(time.time() < timeoutHalf):
-                rTmp = rTmp + (targetColor[0] / iterations)
+                rTmp = rTmp + (targetColor[0] / iterations / 4)
 
             #second half smoothly add green to reach yellow color
             else:
-                rTmp = rTmp + (targetColor[0] / iterations)
+                rTmp = rTmp + (targetColor[0] / iterations * 2)
                 gTmp = gTmp + (targetColor[1] / iterations * 2)
                 bTmp = bTmp + (targetColor[2] / iterations * 2)
 
@@ -150,7 +150,7 @@ class Light():
             time.sleep(1) #1 second cycle
             #time.sleep(self.__cycletimeMs/1000)
 
-    #def __smoothOnOffLoop(self):
+    def __smoothOnOffLoop(self):
         self.tStartLoop = threading.currentThread()
         iterations = self.__onOffLoopSec / 100
 

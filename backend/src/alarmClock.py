@@ -1,12 +1,12 @@
 import time
-from datetime import datetime
+from datetime import datetime, timedelta
 from flask.helpers import stream_with_context
 import pytz
 
 import threading
 
 class AlarmClock():
-
+    debugMode = False
     wakeUpTime = "06:45:00"
     sunsetTime = "15"
     snoozeTime = 10
@@ -140,16 +140,20 @@ class AlarmClock():
         while self.runAlarmClock:
             self.procActTimeAndDate()
 
-            sunsetStartTime = datetime.strptime(self.wakeUpTime,"%H:%M:%S") - datetime.strptime(self.sunsetTime,"%M")
-            
-            #print("") 
-            #print("current Time: " + self.currentTime)
-            #print("wakeup Time: " + str(self.wakeUpTime))
-            #print("sunset Time: " + str(sunsetStartTime))
-            #print("")
+            #sunsetTimeDelta = 
+            sunsetStartTime = datetime.strptime(self.wakeUpTime,"%H:%M:%S") - timedelta(minutes=int(self.sunsetTime))
+            sunsetStartTimeStr = sunsetStartTime.strftime("%H:%M:%S")
+
+            if(self.debugMode):
+                print("") 
+                print("current Time: " + self.currentTime)
+                print("wakeup Time: " + self.wakeUpTime)
+                print("sunset Time: " + sunsetStartTimeStr)
+                print("alarmClockState: " + str(self.__alarmClockState))
+                print("")
 
             if(self.__alarmClockState == True):
-                if(str(sunsetStartTime) == self.currentTime):
+                if(sunsetStartTimeStr == self.currentTime):
                     self.__sunsetState = True
 
                 if(self.wakeUpTime == self.currentTime):

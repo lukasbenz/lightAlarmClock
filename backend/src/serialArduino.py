@@ -50,8 +50,10 @@ class ArduinoConnection():
                             if response.status_code == 200:
                                 if(json_data['state']): #if TRUE system ist muted - so unmute it
                                         requests.post(url+'system/volume/mute/off')
+                                        requests.post(url+'radio/stop')
                                 else: #if FALSE system is unmuted - so mute it
-                                        requests.post(url+'system/volume/mute/on')         
+                                        requests.post(url+'system/volume/mute/on')
+                                        requests.post(url+'radio/play')         
                         
                         elif(inputSplit[1] == "negEdge"): #set volume
                             response = requests.get(url+'system/volume')
@@ -81,11 +83,10 @@ class ArduinoConnection():
                     if response.status_code == 200:
                         if(json_data['state']): #if TRUE light is ON - so turn it off
                                 requests.post(url+'light/off')
-                                requests.post(url+'radio/stop')
+                                
                         else: #if FALSE light is OFF - so turn it on
                                 requests.post(url+'light/on')
-                                requests.post(url+'radio/play')         
-                                         
+                                #requests.post(url+'radio/play')         
             except:
                 print("EXCEPTION ERROR in recLoop")
     
