@@ -12,18 +12,36 @@ class SystemSettings():
     
     def __init__(self,arduinoConnection):
         self.arduinoConnection = arduinoConnection
-        self.mixer = alsaaudio.Mixer()
+        scanCards = alsaaudio.cards()
+        print("cards:", scanCards)
+        
+        # i = 0
+        # for card in scanCards:
+            
+        #     print("cardname: " + str(card))
+        #     scanMixers = alsaaudio.mixers(scanCards.index(card))
+        #     print("mixers:", scanMixers)
+        #     for mixer in scanMixers:
+        #         i+=1
+        #         print("index: " + str(i))
+        #         print("mixer: " + mixer)
+        #         self.mixer = alsaaudio.mixers(scanCards.index(card))
+
+        self.mixer = alsaaudio.Mixer('Digital', cardindex=0)
+        #self.mixer.setvolume(20)
         
         print("init system settings class")
 
     #VOLUME
     def getVolume(self):
         #print("get Volume: " + str(self.__volume))
-        return self.__volume
+        return int(self.__volume)
 
     def setVolume(self,_input): 
         if(not self.__mute):
-            self.__volume = int(np.clip(int(_input), 0, 50))
+            #transform 0-100 to 0-80
+            self.__volume = int(_input)
+            self.__volume = np.clip(self.__volume, 0, 100)
             print("set Volume: " + str(self.__volume))
             self.mixer.setvolume(self.__volume)
         else:

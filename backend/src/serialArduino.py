@@ -45,14 +45,15 @@ class ArduinoConnection():
                 if(inputSplit[0] == "enc"):
                         
                         if(inputSplit[1] == "pressed"): #mute
-                            response = requests.get(url+'system/volume/mute/state')
+                            #response = requests.get(url+'system/volume/mute/state')
+                            response = requests.get(url+'radio/state')
                             json_data = json.loads(response.text)  
                             if response.status_code == 200:
                                 if(json_data['state']): #if TRUE system ist muted - so unmute it
-                                        requests.post(url+'system/volume/mute/off')
+                                        #requests.post(url+'system/volume/mute/off')
                                         requests.post(url+'radio/stop')
                                 else: #if FALSE system is unmuted - so mute it
-                                        requests.post(url+'system/volume/mute/on')
+                                        #requests.post(url+'system/volume/mute/on')
                                         requests.post(url+'radio/play')         
                         
                         elif(inputSplit[1] == "negEdge"): #set volume

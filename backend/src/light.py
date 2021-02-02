@@ -127,7 +127,7 @@ class Light():
         gTmp = 0
         bTmp = 0
         
-        targetColor = (255,110,0)
+        targetColor = (255,100,0)
         
         while self.__runSunsetLoop:
             #first half of the time only red color
@@ -136,7 +136,7 @@ class Light():
 
             #second half smoothly add green to reach yellow color
             else:
-                rTmp = rTmp + (targetColor[0] / iterations * 2)
+                rTmp = rTmp + (targetColor[0] / iterations * 3)
                 gTmp = gTmp + (targetColor[1] / iterations * 2)
                 bTmp = bTmp + (targetColor[2] / iterations * 2)
 
