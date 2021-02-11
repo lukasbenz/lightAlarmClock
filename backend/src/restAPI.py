@@ -394,9 +394,9 @@ def getDispState():
 
 ################## start save config Thread ##################
 loadConfig()
-runConfigThread = True
-tConfig = threading.Thread(target=saveConfig)
-tConfig.start()
+#runConfigThread = True
+#tConfig = threading.Thread(target=saveConfig)
+#tConfig.start()
 
 
 ################## start alarm handle thread ##################
