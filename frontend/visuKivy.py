@@ -4,6 +4,7 @@ Config.set('graphics', 'resizable', 'False')
 Config.set('graphics', 'fullscreen','auto')
 Config.set('graphics', 'width', '800')
 Config.set('graphics', 'height', '480')
+Config.set('graphics','show_cursor','0')
 
 from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager, Screen, FadeTransition
@@ -118,8 +119,7 @@ class ScreenDisplayOff(Screen):
                 requests.post(url+'system/display/off')           
 
         def leavePage(self,**kwargs):
-                pass
-                #requests.post(url+'system/display/on') 
+                requests.post(url+'system/display/on') 
 
         def btnDisplayState(self, *args):
                 self.parent.current = "screenHomeID"
