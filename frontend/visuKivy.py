@@ -1,7 +1,7 @@
 
 from kivy.config import Config
 Config.set('graphics', 'resizable', 'False')
-Config.set('graphics', 'fullscreen','False')
+Config.set('graphics', 'fullscreen','auto')
 Config.set('graphics', 'width', '800')
 Config.set('graphics', 'height', '480')
 
@@ -118,7 +118,8 @@ class ScreenDisplayOff(Screen):
                 requests.post(url+'system/display/off')           
 
         def leavePage(self,**kwargs):
-                requests.post(url+'system/display/on') 
+                pass
+                #requests.post(url+'system/display/on') 
 
         def btnDisplayState(self, *args):
                 self.parent.current = "screenHomeID"

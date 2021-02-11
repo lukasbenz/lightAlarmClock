@@ -1,15 +1,8 @@
 #!/bin/bash
+cd ~/GIT/lightAlarmClock/backend/src
+/home/pi/GIT/lightAlarmClock/env/bin/python restAPI.py&
 
-cd $home
-source /GIT/lightAlarmClock/env/bin/activate
-python --version
+sleep 2
 
-cd $home
-cd /GIT/lightAlarmClock/
-python backend/src/restAPI.py&
-
-sleep 5
-
-python frontend/main.py
-
-exit 0
+cd ~/GIT/lightAlarmClock/frontend/
+/home/pi/GIT/lightAlarmClock/env/bin/python visuKivy.py

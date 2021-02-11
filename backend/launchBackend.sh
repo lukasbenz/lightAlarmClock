@@ -1,5 +1,3 @@
 #!/bin/bash
-source ~/GIT/lightAlarmClock/env/bin/activate
-cd ~ 
-cd ~/GIT/lightAlarmClock/backend/
-python src/restAPI.py
+cd ~/GIT/lightAlarmClock/backend/src
+/home/pi/GIT/lightAlarmClock/env/bin/python restAPI.py

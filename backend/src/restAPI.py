@@ -30,12 +30,12 @@ def loadConfig():
     dir = os.path.dirname(__file__)
     print("work dir: " + dir)
     print("load config:")
-    with open(dir + '/config.json') as json_file:
+    with open('config.json') as json_file:
         data = json.load(json_file)
 
         alarmClock.setWakeUpTime(data["wakeUpTime"])
         alarmClock.setSunsetTime(data["sunsetTime"])
-        
+
         if(data["alarmState"]):
             alarmClock.setAlarmOn()
         else:
@@ -44,8 +44,7 @@ def loadConfig():
         internetRadio.setRadioStation(data["radioStation"])
         systemSettings.setVolume(data["volume"])
         systemSettings.setDispBright(data["displayBrightness"])
-        light.setBrightness(data["lightBrightness"]),  
-        
+        light.setBrightness(data["lightBrightness"]),
         if(data["useLedStripe"]):
             light.turnLedStripeOn()
         else:
@@ -61,15 +60,15 @@ def saveConfig():
         "radioStation": internetRadio.getRadioStationName(),
         "volume": systemSettings.getVolume(),
         "displayBrightness": systemSettings.getDispBright(),
-        "lightBrightness": light.getBrightness(),    
-        "useLedStripe": light.getLedStripeState()  
+        "lightBrightness": light.getBrightness(),
+        "useLedStripe": light.getLedStripeState()
         }
 
         dir = os.path.dirname(__file__)
-        with open(dir + '/config.json', 'w') as outfile:
+        with open('config.json', 'w') as outfile:
             json.dump(jsonData, outfile)
             #print("save JsonFile to disk")
-            
+
         time.sleep(5)
 
 ################## handle Alarm ##################
@@ -78,7 +77,7 @@ def handleAlarm():
     tAlarm = threading.currentThread()
     while runAlarmThread:
         #start Sunset
-        
+
         #print("SunsetState")
         #print(str(alarmClock.getAlarmActiveState()))
 
@@ -86,7 +85,7 @@ def handleAlarm():
             light.setSunsetTime(alarmClock.getSunsetTime())
             light.startSunset()
             alarmClock.setSunsetOff()
-            
+
         #start Radio on Alarm
         if(alarmClock.getAlarmActiveState() == True):
             internetRadio.play()
@@ -97,7 +96,7 @@ def handleAlarm():
 
 ############################################ APLICATION PROGRAMMING INTERFACE ############################################
 
-################## SYSTEM TIME / DATE ##################  
+################## SYSTEM TIME / DATE ##################
 @app.route('/api/time', methods = ['GET'])
 def getTime():
     if request.method == 'GET':
@@ -113,13 +112,13 @@ def getDate():
             })
 
 
-################## ALARM CLOCK ##################         
+################## ALARM CLOCK ##################
 @app.route('/api/alarmClock/time', methods = ['GET','POST'])
 def wakeUpTime():
     if request.method == 'GET':
         return jsonify({
             'value': alarmClock.getWakeUpTime()
-            })        
+            })
     elif request.method == 'POST':
 
         alarmClock.setWakeUpTime(request.get_json()['value'])
@@ -154,7 +153,7 @@ def alarmOff():
         return jsonify({
             'state': alarmClock.getAlarmState()
             })
-    
+
 @app.route('/api/alarmClock/state', methods = ['GET','POST'])
 def alarmState():
     if request.method == 'GET':
@@ -177,20 +176,20 @@ def snoozeModeOff():
         return jsonify({
             'state': alarmClock.getSnoozeState()
             })
-    
+
 @app.route('/api/alarmClock/snoozeMode/state', methods = ['GET','POST'])
 def SnoozeModeState():
     if request.method == 'GET':
         return jsonify({
             'state': alarmClock.getSnoozeState()
             })
-          
+
 @app.route('/api/alarmClock/snoozeMode/time', methods = ['GET','POST'])
 def SnoozeTime():
     if request.method == 'GET':
         return jsonify({
             'value': alarmClock.getSnoozeTime()
-            })        
+            })
     elif request.method == 'POST':
         alarmClock.setSnoozeTime(request.get_json(['value']))
         return jsonify({
@@ -204,7 +203,7 @@ def alarmActiveOff():
         return jsonify({
             'state': alarmClock.getAlarmActiveState()
             })
-    
+
 @app.route('/api/alarmClock/active/state', methods = ['GET','POST'])
 def alarmActiveState():
     if request.method == 'GET':
@@ -399,12 +398,13 @@ runConfigThread = True
 tConfig = threading.Thread(target=saveConfig)
 tConfig.start()
 
+
 ################## start alarm handle thread ##################
 runAlarmThread = True
 tAlarm = threading.Thread(target=handleAlarm)
 tAlarm.start()
 
-time.sleep(1)
+#time.sleep(1)
 
 #light.setSunsetTime(10)
 #light.startSunset()
@@ -417,4 +417,3 @@ app.run()
 #     print('interrupted!')
 #     BackendFunctions.close()
 #     print("backend closed")
-
