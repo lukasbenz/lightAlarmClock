@@ -4,10 +4,10 @@ Config.set('graphics', 'resizable', 'False')
 Config.set('graphics', 'fullscreen','auto')
 Config.set('graphics', 'width', '800')
 Config.set('graphics', 'height', '480')
-Config.set('graphics','show_cursor','0')
+Config.set('graphics','show_cursor','1')
 
 from kivy.app import App
-from kivy.uix.screenmanager import ScreenManager, Screen, FadeTransition
+from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
 from kivy.core.window import Window
 from kivy.clock import Clock      
 
@@ -21,7 +21,7 @@ class ScreenHome(Screen):
         def __init__(self,**kwargs):
                 super(ScreenHome, self).__init__(**kwargs)
                 
-        def enterPage(self,**kwargs):  
+        def enterPage(self,**kwargs):
                 self.eventUpdatePage = Clock.schedule_interval(self.updatePage,0.1)
 
                 #wakeup time
@@ -41,6 +41,7 @@ class ScreenHome(Screen):
                 else:
                         print(response)
 
+                                                
         def leavePage(self,**kwargs):
                 self.eventUpdatePage.cancel()
 
@@ -62,7 +63,7 @@ class ScreenHome(Screen):
                         else:
                                 self.id_date.text = "err"
 
-
+                        
                         #light state
                         response = requests.get(url+'light/state')
                         json_data = json.loads(response.text)  
@@ -81,7 +82,8 @@ class ScreenHome(Screen):
                                         self.id_muted.text = ""
 
                         else:
-                                self.id_muted.text = "err"
+                                self.id_muted.text = "err"                        
+
                 except:
                         print("exception updating page")
 
@@ -119,7 +121,7 @@ class ScreenDisplayOff(Screen):
                 requests.post(url+'system/display/off')           
 
         def leavePage(self,**kwargs):
-                requests.post(url+'system/display/on') 
+                requests.post(url+'system/display/on')
 
         def btnDisplayState(self, *args):
                 self.parent.current = "screenHomeID"
@@ -128,13 +130,13 @@ class ScreenAlarmClock(Screen):
 
                 def __init__(self,**kwargs):
                         super(ScreenAlarmClock, self).__init__(**kwargs)
-
+                        
                 def enterPage(self,**kwargs):
-                        requests.post(url+'alarmClock/off') 
                         self.eventUpdatePage = Clock.schedule_interval(self.updatePage,0.1)
+                        requests.post(url+'alarmClock/off')
 
                 def leavePage(self,**kwargs):
-                        requests.post(url+'alarmClock/on') 
+                        requests.post(url+'alarmClock/on')
                         self.eventUpdatePage.cancel()
 
                 def updatePage(self, *args):
@@ -157,6 +159,7 @@ class ScreenAlarmClock(Screen):
                                 self.id_wakeUpTime.text = self.newWakeUpTime[:-3]                          
                         else:
                                 self.id_wakeUpTime.text = 'err'
+                        
 
                         #sunset time
                         response = requests.get(url+'alarmClock/sunsetTime')
@@ -166,6 +169,7 @@ class ScreenAlarmClock(Screen):
                                 self.displaySunsetTime()                           
                         else:
                                 self.id_sunsetTime.text = 'err'
+                        
 
                 def convertWakeUpTime(self):
                         if(self.hours<10):
@@ -177,9 +181,9 @@ class ScreenAlarmClock(Screen):
                                 strMinutes = '0' + str(self.minutes)
                         else:
                                 strMinutes = str(self.minutes)
-                                
-                        self.newWakeUpTime = strHours + ":" + strMinutes + ":00"
 
+                        self.newWakeUpTime = strHours + ":" + strMinutes + ":00"
+                
                 def sendWakeUpTime(self):
                         data = {'value': self.newWakeUpTime}
                         r = requests.post(url+'alarmClock/time', json=data)           
@@ -200,7 +204,7 @@ class ScreenAlarmClock(Screen):
 
                         self.convertWakeUpTime()
                         self.sendWakeUpTime()
-
+  
                 def btn_wakeUpHoursTimeDown(self, *args):
                         self.hours -= 1
 
@@ -249,7 +253,6 @@ class ScreenRadio(Screen):
                         self.eventUpdatePage = Clock.schedule_interval(self.updatePage,0.1)
                         self.updateRadioInfo()
 
-
                 def leavePage(self,**kwargs):
                         self.eventUpdatePage.cancel()
 
@@ -262,6 +265,7 @@ class ScreenRadio(Screen):
                         else:
                                 self.id_clock.text = "err"
 
+                        
                         #Volume
                         response = requests.get(url+'system/volume')
                         json_data = json.loads(response.text)  
@@ -281,6 +285,7 @@ class ScreenRadio(Screen):
                                         self.id_muted.text = ""
                         else:
                                 self.id_muted.text = "err"
+                        
 
                 def updateRadioInfo(self,**kwargs):
                         response = requests.get(url+'radio/stationName')
@@ -440,7 +445,7 @@ class ScreenAlarmActive(Screen):
 class VisuAlarmClock(App):   
 
         def build(self):
-                self.sm = ScreenManager(transition=FadeTransition())
+                self.sm = ScreenManager(transition=NoTransition())
                 self.home_screen = ScreenHome(name='screenHomeID')
                 self.displayOff_screen = ScreenDisplayOff(name='screenDisplayOffID')
                 self.alarmClock_screen = ScreenAlarmClock(name='screenAlarmClockID')

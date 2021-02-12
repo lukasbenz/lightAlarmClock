@@ -30,7 +30,7 @@ def loadConfig():
     dir = os.path.dirname(__file__)
     print("work dir: " + dir)
     print("load config:")
-    with open('config.json') as json_file:
+    with open(dir + '/config.json') as json_file:
         data = json.load(json_file)
 
         alarmClock.setWakeUpTime(data["wakeUpTime"])
@@ -82,6 +82,7 @@ def handleAlarm():
         #print(str(alarmClock.getAlarmActiveState()))
 
         if(alarmClock.getSunsetActive() == True):
+        
             light.setSunsetTime(alarmClock.getSunsetTime())
             light.startSunset()
             alarmClock.setSunsetOff()
@@ -93,6 +94,7 @@ def handleAlarm():
             alarmClock.setAlarmActiveOff()
 
         time.sleep(1)
+
 
 ############################################ APLICATION PROGRAMMING INTERFACE ############################################
 
