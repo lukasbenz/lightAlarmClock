@@ -65,7 +65,7 @@ def saveConfig():
         }
 
         dir = os.path.dirname(__file__)
-        with open('config.json', 'w') as outfile:
+        with open(dir+'/config.json', 'w') as outfile:
             json.dump(jsonData, outfile)
             #print("save JsonFile to disk")
 
@@ -396,9 +396,9 @@ def getDispState():
 
 ################## start save config Thread ##################
 loadConfig()
-#runConfigThread = True
-#tConfig = threading.Thread(target=saveConfig)
-#tConfig.start()
+runConfigThread = True
+tConfig = threading.Thread(target=saveConfig)
+tConfig.start()
 
 
 ################## start alarm handle thread ##################
