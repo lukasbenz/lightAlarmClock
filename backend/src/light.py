@@ -11,14 +11,11 @@ class Light():
     __endLed = 146
     __brightness = 100
     #Pink __lightColor = (255,100,100)
-    __lightColor = (255,120,20)
+    __lightColor = (255,150,50)
     #__onOffLoopSec = 1
 
     def __init__(self,arduinoConnection):     
-        self.arduinoConnection = arduinoConnection   
-        #self.__onOffLoop = True
-        #self.tonOffLoop = threading.Thread(target=self.__smoothOnOffLoop)
-        #self.tonOffLoop.start()
+        self.arduinoConnection = arduinoConnection
         self.turnLightOff()
         print("init Light class")
 

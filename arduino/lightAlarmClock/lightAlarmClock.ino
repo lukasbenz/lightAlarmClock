@@ -95,21 +95,14 @@ void setup() {
     debounceBtn2.attach(btnEnc1);
     debounceBtn2.interval(10);
 
+//DISPLAY set it off
+  //analogWrite(pinDispLight, 255);
+
 }
 
 //============
 void loop() 
-{
-    //startLed=0;
-    //endLed=146;
-    //intR = intR + 1;
-    //intG = intG + 1;
-    //intB = intB + 1;
-    
-    //setLedStripe();
-    
-    //time.sleep(1)
-        
+{        
     rotating = true; // reset the debouncer
     if (lastReportedPos != encoderPos)
     {

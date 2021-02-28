@@ -1,5 +1,6 @@
 import numpy as np
 import alsaaudio
+import math
 
 class SystemSettings():
 
@@ -32,6 +33,18 @@ class SystemSettings():
         
         print("init system settings class")
 
+
+    def logFunction(self, value):
+        minp = 0
+        maxp = 100
+
+        minv = 0
+        maxv = math.log(100)
+
+        scale = (maxv - minv) / (maxp - minp)
+        #return math.exp(minv + scale * (value - minp))
+        return (math.log(value)-minv) / scale + minp;
+    
     #VOLUME
     def getVolume(self):
         #print("get Volume: " + str(self.__volume))
@@ -41,9 +54,13 @@ class SystemSettings():
         if(not self.__mute):
             #transform 0-100 to 0-80
             self.__volume = int(_input)
-            self.__volume = np.clip(self.__volume, 0, 100)
+            self.__volume = np.clip(self.__volume, 1, 100)
+
+            #use log scale because "digital" volume from hifiberry amp is in db = log scale
+            volLog = self.logFunction(self.__volume)
             print("set Volume: " + str(self.__volume))
-            self.mixer.setvolume(self.__volume)
+            print("set Volume log:" + str(volLog))
+            self.mixer.setvolume(int(volLog))
         else:
             print("system muted!")
 

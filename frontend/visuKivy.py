@@ -4,7 +4,7 @@ Config.set('graphics', 'resizable', 'False')
 Config.set('graphics', 'fullscreen','auto')
 Config.set('graphics', 'width', '800')
 Config.set('graphics', 'height', '480')
-Config.set('graphics','show_cursor','1')
+Config.set('graphics','show_cursor','0')
 
 from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
@@ -373,7 +373,7 @@ class ScreenSettings(Screen):
                         self.eventUpdatePage.cancel()
 
                 def updatePage(self, *args):
-                        #time
+                        # time
                         response = requests.get(url+'time')
                         json_data = json.loads(response.text)  
                         if response.status_code == 200:
@@ -381,6 +381,14 @@ class ScreenSettings(Screen):
                         else:
                                 print(response)
                                 self.id_clock.text = "err"
+
+                        # light state
+                        response = requests.get(url+'light/state')
+                        json_data = json.loads(response.text)  
+                        if response.status_code == 200:
+                                self.id_switch_light.active = json_data['state']
+                        else:
+                                print(response)
 
                 def slider_light_value(self, value):  
                         data = {'value': value}
@@ -405,6 +413,7 @@ class ScreenSettings(Screen):
                 def btn_backHome(self, *args):
                         self.parent.current = "screenHomeID"
 
+'''
 class ScreenAlarmActive(Screen):
 
         def __init__(self,**kwargs):
@@ -441,7 +450,8 @@ class ScreenAlarmActive(Screen):
         def btnStop(self, *args):
                 #requests.post(url+'/alarmClock/active/off')
                 self.parent.current = "screenHomeID"
- 
+'''
+
 class VisuAlarmClock(App):   
 
         def build(self):
@@ -451,22 +461,23 @@ class VisuAlarmClock(App):
                 self.alarmClock_screen = ScreenAlarmClock(name='screenAlarmClockID')
                 self.radio_screen = ScreenRadio(name='screenRadioID')
                 self.settings_screen = ScreenSettings(name='screenSettingsID')
-                self.alarmClockActive_screen = ScreenAlarmActive(name='screenAlarmActiveID')
+                #self.alarmClockActive_screen = ScreenAlarmActive(name='screenAlarmActiveID')
 
                 self.sm.add_widget(self.home_screen)
                 self.sm.add_widget(self.displayOff_screen)
                 self.sm.add_widget(self.alarmClock_screen)
                 self.sm.add_widget(self.radio_screen)
                 self.sm.add_widget(self.settings_screen)
-                self.sm.add_widget(self.alarmClockActive_screen)
+                #self.sm.add_widget(self.alarmClockActive_screen)
 
                 self.sm.current = 'screenHomeID'
 
                 return self.sm
 
-        def on_start(self):
-                self.eventCheckAlarm = Clock.schedule_interval(self.checkAlarmActive,1)
+        #def on_start(self):
+                #self.eventCheckAlarm = Clock.schedule_interval(self.checkAlarmActive,1)
 
+        '''
         def checkAlarmActive(self,*args):
                 try:
                         response = requests.get(url+'alarmClock/active/state')
@@ -478,9 +489,10 @@ class VisuAlarmClock(App):
                                 print(response)
                 except:
                         print("An exception occurred 3")
-        
-        #def on_touch_down(self, touch):
-        #       print("TOUCH TOUCH TOUCH TOUCH TOUCH TOUCH TOUCH TOUCH")
+        '''
+
+        def on_touch_down(self, touch):
+                print("TOUCH TOUCH TOUCH TOUCH TOUCH TOUCH TOUCH TOUCH")
 
         #Window.bind(on_touch_down=on_touch_down)
 

@@ -87,19 +87,19 @@ class ArduinoConnection():
                         if response.status_code == 200:
                             if(json_data['state']): #if TRUE light is ON - so turn it off
                                     requests.post(url+'light/off')
-                                    requests.post(url+'system/display/off')
+                                    #requests.post(url+'system/display/off')
                                     
                             else: #if FALSE light is OFF - so turn it on
                                     requests.post(url+'light/on')
-                                    requests.post(url+'system/display/on')
+                                    #requests.post(url+'system/display/on')
                                     #requests.post(url+'radio/play')         
                     
 
-                time.sleep(0.1)
-
+                #time.sleep(0.1)
 
             except:
                 print("EXCEPTION ERROR in recLoop")
+                self.s.flushInput() #try to reset arduino
     
     def writeData(self,string):
         try:

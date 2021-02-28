@@ -50,7 +50,7 @@ def loadConfig():
         else:
             light.turnLedStripeOff()
 
-def saveConfig():
+def saveConfig(): #save all 10s current state - if you turn the power on/off
     tConfig = threading.currentThread()
     while runConfigThread:
         jsonData = {
@@ -65,11 +65,11 @@ def saveConfig():
         }
 
         dir = os.path.dirname(__file__)
-        with open(dir+'/config.json', 'w') as outfile:
+        with open(dir + '/config.json', 'w') as outfile:
             json.dump(jsonData, outfile)
             #print("save JsonFile to disk")
-
-        time.sleep(5)
+        
+        time.sleep(10)
 
 ################## handle Alarm ##################
 def handleAlarm():
@@ -89,12 +89,12 @@ def handleAlarm():
 
         #start Radio on Alarm
         if(alarmClock.getAlarmActiveState() == True):
+            systemSettings.setDispOn()
             internetRadio.play()
             time.sleep(2)
             alarmClock.setAlarmActiveOff()
 
         time.sleep(1)
-
 
 ############################################ APLICATION PROGRAMMING INTERFACE ############################################
 
@@ -405,11 +405,6 @@ tConfig.start()
 runAlarmThread = True
 tAlarm = threading.Thread(target=handleAlarm)
 tAlarm.start()
-
-#time.sleep(1)
-
-#light.setSunsetTime(10)
-#light.startSunset()
 
 #try
 app.config["DEBUG"] = False
