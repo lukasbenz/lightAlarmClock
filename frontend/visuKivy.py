@@ -101,6 +101,7 @@ class ScreenHome(Screen):
                         requests.post(url+'light/off') 
 
         def btnDisplayState(self, *args):
+                requests.post(url+'system/display/off')
                 self.parent.current = "screenDisplayOffID"
 
         def btnMenue1(self, *args):
@@ -118,12 +119,21 @@ class ScreenDisplayOff(Screen):
                 super(ScreenDisplayOff, self).__init__(**kwargs)
                 
         def enterPage(self,**kwargs):
-                requests.post(url+'system/display/off')           
+                self.eventUpdatePage = Clock.schedule_interval(self.updatePage,0.1)
 
+         def updatePage(self, *args):
+                #display state
+                response = requests.get(url+'system/display/state')
+                json_data = json.loads(response.text)  
+                        if response.status_code == 200:
+                                if(json_data['state'] == True):
+                                        self.parent.current = "screenHomeID"
+                                
         def leavePage(self,**kwargs):
-                requests.post(url+'system/display/on')
+                self.eventUpdatePage.cancel()
 
         def btnDisplayState(self, *args):
+                requests.post(url+'system/display/on')
                 self.parent.current = "screenHomeID"
 
 class ScreenAlarmClock(Screen):
@@ -473,11 +483,12 @@ class VisuAlarmClock(App):
                 self.sm.current = 'screenHomeID'
 
                 return self.sm
-
-        #def on_start(self):
-                #self.eventCheckAlarm = Clock.schedule_interval(self.checkAlarmActive,1)
-
+        
         '''
+        def on_start(self):
+                self.eventCheckAlarm = Clock.schedule_interval(self.checkScreenSaver,1)
+
+        
         def checkAlarmActive(self,*args):
                 try:
                         response = requests.get(url+'alarmClock/active/state')
