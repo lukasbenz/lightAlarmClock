@@ -9,6 +9,9 @@ class Light():
     __runSunsetLoop = False
     __ledStripeState = True
     
+    __startLed = 0
+    __endLed = 146
+        
     __countLedsBuildIn = 28     #here define amount of LED´s within the case
     __countLedStripe = 146      #here define amount of LED´s within the LED Stripe
 
@@ -17,10 +20,12 @@ class Light():
     __colorOn = (255,120,0)     #standard color On
     __colorOff = (0,0,0)        #standard color Off
 
+    threadSunsetLoopName = "threadSunsetLoop"
     #Pink __lightColor = (255,100,100)
 
     def __init__(self,arduinoConnection):     
         self.arduinoConnection = arduinoConnection
+        self.t = threading.Thread(target=self.__sunsetLoop, name=self.threadSunsetLoopName)
         self.turnLightOff()
         print("init Light class")
 
@@ -33,7 +38,7 @@ class Light():
     def turnLightOff(self):
         self.stopSunsetLoop()
         print("set Light Off")
-        self.__color=__colorOff
+        self.__color = self.__colorOff
         self.__accessPixel()
         self.__lightstate = False
 
@@ -111,14 +116,18 @@ class Light():
         self.__lightstate = True
 
         self.__runSunsetLoop = True
-        self.t = threading.Thread(target=self.__sunsetLoop)
         self.t.start()
 
     def stopSunsetLoop(self):
-        self.__runSunsetLoop = False
-        if self.t.joinable():
-            self.t.join()
-        self.turnLightOff()
+        for th in threading.enumerate():
+            if (th.name == self.threadSunsetLoopName):
+                print("Thread sunsetLoop is running")
+                #self.__runSunsetLoop = False
+                #th.join()
+                break
+
+            print(th.name)
+
         print("stop sunsest Loop")
 
     def __sunsetLoop(self):
@@ -158,6 +167,14 @@ class Light():
             time.sleep(1) #1 second cycle
             #time.sleep(self.__cycletimeMs/1000)
 
+    def close(self):
+        self.__runSunsetLoop = False
+        if self.t.joinable():
+            self.t.join()
+        self.turnLightOff()
+        print("close led stripe")
+
+
 '''
     def __smoothOnOffLoop(self):
         self.tStartLoop = threading.currentThread()
@@ -180,9 +197,3 @@ class Light():
 
             time.sleep(100)
 '''
-    def close(self):
-        self.__runSunsetLoop = False
-        if self.t.joinable():
-            self.t.join()
-        self.turnLightOff()
-        print("close led stripe")
