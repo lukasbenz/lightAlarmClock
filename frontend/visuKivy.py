@@ -91,7 +91,6 @@ class ScreenHome(Screen):
                 if(switchValue == True):
                         requests.post(url+'alarmClock/on') 
                 else:
-                        requests.post(url+'alarmClock/snoozeMode/off') 
                         requests.post(url+'alarmClock/off') 
                         
         def switchLightCallback(self, switchObject, switchValue):   
@@ -101,6 +100,7 @@ class ScreenHome(Screen):
                         requests.post(url+'light/off') 
 
         def btnDisplayState(self, *args):
+                requests.post(url+'system/display/off')
                 self.parent.current = "screenDisplayOffID"
 
         def btnMenue1(self, *args):
@@ -118,13 +118,22 @@ class ScreenDisplayOff(Screen):
                 super(ScreenDisplayOff, self).__init__(**kwargs)
                 
         def enterPage(self,**kwargs):
-                requests.post(url+'system/display/off')           
+                self.eventUpdatePage = Clock.schedule_interval(self.updatePage,0.1)
+
+        def updatePage(self, *args):
+                response = requests.get(url+'system/display/state')
+                json_data = json.loads(response.text)  
+                if response.status_code == 200:
+                        if(json_data['state'] == True):
+                                self.parent.current = "screenHomeID"
+                else:
+                        print(response)
 
         def leavePage(self,**kwargs):
-                requests.post(url+'system/display/on')
+                self.eventUpdatePage.cancel()
 
         def btnDisplayState(self, *args):
-                self.parent.current = "screenHomeID"
+                requests.post(url+'system/display/on')
 
 class ScreenAlarmClock(Screen):
 
@@ -133,10 +142,8 @@ class ScreenAlarmClock(Screen):
                         
                 def enterPage(self,**kwargs):
                         self.eventUpdatePage = Clock.schedule_interval(self.updatePage,0.1)
-                        requests.post(url+'alarmClock/off')
 
                 def leavePage(self,**kwargs):
-                        requests.post(url+'alarmClock/on')
                         self.eventUpdatePage.cancel()
 
                 def updatePage(self, *args):
@@ -473,11 +480,12 @@ class VisuAlarmClock(App):
                 self.sm.current = 'screenHomeID'
 
                 return self.sm
-
-        #def on_start(self):
-                #self.eventCheckAlarm = Clock.schedule_interval(self.checkAlarmActive,1)
-
+        
         '''
+        def on_start(self):
+                self.eventCheckAlarm = Clock.schedule_interval(self.checkScreenSaver,1)
+
+        
         def checkAlarmActive(self,*args):
                 try:
                         response = requests.get(url+'alarmClock/active/state')

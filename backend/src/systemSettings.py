@@ -9,7 +9,7 @@ class SystemSettings():
     __mute = False
 
     __displayBrightness = 10
-    __displayOff = False
+    __displayState = True
     
     def __init__(self,arduinoConnection):
         self.arduinoConnection = arduinoConnection
@@ -88,14 +88,14 @@ class SystemSettings():
         self.arduinoConnection.writeData("<display," + str(self.__displayBrightness) + ">")
 
     def setDispOn(self):
-        self.__displayOff = False
+        self.__displayState = True
         self.arduinoConnection.writeData("<display," + str(self.__displayBrightness) + ">")
         print("turn Display On")
 
     def setDispOff(self): 
-        self.__displayOff = True
+        self.__displayState = False
         self.arduinoConnection.writeData("<display,0>")
         print("turn Display Off")
 
     def getDispState(self):
-        return self.__displayOff
+        return self.__displayState

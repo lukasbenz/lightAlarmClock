@@ -5,7 +5,7 @@ import json
 import threading
 import time
 import os
-
+ 
 from internetRadio import InternetRadio
 from alarmClock import AlarmClock
 from systemSettings import SystemSettings
@@ -27,6 +27,7 @@ light = Light(arduinoConnection)
 
 ################## config ##################
 def loadConfig():
+    time.sleep(1)
     dir = os.path.dirname(__file__)
     print("work dir: " + dir)
     print("load config:")
@@ -51,6 +52,7 @@ def loadConfig():
             light.turnLedStripeOff()
 
 def saveConfig(): #save all 10s current state - if you turn the power on/off
+    time.sleep(1)
     tConfig = threading.currentThread()
     while runConfigThread:
         jsonData = {
@@ -393,24 +395,18 @@ def getDispState():
             'state': systemSettings.getDispState()
             })
 
-
 ################## start save config Thread ##################
 loadConfig()
 runConfigThread = True
-tConfig = threading.Thread(target=saveConfig)
+tConfig = threading.Thread(target=saveConfig, name="saveConfigThread")
 tConfig.start()
-
 
 ################## start alarm handle thread ##################
 runAlarmThread = True
-tAlarm = threading.Thread(target=handleAlarm)
+tAlarm = threading.Thread(target=handleAlarm, name="handleAlarmThread")
 tAlarm.start()
 
-#try
 app.config["DEBUG"] = False
 #app.run(host='192.168.2.112')
 app.run()
-# except KeyboardInterrupt:
-#     print('interrupted!')
-#     BackendFunctions.close()
-#     print("backend closed")
+
