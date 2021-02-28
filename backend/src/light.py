@@ -4,7 +4,7 @@ import numpy as np
 
 class Light():
 
-    debugMode = True
+    debugMode = False
     __lightstate = False
     __runSunsetLoop = False
     __ledStripeState = True
@@ -16,8 +16,8 @@ class Light():
     __countLedStripe = 146      #here define amount of LED´s within the LED Stripe
 
     __brightness = 100          #brightness of the LEds
-    __colorSunset = (255,120,0) #custom color for sunset 
-    __colorOn = (255,120,0)     #standard color On
+    __colorSunset = (255,150,0) #custom color for sunset 
+    __colorOn = (255,255,120)     #standard color On
     __colorOff = (0,0,0)        #standard color Off
 
     threadSunsetLoopName = "threadSunsetLoop"
@@ -25,18 +25,18 @@ class Light():
 
     def __init__(self,arduinoConnection):     
         self.arduinoConnection = arduinoConnection
-        self.t = threading.Thread(target=self.__sunsetLoop, name=self.threadSunsetLoopName)
         self.turnLightOff()
         print("init Light class")
 
     def turnLightOn(self):
           print("set Light On")
-          self.__color = self.__lightColor
+          self.__color = self.__colorOn
           self.__accessPixel()
           self.__lightstate = True
         
     def turnLightOff(self):
         self.stopSunsetLoop()
+
         print("set Light Off")
         self.__color = self.__colorOff
         self.__accessPixel()
@@ -86,7 +86,7 @@ class Light():
         
         self.__startLed = 0
         self.__endLed = self.__countLedsBuildIn
-        self.__color=self.__lightColor
+        self.__color=self.__colorOn
 
     def getLedStripeState(self):
         return self.__ledStripeState
@@ -112,9 +112,11 @@ class Light():
         self.arduinoConnection.writeData("<led," + str(r) + "," + str(g) + "," + str(b) + "," + str(self.__startLed) + "," + str(self.__endLed) + ">")
 
     def startSunset(self):
-        print("Sunsest Loop started for " + str(self.sunsetTimeSeconds) + "sec") 
-        self.__lightstate = True
+        self.stopSunsetLoop()
 
+        self.t = threading.Thread(target=self.__sunsetLoop, name=self.threadSunsetLoopName)
+        print("Sunsest Loop started for " + str(self.sunsetTimeSeconds) + "sec") 
+        
         self.__runSunsetLoop = True
         self.t.start()
 
@@ -122,13 +124,10 @@ class Light():
         for th in threading.enumerate():
             if (th.name == self.threadSunsetLoopName):
                 print("Thread sunsetLoop is running")
-                #self.__runSunsetLoop = False
-                #th.join()
+                self.__runSunsetLoop = False
+                th.join()
+                print("stop sunsest Loop")
                 break
-
-            print(th.name)
-
-        print("stop sunsest Loop")
 
     def __sunsetLoop(self):
         self.t = threading.currentThread()
@@ -149,13 +148,13 @@ class Light():
         while self.__runSunsetLoop:
             #first half of the time only show red LED to create a realistic sunset
             if(time.time() < timeoutHalf):
-                rTmp = rTmp + (__colorSunset[0] / iterations / 4)
+                rTmp = rTmp + (self.__colorSunset[0] / iterations / 4)
 
             #second half smoothly add rest of the colors to reach sunset color
             else:
-                rTmp = rTmp + (__colorSunset[0] / iterations * 3)
-                gTmp = gTmp + (__colorSunset[1] / iterations * 2)
-                bTmp = bTmp + (__colorSunset[2] / iterations * 2)
+                rTmp = rTmp + (self.__colorSunset[0] / iterations * 3)
+                gTmp = gTmp + (self.__colorSunset[1] / iterations * 2)
+                bTmp = bTmp + (self.__colorSunset[2] / iterations * 2)
 
             self.__color=(rTmp,gTmp,bTmp) 
             self.__accessPixel()

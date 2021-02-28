@@ -8,7 +8,7 @@ import time
 url = 'http://127.0.0.1:5000/api/'
 
 class ArduinoConnection():
-    debugMode = True
+    debugMode = False
     __runRecLoop = False
 
     def __init__(self):        

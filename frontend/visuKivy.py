@@ -91,7 +91,6 @@ class ScreenHome(Screen):
                 if(switchValue == True):
                         requests.post(url+'alarmClock/on') 
                 else:
-                        requests.post(url+'alarmClock/snoozeMode/off') 
                         requests.post(url+'alarmClock/off') 
                         
         def switchLightCallback(self, switchObject, switchValue):   
@@ -121,20 +120,20 @@ class ScreenDisplayOff(Screen):
         def enterPage(self,**kwargs):
                 self.eventUpdatePage = Clock.schedule_interval(self.updatePage,0.1)
 
-         def updatePage(self, *args):
-                #display state
+        def updatePage(self, *args):
                 response = requests.get(url+'system/display/state')
                 json_data = json.loads(response.text)  
-                        if response.status_code == 200:
-                                if(json_data['state'] == True):
-                                        self.parent.current = "screenHomeID"
-                                
+                if response.status_code == 200:
+                        if(json_data['state'] == True):
+                                self.parent.current = "screenHomeID"
+                else:
+                        print(response)
+
         def leavePage(self,**kwargs):
                 self.eventUpdatePage.cancel()
 
         def btnDisplayState(self, *args):
                 requests.post(url+'system/display/on')
-                self.parent.current = "screenHomeID"
 
 class ScreenAlarmClock(Screen):
 
@@ -143,10 +142,8 @@ class ScreenAlarmClock(Screen):
                         
                 def enterPage(self,**kwargs):
                         self.eventUpdatePage = Clock.schedule_interval(self.updatePage,0.1)
-                        requests.post(url+'alarmClock/off')
 
                 def leavePage(self,**kwargs):
-                        requests.post(url+'alarmClock/on')
                         self.eventUpdatePage.cancel()
 
                 def updatePage(self, *args):
