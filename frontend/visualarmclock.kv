@@ -444,6 +444,7 @@
     id_slider_display: _id_slider_display
     id_switch_light: _id_switch_light
     id_switch_ledStripe: _id_switch_ledStripe
+    id_switch_screensaver: _id_switch_screensaver
 
     canvas.before:
         Rectangle:
@@ -521,7 +522,21 @@
         pos_hint: {"center_x":0.75, "center_y":0.45}
         font_size: 20
         color: 1,1,1,1
-          
+
+    Switch: 
+        size_hint: 0.2,0.2
+        id: _id_switch_screensaver
+        pos_hint: {"center_x":0.5, "center_y":0.35}
+        # Arranging a callback to the switch 
+        on_active: root.switch_screensaver(self, self.active) 
+
+    Label:
+        text: "Bildschirmschoner AN / AUS"
+        bold: True
+        pos_hint: {"center_x":0.5, "center_y":0.45}
+        font_size: 20
+        color: 1,1,1,1
+             
     Switch: 
         size_hint: 0.2,0.2
         id: _id_switch_ledStripe

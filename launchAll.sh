@@ -4,5 +4,5 @@ cd ~/GIT/lightAlarmClock/
 
 sleep 5
 
-cd ~/GIT/lightAlarmClock/frontend
-/home/pi/GIT/lightAlarmClock/env/bin/python visuKivy.py
+#cd ~/GIT/lightAlarmClock/frontend
+#/home/pi/GIT/lightAlarmClock/env/bin/python visuKivy.py

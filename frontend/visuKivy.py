@@ -417,6 +417,15 @@ class ScreenSettings(Screen):
                         else:
                                 requests.post(url+'light/off')
 
+                
+                def switch_screensaver(self, switchObject, switchValue): 
+                        if(switchValue == True):
+                                pass
+                                #requests.post(url+'light/on') 
+                        else:
+                                pass
+                                #requests.post(url+'light/off')
+
                 def btn_backHome(self, *args):
                         self.parent.current = "screenHomeID"
 
@@ -481,28 +490,22 @@ class VisuAlarmClock(App):
 
                 return self.sm
         
-        '''
         def on_start(self):
                 self.eventCheckAlarm = Clock.schedule_interval(self.checkScreenSaver,1)
-
+                self.timerWithoutTouchingDisplay = 0
+                self.maxTimeWithputTouchingDisplay = 30 #60s
         
-        def checkAlarmActive(self,*args):
-                try:
-                        response = requests.get(url+'alarmClock/active/state')
-                        json_data = json.loads(response.text)
-                        if response.status_code == 200:
-                                if(json_data['state'] == 1):
-                                        self.sm.current = "screenAlarmActiveID"
-                        else:
-                                print(response)
-                except:
-                        print("An exception occurred 3")
-        '''
+        def checkScreenSaver(self, *args):
+                self.timerWithoutTouchingDisplay += 1
+                if(self.timerWithoutTouchingDisplay == self.maxTimeWithputTouchingDisplay):
+                        requests.post(url+'system/display/off')
+                        self.sm.current = "screenDisplayOffID"
 
         def on_touch_down(self, touch):
-                print("TOUCH TOUCH TOUCH TOUCH TOUCH TOUCH TOUCH TOUCH")
+                self.timerWithoutTouchingDisplay = 0
+                #print("TOUCH TOUCH TOUCH TOUCH TOUCH TOUCH TOUCH TOUCH")
 
-        #Window.bind(on_touch_down=on_touch_down)
+        Window.bind(on_touch_down=on_touch_down)
 
 visu = VisuAlarmClock()
 visu.run()
