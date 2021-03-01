@@ -27,7 +27,6 @@ light = Light(arduinoConnection)
 
 ################## config ##################
 def loadConfig():
-    time.sleep(1)
     dir = os.path.dirname(__file__)
     print("work dir: " + dir)
     print("load config:")
@@ -52,7 +51,6 @@ def loadConfig():
             light.turnLedStripeOff()
 
 def saveConfig(): #save all 10s current state - if you turn the power on/off
-    time.sleep(1)
     tConfig = threading.currentThread()
     while runConfigThread:
         jsonData = {
@@ -83,8 +81,7 @@ def handleAlarm():
         #print("SunsetState")
         #print(str(alarmClock.getAlarmActiveState()))
 
-        if(alarmClock.getSunsetActive() == True):
-        
+        if(alarmClock.getSunsetActive() == True):        
             light.setSunsetTime(alarmClock.getSunsetTime())
             light.startSunset()
             alarmClock.setSunsetOff()
@@ -405,6 +402,8 @@ tConfig.start()
 runAlarmThread = True
 tAlarm = threading.Thread(target=handleAlarm, name="handleAlarmThread")
 tAlarm.start()
+
+time.sleep(1)
 
 app.config["DEBUG"] = False
 #app.run(host='192.168.2.112')
