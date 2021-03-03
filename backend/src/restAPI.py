@@ -27,10 +27,12 @@ light = Light(arduinoConnection)
 
 ################## config ##################
 def loadConfig():
+    #dir = os.path.dirname(__file__)
+    #print("work dir: " + str(dir))
+    #print("load config:")
+
     dir = os.path.dirname(__file__)
-    print("work dir: " + dir)
-    print("load config:")
-    with open(dir + '/config.json') as json_file:
+    with open(dir + 'config.json') as json_file:
         data = json.load(json_file)
 
         alarmClock.setWakeUpTime(data["wakeUpTime"])
@@ -50,6 +52,11 @@ def loadConfig():
         else:
             light.turnLedStripeOff()
 
+        if(data["screensaver"]):
+            systemSettings.setDispScreensaverOn()
+        else:
+            systemSettings.setDispScreensaverOff()
+
 def saveConfig(): #save all 10s current state - if you turn the power on/off
     tConfig = threading.currentThread()
     while runConfigThread:
@@ -61,11 +68,12 @@ def saveConfig(): #save all 10s current state - if you turn the power on/off
         "volume": systemSettings.getVolume(),
         "displayBrightness": systemSettings.getDispBright(),
         "lightBrightness": light.getBrightness(),
-        "useLedStripe": light.getLedStripeState()
+        "useLedStripe": light.getLedStripeState(),
+        "screensaver": systemSettings.getDispScreensaverState()
         }
 
         dir = os.path.dirname(__file__)
-        with open(dir + '/config.json', 'w') as outfile:
+        with open(dir + 'config.json', 'w') as outfile:
             json.dump(jsonData, outfile)
             #print("save JsonFile to disk")
         
@@ -77,10 +85,6 @@ def handleAlarm():
     tAlarm = threading.currentThread()
     while runAlarmThread:
         #start Sunset
-
-        #print("SunsetState")
-        #print(str(alarmClock.getAlarmActiveState()))
-
         if(alarmClock.getSunsetActive() == True):        
             light.setSunsetTime(alarmClock.getSunsetTime())
             light.startSunset()
@@ -390,6 +394,29 @@ def getDispState():
     if request.method == 'GET':
             return jsonify({
             'state': systemSettings.getDispState()
+            })
+
+@app.route('/api/system/display/screensaver/on', methods = ['GET','POST'])
+def setDispScreensaverOn():
+    if request.method == 'POST':
+        systemSettings.setDispScreensaverOn()
+        return jsonify({
+            'value': systemSettings.getDispScreensaverState()
+            })
+
+@app.route('/api/system/display/screensaver/off', methods = ['GET','POST'])
+def setDispScreensaverOff():
+    if request.method == 'POST':
+        systemSettings.setDispScreensaverOff()
+        return jsonify({
+            'value': systemSettings.getDispScreensaverState()
+            })
+
+@app.route('/api/system/display/screensaver/state', methods = ['GET'])
+def getDispScreensaverState():
+    if request.method == 'GET':
+            return jsonify({
+            'state': systemSettings.getDispScreensaverState()
             })
 
 ################## start save config Thread ##################

@@ -503,47 +503,49 @@
         on_value: root.slider_display_value(self.value)
 
     Label:
-        text: "Licht AN / AUS"
+        text: "Licht"
         bold: True
-        pos_hint: {"center_x":0.25, "center_y":0.45}
+        pos_hint: {"center_x":0.15, "center_y":0.45}
         font_size: 20
         color: 1,1,1,1
           
     Switch: 
         size_hint: 0.2,0.2
         id: _id_switch_light
-        pos_hint: {"center_x":0.25, "center_y":0.35}
+        pos_hint: {"center_x":0.15, "center_y":0.35}
         # Arranging a callback to the switch 
         on_active: root.switch_light_callback(self, self.active) 
 
     Label:
-        text: "LED BAND AN / AUS"
+        text: "Bildschirmschoner"
         bold: True
-        pos_hint: {"center_x":0.75, "center_y":0.45}
+        pos_hint: {"center_x":0.5, "center_y":0.45}
         font_size: 20
         color: 1,1,1,1
-
+      
     Switch: 
         size_hint: 0.2,0.2
         id: _id_switch_screensaver
         pos_hint: {"center_x":0.5, "center_y":0.35}
         # Arranging a callback to the switch 
-        on_active: root.switch_screensaver(self, self.active) 
+        on_active: root.switch_screensaver_callback(self, self.active) 
+
 
     Label:
-        text: "Bildschirmschoner AN / AUS"
+        text: "LED BAND"
         bold: True
-        pos_hint: {"center_x":0.5, "center_y":0.45}
+        pos_hint: {"center_x":0.85, "center_y":0.45}
         font_size: 20
         color: 1,1,1,1
-             
+
     Switch: 
         size_hint: 0.2,0.2
         id: _id_switch_ledStripe
-        pos_hint: {"center_x":0.75, "center_y":0.35}
+        pos_hint: {"center_x":0.85, "center_y":0.35}
         # Arranging a callback to the switch 
         on_active: root.switch_ledStripe_callback(self, self.active) 
 
+ 
     Button:  
         pos_hint: {"center_x":0.505, "center_y":0.15} 
         background_color: 0,0,0,0
