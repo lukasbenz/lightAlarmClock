@@ -1,7 +1,7 @@
 
 from kivy.config import Config
 Config.set('graphics', 'resizable', 'False')
-Config.set('graphics', 'fullscreen','auto')
+Config.set('graphics', 'fullscreen','True')
 Config.set('graphics', 'width', '800')
 Config.set('graphics', 'height', '480')
 Config.set('graphics','show_cursor','0')
@@ -15,6 +15,8 @@ import requests
 import json
 
 url = 'http://127.0.0.1:5000/api/'
+
+global timerWithoutTouchingDisplay
 
 class ScreenHome(Screen):
 
@@ -119,8 +121,11 @@ class ScreenDisplayOff(Screen):
                 
         def enterPage(self,**kwargs):
                 self.eventUpdatePage = Clock.schedule_interval(self.updatePage,0.1)
+                
 
         def updatePage(self, *args):
+                App.get_running_app().timerWithoutTouchingDisplay = 0
+
                 response = requests.get(url+'system/display/state')
                 json_data = json.loads(response.text)  
                 if response.status_code == 200:
@@ -369,6 +374,14 @@ class ScreenSettings(Screen):
                         else:
                                 print(response)
 
+
+                        response = requests.get(url+'system/display/screensaver/state')
+                        json_data = json.loads(response.text)  
+                        if response.status_code == 200:
+                                self.id_switch_screensaver.active = json_data['state']
+                        else:
+                                print(response)
+
                         response = requests.get(url+'light/ledStripe/state')
                         json_data = json.loads(response.text)  
                         if response.status_code == 200:
@@ -405,17 +418,28 @@ class ScreenSettings(Screen):
                         data = {'value': value}
                         r = requests.post(url+'system/display/brightness', json=data)           
 
+                def switch_light_callback(self, switchObject, switchValue): 
+                        if(switchValue == True):
+                                pass
+                                requests.post(url+'light/on') 
+                        else:
+                                pass
+                                requests.post(url+'light/off')
+
+
+                def switch_screensaver_callback(self, switchObject, switchValue): 
+                        if(switchValue == True):
+                                requests.post(url+'system/display/screensaver/on') 
+                        else:
+                                requests.post(url+'system/display/screensaver/off')
+
+
                 def switch_ledStripe_callback(self, switchObject, switchValue): 
                         if(switchValue == True):
                                 requests.post(url+'light/ledStripe/on') 
                         else:
                                 requests.post(url+'light/ledStripe/off')
 
-                def switch_light_callback(self, switchObject, switchValue): 
-                        if(switchValue == True):
-                                requests.post(url+'light/on') 
-                        else:
-                                requests.post(url+'light/off')
 
                 def btn_backHome(self, *args):
                         self.parent.current = "screenHomeID"
@@ -460,6 +484,7 @@ class ScreenAlarmActive(Screen):
 '''
 
 class VisuAlarmClock(App):   
+        timerWithoutTouchingDisplay = 0
 
         def build(self):
                 self.sm = ScreenManager(transition=NoTransition())
@@ -481,28 +506,38 @@ class VisuAlarmClock(App):
 
                 return self.sm
         
-        '''
         def on_start(self):
                 self.eventCheckAlarm = Clock.schedule_interval(self.checkScreenSaver,1)
+                self.maxTimeWithputTouchingDisplay = 10 #60s
+                
+        def checkScreenSaver(self, *args):
+                useScreensaver = False
+                response = requests.get(url+'system/display/screensaver/state')
+                json_data = json.loads(response.text)  
+                
+                if response.status_code == 200:
+                        useScreensaver = json_data['state']
+                else:
+                        print(response)
 
-        
-        def checkAlarmActive(self,*args):
-                try:
-                        response = requests.get(url+'alarmClock/active/state')
-                        json_data = json.loads(response.text)
-                        if response.status_code == 200:
-                                if(json_data['state'] == 1):
-                                        self.sm.current = "screenAlarmActiveID"
-                        else:
-                                print(response)
-                except:
-                        print("An exception occurred 3")
-        '''
+                #print("useScreensaver: " + str(useScreensaver))
+                #print("timerWithoutTouchingDisplay: " + str(self.timerWithoutTouchingDisplay))
+                
+                if(useScreensaver):
+                        self.timerWithoutTouchingDisplay += 1
+                        if(self.timerWithoutTouchingDisplay == self.maxTimeWithputTouchingDisplay):
+                                requests.post(url+'system/display/off')
+                                self.sm.current = "screenDisplayOffID"
+                                print("turn screen off to safe energy")
+                else:
+                        self.timerWithoutTouchingDisplay = 0   
+
 
         def on_touch_down(self, touch):
-                print("TOUCH TOUCH TOUCH TOUCH TOUCH TOUCH TOUCH TOUCH")
+                App.get_running_app().timerWithoutTouchingDisplay = 0
+                #print("DEBUGGING TOUCH TOUCH TOUCH TOUCH TOUCH")
 
-        #Window.bind(on_touch_down=on_touch_down)
+        Window.bind(on_touch_down=on_touch_down)
 
 visu = VisuAlarmClock()
 visu.run()

@@ -1,1 +1,11 @@
-{"wakeUpTime": "06:45:00", "sunsetTime": "15", "alarmState": true, "radioStation": "DASDING", "volume": 30, "displayBrightness": 10, "lightBrightness": 100, "useLedStripe": true}
+{
+"wakeUpTime": "06:45:00", 
+"sunsetTime": "15", 
+"alarmState": true, 
+"radioStation": "DASDING", 
+"volume": 30, 
+"displayBrightness": 10, 
+"lightBrightness": 100, 
+"useLedStripe": true, 
+"screensaver": true
+}

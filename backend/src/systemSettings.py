@@ -10,7 +10,8 @@ class SystemSettings():
 
     __displayBrightness = 10
     __displayState = True
-    
+    __displayScreensaverState = True
+
     def __init__(self,arduinoConnection):
         self.arduinoConnection = arduinoConnection
         scanCards = alsaaudio.cards()
@@ -59,7 +60,7 @@ class SystemSettings():
             #use log scale because "digital" volume from hifiberry amp is in db = log scale
             volLog = self.logFunction(self.__volume)
             print("set Volume: " + str(self.__volume))
-            print("set Volume log:" + str(volLog))
+            #print("set Volume log:" + str(volLog))
             self.mixer.setvolume(int(volLog))
         else:
             print("system muted!")
@@ -90,12 +91,23 @@ class SystemSettings():
     def setDispOn(self):
         self.__displayState = True
         self.arduinoConnection.writeData("<display," + str(self.__displayBrightness) + ">")
-        print("turn Display On")
+        print("set Display On")
 
     def setDispOff(self): 
         self.__displayState = False
         self.arduinoConnection.writeData("<display,0>")
-        print("turn Display Off")
+        print("set Display Off")
 
     def getDispState(self):
         return self.__displayState
+
+    def setDispScreensaverOn(self):
+        self.__displayScreensaverState = True
+        print("set Display Screensaver On")
+
+    def setDispScreensaverOff(self): 
+        self.__displayScreensaverState = False
+        print("set Display Screensaver Off")
+
+    def getDispScreensaverState(self):
+        return self.__displayScreensaverState
