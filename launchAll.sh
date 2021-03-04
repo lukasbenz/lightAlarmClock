@@ -1,6 +1,6 @@
 #!/bin/bash
-cd ~/GIT/lightAlarmClock/
-/home/pi/GIT/lightAlarmClock/env/bin/python backend/src/restAPI.py&
+cd ~/GIT/lightAlarmClock/backend/src
+/home/pi/GIT/lightAlarmClock/env/bin/python restAPI.py&
 
 sleep 3
 

@@ -75,9 +75,8 @@ def saveConfig(): #save all 10s current state - if you turn the power on/off
         dir = os.path.dirname(__file__)
         with open(dir + 'config.json', 'w') as outfile:
             json.dump(jsonData, outfile)
-            #print("save JsonFile to disk")
         
-        time.sleep(10)
+        time.sleep(60)
 
 ################## handle Alarm ##################
 def handleAlarm():

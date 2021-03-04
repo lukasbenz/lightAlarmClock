@@ -1,7 +1,7 @@
 
 from kivy.config import Config
 Config.set('graphics', 'resizable', 'False')
-Config.set('graphics', 'fullscreen','False')
+Config.set('graphics', 'fullscreen','True')
 Config.set('graphics', 'width', '800')
 Config.set('graphics', 'height', '480')
 Config.set('graphics','show_cursor','0')
@@ -16,7 +16,7 @@ import json
 
 url = 'http://127.0.0.1:5000/api/'
 
-timerWithoutTouchingDisplay = 0
+global timerWithoutTouchingDisplay
 
 class ScreenHome(Screen):
 
@@ -121,8 +121,11 @@ class ScreenDisplayOff(Screen):
                 
         def enterPage(self,**kwargs):
                 self.eventUpdatePage = Clock.schedule_interval(self.updatePage,0.1)
+                
 
         def updatePage(self, *args):
+                App.get_running_app().timerWithoutTouchingDisplay = 0
+
                 response = requests.get(url+'system/display/state')
                 json_data = json.loads(response.text)  
                 if response.status_code == 200:
@@ -506,8 +509,8 @@ class VisuAlarmClock(App):
         def on_start(self):
                 self.eventCheckAlarm = Clock.schedule_interval(self.checkScreenSaver,1)
                 self.maxTimeWithputTouchingDisplay = 10 #60s
-        
-        def checkScreenSaver(self, *args): 
+                
+        def checkScreenSaver(self, *args):
                 useScreensaver = False
                 response = requests.get(url+'system/display/screensaver/state')
                 json_data = json.loads(response.text)  
@@ -517,8 +520,8 @@ class VisuAlarmClock(App):
                 else:
                         print(response)
 
-                print("useScreensaver: " + str(useScreensaver))
-                print("timerWithoutTouchingDisplay: " + str(self.timerWithoutTouchingDisplay))
+                #print("useScreensaver: " + str(useScreensaver))
+                #print("timerWithoutTouchingDisplay: " + str(self.timerWithoutTouchingDisplay))
                 
                 if(useScreensaver):
                         self.timerWithoutTouchingDisplay += 1
@@ -531,8 +534,8 @@ class VisuAlarmClock(App):
 
 
         def on_touch_down(self, touch):
-                self.timerWithoutTouchingDisplay = 0
-                print("DEBUGGING TOUCH TOUCH TOUCH TOUCH TOUCH")
+                App.get_running_app().timerWithoutTouchingDisplay = 0
+                #print("DEBUGGING TOUCH TOUCH TOUCH TOUCH TOUCH")
 
         Window.bind(on_touch_down=on_touch_down)
 

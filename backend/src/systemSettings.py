@@ -60,7 +60,7 @@ class SystemSettings():
             #use log scale because "digital" volume from hifiberry amp is in db = log scale
             volLog = self.logFunction(self.__volume)
             print("set Volume: " + str(self.__volume))
-            print("set Volume log:" + str(volLog))
+            #print("set Volume log:" + str(volLog))
             self.mixer.setvolume(int(volLog))
         else:
             print("system muted!")
