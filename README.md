@@ -2,7 +2,7 @@
 
 DIY light alarm Clock. Build in a tissue box from Amazon. Totaly Overengineered and way to expensive - but i dont care! :)
 
-![Uploading world_map_of_cpp_STL_algorithms.png…]()
+![alt text](http://url/to/img.png)
 
 
 Hardware:
