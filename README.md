@@ -7,8 +7,7 @@
 
 
 Hardware:
- - Case: tissue box (heavily modded)
- 				- https://www.amazon.de/gp/product/B079VHRWJQ/ref=ppx_yo_dt_b_asin_title_o02_s02?ie=UTF8&psc=1 
+ - Case tissue box: https://www.amazon.de/gp/product/B079VHRWJQ/ref=ppx_yo_dt_b_asin_title_o02_s02?ie=UTF8&psc=1 
  - Raspberry Pi 4 4gb    
  - Case for the raspberry pi Geekworm Raspberry Pi 4 Gehäuse CNC ultra Slim   
  - Arduino Nano
@@ -19,26 +18,24 @@ Hardware:
  - Plugable USB Bluetooth Adapter
  - 12V to 5V converter
  - Power Supply LEICKE 72W 12V 6A
- 				- https://www.amazon.de/gp/product/B07FLZ1SGY/ref=ppx_yo_dt_b_asin_title_o05_s02?ie=UTF8&psc=1 
+ 	- https://www.amazon.de/gp/product/B07FLZ1SGY/ref=ppx_yo_dt_b_asin_title_o05_s02?ie=UTF8&psc=1 
  - other Stuff:
-   		- Rotary Encoder Modul EC11 Digital Potentiometer
-   						- https://www.amazon.de/gp/product/B08728PS6N/ref=ppx_yo_dt_b_asin_title_o02_s02?ie=UTF8&psc=1
-   		- Push-Button
-   						- https://www.amazon.de/gp/product/B0811QKG1R/ref=ppx_yo_dt_b_asin_title_o02_s02?ie=UTF8&psc=1 
-   		- USB connection for extrnal handy charging 
-   						- https://www.amazon.de/gp/product/B003L79T06/ref=ppx_yo_dt_b_asin_title_o07_s00?ie=UTF8&psc=1
-					- XLR connection for external LED Stripe
-   						- https://www.amazon.de/gp/product/B00A7W4RKK/ref=ppx_yo_dt_b_asin_title_o09_s00?ie=UTF8&psc=1
-   						- https://www.amazon.de/gp/product/B002A3IWIW/ref=ppx_yo_dt_b_asin_title_o08_s00?ie=UTF8&psc=1
-					- Micro USB cables for connection from raspberry pi to arduino & touch display
-   						- https://www.amazon.de/gp/product/B001D1H4BS/ref=ppx_yo_dt_b_asin_title_o08_s00?ie=UTF8&psc=1
-					- HDMI cable between raspberry pi & display
-   						- https://www.amazon.de/gp/product/B01E6UKVKS/ref=ppx_yo_dt_b_asin_title_o01_s00?ie=UTF8&psc=1
-					- Connection cable between Display / RaspberryPI (very useful!): 
+   	- Rotary Encoder Modul EC11 Digital Potentiometer
+   		- https://www.amazon.de/gp/product/B08728PS6N/ref=ppx_yo_dt_b_asin_title_o02_s02?ie=UTF8&psc=1
+   	- Push-Button
+   		- https://www.amazon.de/gp/product/B0811QKG1R/ref=ppx_yo_dt_b_asin_title_o02_s02?ie=UTF8&psc=1 
+   	- USB connection for extrnal handy charging 
+   		- https://www.amazon.de/gp/product/B003L79T06/ref=ppx_yo_dt_b_asin_title_o07_s00?ie=UTF8&psc=1
+	- XLR connection for external LED Stripe
+   		- https://www.amazon.de/gp/product/B00A7W4RKK/ref=ppx_yo_dt_b_asin_title_o09_s00?ie=UTF8&psc=1
+   		- https://www.amazon.de/gp/product/B002A3IWIW/ref=ppx_yo_dt_b_asin_title_o08_s00?ie=UTF8&psc=1
+	- Micro USB cables for connection from raspberry pi to arduino & touch display
+   		- https://www.amazon.de/gp/product/B001D1H4BS/ref=ppx_yo_dt_b_asin_title_o08_s00?ie=UTF8&psc=1
+	- HDMI cable between raspberry pi & display
+   		- https://www.amazon.de/gp/product/B01E6UKVKS/ref=ppx_yo_dt_b_asin_title_o01_s00?ie=UTF8&psc=1
+	- Connection cable between Display / RaspberryPI (very useful!): 
    						-   
  
- 
-
       - InternetConnection for WLAN Radio / Time synchronization
       - AlarmClock
       - REST API
