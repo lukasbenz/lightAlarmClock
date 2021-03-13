@@ -12,8 +12,10 @@ Hardware:
 - Raspberry Pi 4 4gb    
 - Case for the raspberry pi Geekworm Raspberry Pi 4 Gehäuse CNC ultra Slim   
 - Arduino Nano
-- Touch display Ardafruit Display 4inch HDMI
+- Touch display waveshare 4inch HDMI
+	- https://www.waveshare.com/wiki/4inch_HDMI_LCD
 - Soundcard Hifiberry Amp2
+	- https://www.hifiberry.com/shop/boards/hifiberry-amp2/
 - Speaker Visaton vs-frs8 m
 - LED Stripe WS2812b
 - Plugable USB Bluetooth Adapter
