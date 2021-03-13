@@ -7,20 +7,22 @@
 
 
 Hardware:
- - Case tissue box: https://www.amazon.de/gp/product/B079VHRWJQ/ref=ppx_yo_dt_b_asin_title_o02_s02?ie=UTF8&psc=1 
- - Raspberry Pi 4 4gb    
- - Case for the raspberry pi Geekworm Raspberry Pi 4 Gehäuse CNC ultra Slim   
- - Arduino Nano
- - Touch display Ardafruit Display 4inch HDMI
- - Soundcard Hifiberry Amp2
- - Speaker Visaton vs-frs8 m
- - LED Stripe WS2812b
- - Plugable USB Bluetooth Adapter
- - 12V to 5V converter
- - Power Supply LEICKE 72W 12V 6A
+- Case tissue box: 
+ 	- https://www.amazon.de/gp/product/B079VHRWJQ/ref=ppx_yo_dt_b_asin_title_o02_s02?ie=UTF8&psc=1 
+- Raspberry Pi 4 4gb    
+- Case for the raspberry pi Geekworm Raspberry Pi 4 Gehäuse CNC ultra Slim   
+- Arduino Nano
+- Touch display Ardafruit Display 4inch HDMI
+- Soundcard Hifiberry Amp2
+- Speaker Visaton vs-frs8 m
+- LED Stripe WS2812b
+- Plugable USB Bluetooth Adapter
+- 12V to 5V converter
+- Power Supply LEICKE 72W 12V 6A
  	- https://www.amazon.de/gp/product/B07FLZ1SGY/ref=ppx_yo_dt_b_asin_title_o05_s02?ie=UTF8&psc=1 
- - other Stuff:
-   	- Rotary Encoder Modul EC11 Digital Potentiometer
+ 
+- other Stuff:
+	- Rotary Encoder Modul EC11 Digital Potentiometer
    		- https://www.amazon.de/gp/product/B08728PS6N/ref=ppx_yo_dt_b_asin_title_o02_s02?ie=UTF8&psc=1
    	- Push-Button
    		- https://www.amazon.de/gp/product/B0811QKG1R/ref=ppx_yo_dt_b_asin_title_o02_s02?ie=UTF8&psc=1 
@@ -36,24 +38,23 @@ Hardware:
 	- Connection cable between Display / RaspberryPI (very useful!): 
    						-   
  
-      - InternetConnection for WLAN Radio / Time synchronization
-      - AlarmClock
-      - REST API
-      - KIVY Visualization
-      - Remote Handy connection via VNC Client APP     
-      - LED Stripe WS2812b
-      - GPIO Encoder / Buttons
-      
+     
       
 Features: 
-  - Alarm clock using the Internet Time 
-    - synchronized via Wlan
-  - Internet Radio 
-    - can be used separate & for the alarm clock tone
-  - WS2812B LED Stripe 
-    - can be used as a sunset & for the normal light
-    - the LED Stripe is splitted in an intern Light & an external LED Stripe
-  - Bluetooth adapter to use the light alarm clock as a bluetooth speaker 
-  - Touchdisplay with a "Kivy" based GUI
-
-
+ - InternetConnection for WLAN Radio / Time synchronization
+ - AlarmClock
+ - REST API
+ - KIVY Visualization
+ - Remote Handy connection via VNC Client APP     
+ - LED Stripe WS2812b
+ - GPIO Encoder / Buttons
+ 
+- Alarm clock using the Internet Time 
+	- synchronized via Wlan
+- Internet Radio 
+	- can be used separate & for the alarm clock tone
+- WS2812B LED Stripe 
+	- can be used as a sunset & for the normal light
+	- the LED Stripe is splitted in an intern Light & an external LED Stripe
+- Bluetooth adapter to use the light alarm clock as a bluetooth speaker 
+- Touchdisplay with a "Kivy" based GUI
