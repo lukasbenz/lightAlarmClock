@@ -1,6 +1,6 @@
 # Light Alarm Clock
 
-### DIY light alarm Clock. Based on a raspberry pi & arduino nano. Build in a 10$ tissue box. Totaly over engineered and way to expensive - but i dont care! 
+### DIY light alarm Clock. Based on a raspberry pi & arduino nano. Totally over engineered and way to expensive - but i dont care! 
 ##### Feel free to use some code or build it for yourself! :)
 
 <p float="center">
