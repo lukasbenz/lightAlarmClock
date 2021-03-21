@@ -1,7 +1,7 @@
-# lightAlarmClock
+# Light Alarm Clock
 
-#### DIY light alarm Clock. Build in a tissue box from Amazon. Totaly over engineered and way to expensive - but i dont care! 
-#### Feel free to use some code or build it for yourself!:)
+### DIY light alarm Clock. Build in a tissue box from Amazon. Totaly over engineered and way to expensive - but i dont care! 
+##### Feel free to use some code or build it for yourself! :)
 
 <p float="center">
 <img src="https://github.com/lukasbenz/lightAlarmClock/blob/develop/docuImg/outside/main.JPG" width="1000" />
@@ -11,7 +11,7 @@
   <img src="https://github.com/lukasbenz/lightAlarmClock/blob/develop/docuImg/outside/right.JPG" width="500" />
 </p>
 
-Hardware:
+#### Hardware:
 - Case tissue box: 
  	- https://www.amazon.de/gp/product/B079VHRWJQ/ref=ppx_yo_dt_b_asin_title_o02_s02?ie=UTF8&psc=1 
 - Raspberry Pi 4 4gb:
