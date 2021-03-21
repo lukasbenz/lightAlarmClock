@@ -1,10 +1,13 @@
 # lightAlarmClock
 
-#### DIY light alarm Clock. Build in a tissue box from Amazon. Totaly overengineered and way to expensive - but i dont care! 
-#### Feel free to use some code or build it for yourself!(:
+#### DIY light alarm Clock. Build in a tissue box from Amazon. Totaly over engineered and way to expensive - but i dont care! 
+#### Feel free to use some code or build it for yourself!:)
 
-![lightAlarmClock](https://github.com/lukasbenz/lightAlarmClock/blob/develop/docuImg/outside/main.JPG)
-
+<p float="left">
+  <img src="https://github.com/lukasbenz/lightAlarmClock/blob/develop/docuImg/outside/main.JPG" width="100" />
+  <img src="https://github.com/lukasbenz/lightAlarmClock/blob/develop/docuImg/outside/main.JPG" width="100" /> 
+  <img src="https://github.com/lukasbenz/lightAlarmClock/blob/develop/docuImg/outside/main.JPG" width="100" />
+</p>
 
 Hardware:
 - Case tissue box: 
