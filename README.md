@@ -4,11 +4,10 @@
 #### Feel free to use some code or build it for yourself!:)
 
 <p float="center">
-<img src="https://github.com/lukasbenz/lightAlarmClock/blob/develop/docuImg/outside/main.JPG" width="800" />
+<img src="https://github.com/lukasbenz/lightAlarmClock/blob/develop/docuImg/outside/main.JPG" width="1000" />
 </p>
 <p float="left">
   <img src="https://github.com/lukasbenz/lightAlarmClock/blob/develop/docuImg/outside/left.JPG" width="500" />
-  <img src="https://github.com/lukasbenz/lightAlarmClock/blob/develop/docuImg/outside/front.JPG" width="500" /> 
   <img src="https://github.com/lukasbenz/lightAlarmClock/blob/develop/docuImg/outside/right.JPG" width="500" />
 </p>
 
