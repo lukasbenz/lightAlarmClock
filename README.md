@@ -4,9 +4,9 @@
 #### Feel free to use some code or build it for yourself!:)
 
 <p float="left">
-  <img src="https://github.com/lukasbenz/lightAlarmClock/blob/develop/docuImg/outside/main.JPG" width="100" />
-  <img src="https://github.com/lukasbenz/lightAlarmClock/blob/develop/docuImg/outside/main.JPG" width="100" /> 
-  <img src="https://github.com/lukasbenz/lightAlarmClock/blob/develop/docuImg/outside/main.JPG" width="100" />
+  <img src="https://github.com/lukasbenz/lightAlarmClock/blob/develop/docuImg/outside/left.JPG" width="500" />
+  <img src="https://github.com/lukasbenz/lightAlarmClock/blob/develop/docuImg/outside/main.JPG" width="500" /> 
+  <img src="https://github.com/lukasbenz/lightAlarmClock/blob/develop/docuImg/outside/right.JPG" width="500" />
 </p>
 
 Hardware:
