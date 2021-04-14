@@ -18,12 +18,13 @@
  - HifiBerry soundcard integration with alsa audio & alsa equalizer
  - Touchdisplay
  - Kivy based GUI
- - Arduino / raspberry pi connection
  - Arduino:
+ 	- Raspberry Pi connection
  	- LED Stripe WS2812b with sunrise mode
  	- GPIO Encoder / Buttons
  - Remote connection via VNC Client APP     
- - Bluetooth speaker 
+ - Bluetooth speaker
+ 
 
 
 #### Hardware:
@@ -65,6 +66,4 @@
 	- HDMI cable between raspberry pi & display
    		- https://www.amazon.de/gp/product/B01E6UKVKS/ref=ppx_yo_dt_b_asin_title_o01_s00?ie=UTF8&psc=1
 	- Connection cable between Display / RaspberryPI (very useful!): 
-   		- https://www.berrybase.de/raspberry-pi/raspberry-pi-computer/kabel-adapter/gpio-csi-dsi-kabel/gpio-adapter-kabel-f-252-r-raspberry-pi-40-pin-buchse-26-pin-buchse-grau-15cm				-   
- 
-   
+   		- https://www.berrybase.de/raspberry-pi/raspberry-pi-computer/kabel-adapter/gpio-csi-dsi-kabel/gpio-adapter-kabel-f-252-r-raspberry-pi-40-pin-buchse-26-pin-buchse-grau-15cm				-
