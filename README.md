@@ -11,28 +11,22 @@
   <img src="https://github.com/lukasbenz/lightAlarmClock/blob/develop/docuImg/outside/right.JPG" width="400" />
 </p>
 
- 
-##### Features: 
- - InternetConnection for WLAN Radio / Time synchronization
+#### Features:
+ - internet based Radio
  - AlarmClock
- - REST API
- - KIVY Visualization
- - Remote Handy connection via VNC Client APP     
- - LED Stripe WS2812b
- - GPIO Encoder / Buttons
- 
-- Alarm clock using the Internet Time 
-	- synchronized via Wlan
-- Internet Radio 
-	- can be used separate & for the alarm clock tone
-- WS2812B LED Stripe 
-	- can be used as a sunset & for the normal light
-	- the LED Stripe is splitted in an intern Light & an external LED Stripe
-- Bluetooth adapter to use the light alarm clock as a bluetooth speaker 
-- Touchdisplay with a "Kivy" based GUI
+ - HTTP/REST API
+ - HifiBerry soundcard integration with alsa audio & alsa equalizer
+ - Touchdisplay
+ - Kivy based GUI
+ - Arduino / raspberry pi connection
+ - Arduino:
+ 	- LED Stripe WS2812b with sunrise mode
+ 	- GPIO Encoder / Buttons
+ - Remote connection via VNC Client APP     
+ - Bluetooth speaker 
 
 
-##### Hardware:
+#### Hardware:
 - Case tissue box: 
  	- https://www.amazon.de/gp/product/B079VHRWJQ/ref=ppx_yo_dt_b_asin_title_o02_s02?ie=UTF8&psc=1 
 - Raspberry Pi 4 4gb:
