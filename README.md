@@ -12,20 +12,19 @@
 </p>
 
 #### Features:
- - internet based Radio
+ - Internet Radio
  - AlarmClock
- - HTTP/REST API
  - HifiBerry soundcard integration with alsa audio & alsa equalizer
  - Touchdisplay
- - Kivy based GUI
  - Arduino:
  	- Raspberry Pi connection
  	- LED Stripe WS2812b with sunrise mode
  	- GPIO Encoder / Buttons
  - Remote connection via VNC Client APP     
  - Bluetooth speaker
+ - HTTP/REST API
+ - Kivy based GUI
  
-
 #### Hardware:
 - Case tissue box: 
  	- https://www.amazon.de/gp/product/B079VHRWJQ/ref=ppx_yo_dt_b_asin_title_o02_s02?ie=UTF8&psc=1 
