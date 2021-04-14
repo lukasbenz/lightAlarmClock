@@ -26,7 +26,6 @@
  - Bluetooth speaker
  
 
-
 #### Hardware:
 - Case tissue box: 
  	- https://www.amazon.de/gp/product/B079VHRWJQ/ref=ppx_yo_dt_b_asin_title_o02_s02?ie=UTF8&psc=1 
