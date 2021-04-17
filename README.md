@@ -4,11 +4,11 @@
 ##### Feel free to use some code or build it for yourself! :)
 
 <p float="center">
-<img src="https://github.com/lukasbenz/lightAlarmClock/blob/develop/docuImg/outside/main.JPG" width="1000" />
+<img src="documentation/images/outside/main.JPG" width="1000" />
 </p>
 <p float="left">
-  <img src="https://github.com/lukasbenz/lightAlarmClock/blob/develop/docuImg/outside/left.JPG" width="400" />
-  <img src="https://github.com/lukasbenz/lightAlarmClock/blob/develop/docuImg/outside/right.JPG" width="400" />
+  <img src=<img src="documentation/images/outside/left.JPG" width="400" />
+  <img src=<img src="documentation/images/outside/right.JPG" width="400" />
 </p>
 
 #### Documentation:
@@ -28,5 +28,5 @@
  9. [VNC Client](documentation/vncClient)
  10. [Bluetooth speaker with pulseaudio](documentation/bluetoothSpeaker)
  11. [HTTP/REST API](documentation/11_restAPI)
- 
+
 ### Videos:
