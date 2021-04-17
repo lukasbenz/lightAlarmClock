@@ -11,57 +11,22 @@
   <img src="https://github.com/lukasbenz/lightAlarmClock/blob/develop/docuImg/outside/right.JPG" width="400" />
 </p>
 
-#### Features:
- - Internet Radio
- - AlarmClock
- - HifiBerry soundcard integration with alsa audio & alsa equalizer
- - Touchdisplay
- - Arduino:
- 	- Raspberry Pi connection
- 	- LED Stripe WS2812b with sunrise mode
- 	- GPIO Encoder / Buttons
- - Remote connection via VNC Client APP     
- - Bluetooth speaker
- - HTTP/REST API
- - Kivy based GUI
+#### Documentation:
+ 1. [Hardware](documentation/1_hardware.md)
+ 2. [Software architecture](documentation/2_softwareArchitecture.md)
+ 3. [Internet Radio](documentation/3_internetRadio)
+ 4. [Alarm clock](documentation/4_alarmClock)
+ 5. [hifiberry amp2 with alsa equalizer](documentation/5_soundcard.md) 
+ 6. [Kivy GUI](documentation/6_kivyGui.md)
+ 7. [Touchdisplay](documentation/7_touchdisplay)
+ 8. [Arduino](documentation/8_0_arduino)
+
+	8.1. [Raspberry Pi serial connection](documentation/8_1_serialConnection)
+	8.2. [LED Stripe WS2812b](documentation/8_2_ledStripe)
+	8.3. [GPIO Encoder / Button](documentation/8_3_gpio)
+
+ 9. [VNC Client](documentation/vncClient)
+ 10. [Bluetooth speaker with pulseaudio](documentation/bluetoothSpeaker)
+ 11. [HTTP/REST API](documentation/11_restAPI)
  
-#### Hardware:
-- Case tissue box: 
- 	- https://www.amazon.de/gp/product/B079VHRWJQ/ref=ppx_yo_dt_b_asin_title_o02_s02?ie=UTF8&psc=1 
-- Raspberry Pi 4 4gb:
-	- https://www.raspberrypi.org/products/raspberry-pi-4-model-b/
-- Case for the raspberry pi Geekworm Raspberry Pi 4 Gehäuse CNC ultra Slim:
-	- https://www.amazon.de/Geekworm-Raspberry-Ultra-D%C3%BCnne-Aluminium-K%C3%BChlk%C3%B6rper/dp/B07WZXPR2W/ref=dp_prsubs_1?pd_rd_i=B07WZXPR2W&psc=1
-- Arduino Nano:
-	- https://store.arduino.cc/arduino-nano
-- Touch display waveshare 4inch HDMI
-	- https://www.waveshare.com/wiki/4inch_HDMI_LCD
-- Soundcard Hifiberry Amp2
-	- https://www.hifiberry.com/shop/boards/hifiberry-amp2/
-- Speaker Visaton vs-frs8 m:
-	- https://www.amazon.de/gp/product/B0017KT3S2/ref=ppx_yo_dt_b_asin_title_o05_s02?ie=UTF8&psc=1
-- LED Stripe WS2812b:
-	- https://www.amazon.de/gp/product/B01CDTEID0/ref=ppx_yo_dt_b_asin_title_o05_s00?ie=UTF8&psc=1
-- Plugable USB Bluetooth Adapter:
-	- https://www.amazon.de/gp/product/B009ZIILLI/ref=ppx_yo_dt_b_asin_title_o07_s00?ie=UTF8&psc=1
-- Pololu 12V to 5V converter:
-	- https://eckstein-shop.de/Pololu-5V-32A-Step-Down-Voltage-Regulator-D36V28F5
-- Power Supply LEICKE 72W 12V 6A
- 	- https://www.amazon.de/gp/product/B07FLZ1SGY/ref=ppx_yo_dt_b_asin_title_o05_s02?ie=UTF8&psc=1 
- 
-- other small parts:
-	- Rotary Encoder Modul EC11 Digital Potentiometer
-   		- https://www.amazon.de/gp/product/B08728PS6N/ref=ppx_yo_dt_b_asin_title_o02_s02?ie=UTF8&psc=1
-   	- Push-Button
-   		- https://www.amazon.de/gp/product/B0811QKG1R/ref=ppx_yo_dt_b_asin_title_o02_s02?ie=UTF8&psc=1 
-   	- USB connection for extrnal handy charging 
-   		- https://www.amazon.de/gp/product/B003L79T06/ref=ppx_yo_dt_b_asin_title_o07_s00?ie=UTF8&psc=1
-	- XLR connection for external LED Stripe
-   		- https://www.amazon.de/gp/product/B00A7W4RKK/ref=ppx_yo_dt_b_asin_title_o09_s00?ie=UTF8&psc=1
-   		- https://www.amazon.de/gp/product/B002A3IWIW/ref=ppx_yo_dt_b_asin_title_o08_s00?ie=UTF8&psc=1
-	- Micro USB cables for connection from raspberry pi to arduino & touch display
-   		- https://www.amazon.de/gp/product/B001D1H4BS/ref=ppx_yo_dt_b_asin_title_o08_s00?ie=UTF8&psc=1
-	- HDMI cable between raspberry pi & display
-   		- https://www.amazon.de/gp/product/B01E6UKVKS/ref=ppx_yo_dt_b_asin_title_o01_s00?ie=UTF8&psc=1
-	- Connection cable between Display / RaspberryPI (very useful!): 
-   		- https://www.berrybase.de/raspberry-pi/raspberry-pi-computer/kabel-adapter/gpio-csi-dsi-kabel/gpio-adapter-kabel-f-252-r-raspberry-pi-40-pin-buchse-26-pin-buchse-grau-15cm				-
+### Videos:
