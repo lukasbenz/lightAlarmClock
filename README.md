@@ -10,8 +10,8 @@
 <img src="documentation/images/outside/main.JPG" width="1000" />
 </p>
 <p float="left">
-  <img src="documentation/images/outside/left.JPG" width="450" />
-  <img src="documentation/images/outside/right.JPG" width="450" />
+  <img src="documentation/images/outside/left.JPG" width="400" />
+  <img src="documentation/images/outside/right.JPG" width="400" />
 </p>
 
 
