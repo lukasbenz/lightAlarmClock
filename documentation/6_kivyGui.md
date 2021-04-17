@@ -1,2 +1,2 @@
-# 6. Kivy based GUI
+# 6. Kivy GUI
 

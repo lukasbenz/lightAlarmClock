@@ -1,2 +1,2 @@
-# 11. HTTP/REST API
+# 11. REST API
 

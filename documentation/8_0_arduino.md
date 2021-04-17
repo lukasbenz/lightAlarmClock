@@ -1,2 +1,2 @@
-# 8.1. Raspberry Pi serial connection
+# 8.1. Arduino
 

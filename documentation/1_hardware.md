@@ -1,9 +1,9 @@
-# 2. Hardware architecture
+# 1. Hardware
 
 
 
-#### Hardware:
-- Case tissue box: 
+#### Part list:
+- Case e.g. tissue box: 
  	- https://www.amazon.de/gp/product/B079VHRWJQ/ref=ppx_yo_dt_b_asin_title_o02_s02?ie=UTF8&psc=1 
 - Raspberry Pi 4 4gb:
 	- https://www.raspberrypi.org/products/raspberry-pi-4-model-b/
