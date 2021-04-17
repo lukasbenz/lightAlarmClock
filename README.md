@@ -21,25 +21,17 @@
 
 
 #### Documentation:
- 1. [Hardware](documentation/1_hardware.md)
-
- 2. [Software architecture](documentation/2_softwareArchitecture.md)
-
- 3. [Internet Radio](documentation/3_internetRadio.md)
-
- 4. [Alarm clock](documentation/4_alarmClock.md)
-
- 5. [hifiberry amp2 with ALSA & equalizer](documentation/5_hifiberryAmp2.md) 
-
- 6. [Kivy GUI](documentation/6_kivyGui.md)
-
- 7. [Touchdisplay](documentation/7_touchdisplay.md)
-
- 8. [Arduino](documentation/8_0_arduino.md)
-
-  8.1. [Raspberry Pi serial connection](documentation/8_1_serialConnection.md)
-  8.2. [LED Stripe WS2812b](documentation/8_2_ledStripe.md)
-  8.3. [GPIO Encoder / Button](documentation/8_3_gpio.md)
+  1. [Hardware](documentation/1_hardware.md)
+  2. [Software architecture](documentation/2_softwareArchitecture.md)
+  3. [Internet Radio](documentation/3_internetRadio.md)
+  4. [Alarm clock](documentation/4_alarmClock.md)
+  5. [hifiberry amp2 with ALSA & equalizer](documentation/5_hifiberryAmp2.md) 
+  6. [Kivy GUI](documentation/6_kivyGui.md)
+  7. [Touchdisplay](documentation/7_touchdisplay.md)
+  8. [Arduino](documentation/8_0_arduino.md)
+     - 8.1. [Raspberry Pi serial connection](documentation/8_1_serialConnection.md)
+     - 8.2. [LED Stripe WS2812b](documentation/8_2_ledStripe.md)
+     - 8.3. [GPIO Encoder / Button](documentation/8_3_gpio.md)
 
  9. [VNC Client](documentation/vncClient.md)
 

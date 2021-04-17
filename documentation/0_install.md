@@ -1,2 +1,2 @@
-# Setup and Requirements
+# Install and Requirements
 
