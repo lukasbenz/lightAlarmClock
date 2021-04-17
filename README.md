@@ -1,15 +1,19 @@
 # Light Alarm Clock
 
-### DIY light alarm Clock. Based on a raspberry pi & arduino nano. Totally over engineered and way to expensive - but i dont care! 
+
+
+#### DIY light alarm Clock. Based on a raspberry pi & arduino nano. Totally over engineered and way to expensive! 
+
 ##### Feel free to use some code or build it for yourself! :)
 
 <p float="center">
 <img src="documentation/images/outside/main.JPG" width="1000" />
 </p>
 <p float="left">
-  <img src=<img src="documentation/images/outside/left.JPG" width="400" />
-  <img src=<img src="documentation/images/outside/right.JPG" width="400" />
+  <img src="documentation/images/outside/left.JPG" width="450" />
+  <img src="documentation/images/outside/right.JPG" width="450" />
 </p>
+
 
 #### Documentation:
  1. [Hardware](documentation/1_hardware.md)
@@ -29,4 +33,12 @@
  10. [Bluetooth speaker with pulseaudio](documentation/bluetoothSpeaker)
  11. [HTTP/REST API](documentation/11_restAPI)
 
-### Videos:
+
+
+
+#### video sunset:
+<p float="center" > <img src="documentation/videos/sunrise.gif" width="300" /> </p>
+
+
+
+
