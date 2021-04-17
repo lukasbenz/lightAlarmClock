@@ -34,11 +34,5 @@
  11. [HTTP/REST API](documentation/11_restAPI)
 
 
-
-
-#### video sunset:
-<p float="center" > <img src="documentation/videos/sunrise.gif" width="300" /> </p>
-
-
-
+#### Videos:
 
