@@ -15,6 +15,11 @@
 </p>
 
 
+
+#### [Install/Requirements](documentation/0_install.md)
+
+
+
 #### Documentation:
  1. [Hardware](documentation/1_hardware.md)
 
