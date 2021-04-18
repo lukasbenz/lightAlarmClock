@@ -148,6 +148,13 @@ class ScreenAlarmClock(Screen):
                 def enterPage(self,**kwargs):
                         self.eventUpdatePage = Clock.schedule_interval(self.updatePage,0.1)
 
+                        response = requests.get(url+'alarmClock/alarmOnWeekend/state')
+                        json_data = json.loads(response.text)  
+                        if response.status_code == 200:
+                                self.id_switch_weekend.active = json_data['state']
+                        else:
+                                print(response)
+
                 def leavePage(self,**kwargs):
                         self.eventUpdatePage.cancel()
 
@@ -255,10 +262,10 @@ class ScreenAlarmClock(Screen):
          
 
                 def switchWeekendCallback(self, switchObject, switchValue):   
-                if(switchValue == True):
-                        requests.post(url+'alarmClock/') 
-                else:
-                        requests.post(url+'alarmClock/off') 
+                        if(switchValue == True):
+                                requests.post(url+'alarmClock/alarmOnWeekend/on') 
+                        else:
+                                requests.post(url+'alarmClock/alarmOnWeekend/off') 
 
                 def btn_backHome(self, *args):
                         self.parent.current = "screenHomeID"

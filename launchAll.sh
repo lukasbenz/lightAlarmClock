@@ -2,7 +2,7 @@
 cd ~/GIT/lightAlarmClock/backend/src
 /home/pi/GIT/lightAlarmClock/env/bin/python restAPI.py&
 
-sleep 3
+sleep 5
 
 cd ~/GIT/lightAlarmClock/frontend
 /home/pi/GIT/lightAlarmClock/env/bin/python visuKivy.py
