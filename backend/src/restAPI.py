@@ -38,6 +38,11 @@ def loadConfig():
         alarmClock.setWakeUpTime(data["wakeUpTime"])
         alarmClock.setSunsetTime(data["sunsetTime"])
 
+        if(data["alarmOnWeekend"]):
+            alarmClock.setAlarmOnWeekendOn()
+        else:
+            alarmClock.setAlarmOnWeekendOff()
+
         if(data["alarmState"]):
             alarmClock.setAlarmOn()
         else:
@@ -47,6 +52,7 @@ def loadConfig():
         systemSettings.setVolume(data["volume"])
         systemSettings.setDispBright(data["displayBrightness"])
         light.setBrightness(data["lightBrightness"]),
+
         if(data["useLedStripe"]):
             light.turnLedStripeOn()
         else:
@@ -62,6 +68,7 @@ def saveConfig(): #save all 10s current state - if you turn the power on/off
     while runConfigThread:
         jsonData = {
         "wakeUpTime": alarmClock.getWakeUpTime(),
+        "alarmOnWeekend": alarmClock.getAlarmOnWeekend(),
         "sunsetTime": alarmClock.getSunsetTime(),
         "alarmState": alarmClock.getAlarmState(),
         "radioStation": internetRadio.getRadioStationName(),
@@ -124,7 +131,6 @@ def wakeUpTime():
             'value': alarmClock.getWakeUpTime()
             })
     elif request.method == 'POST':
-
         alarmClock.setWakeUpTime(request.get_json()['value'])
         return jsonify({
                      'value': alarmClock.getWakeUpTime()
@@ -142,7 +148,7 @@ def sunsetTime():
             'value': alarmClock.getSunsetTime()
             })
 
-@app.route('/api/alarmClock/on', methods = ['GET','POST'])
+@app.route('/api/alarmClock/on', methods = ['POST'])
 def alarmOn():
     if request.method == 'POST':
         alarmClock.setAlarmOn()
@@ -150,7 +156,7 @@ def alarmOn():
             'state': alarmClock.getAlarmState()
             })
 
-@app.route('/api/alarmClock/off', methods = ['GET','POST'])
+@app.route('/api/alarmClock/off', methods = ['POST'])
 def alarmOff():
     if request.method == 'POST':
         alarmClock.setAlarmOff()
@@ -158,14 +164,38 @@ def alarmOff():
             'state': alarmClock.getAlarmState()
             })
 
-@app.route('/api/alarmClock/state', methods = ['GET','POST'])
+@app.route('/api/alarmClock/state', methods = ['GET'])
 def alarmState():
     if request.method == 'GET':
         return jsonify({
             'state': alarmClock.getAlarmState()
             })
 
-@app.route('/api/alarmClock/snoozeMode/on', methods = ['GET','POST'])
+@app.route('/api/alarmClock/alarmOnWeekend/on', methods = ['POST'])
+def alarmOnWeekendOn():
+    if request.method == 'POST':
+        alarmClock.setAlarmOnWeekendOn()
+        return jsonify({
+            'state': alarmClock.getAlarmOnWeekend()
+            })
+
+@app.route('/api/alarmClock/alarmOnWeekend/off', methods = ['POST'])
+def alarmOnWeekendOff():
+    if request.method == 'POST':
+        alarmClock.setAlarmOnWeekendOff()
+        return jsonify({
+            'state': alarmClock.getAlarmOnWeekend()
+            })
+
+
+@app.route('/api/alarmClock/alarmOnWeekend/state', methods = ['GET'])
+def alarmOnWeekendState():
+    if request.method == 'GET':
+        return jsonify({
+            'state': alarmClock.getAlarmOnWeekend()
+            })
+
+@app.route('/api/alarmClock/snoozeMode/on', methods = ['POST'])
 def snoozeModeOn():
     if request.method == 'POST':
         alarmClock.setSnoozeModeOn()
@@ -173,7 +203,7 @@ def snoozeModeOn():
             'state': alarmClock.getSnoozeState()
             })
 
-@app.route('/api/alarmClock/snoozeMode/off', methods = ['GET','POST'])
+@app.route('/api/alarmClock/snoozeMode/off', methods = ['POST'])
 def snoozeModeOff():
     if request.method == 'POST':
         alarmClock.setSnoozeModeOff()
@@ -181,7 +211,7 @@ def snoozeModeOff():
             'state': alarmClock.getSnoozeState()
             })
 
-@app.route('/api/alarmClock/snoozeMode/state', methods = ['GET','POST'])
+@app.route('/api/alarmClock/snoozeMode/state', methods = ['GET'])
 def SnoozeModeState():
     if request.method == 'GET':
         return jsonify({
@@ -200,7 +230,7 @@ def SnoozeTime():
                      'value': alarmClock.getSnoozeTime()
             })
 
-@app.route('/api/alarmClock/active/off', methods = ['GET','POST'])
+@app.route('/api/alarmClock/active/off', methods = ['POST'])
 def alarmActiveOff():
     if request.method == 'POST':
         alarmClock.setAlarmActiveOff()
@@ -208,7 +238,7 @@ def alarmActiveOff():
             'state': alarmClock.getAlarmActiveState()
             })
 
-@app.route('/api/alarmClock/active/state', methods = ['GET','POST'])
+@app.route('/api/alarmClock/active/state', methods = ['POST'])
 def alarmActiveState():
     if request.method == 'GET':
         return jsonify({
@@ -217,14 +247,14 @@ def alarmActiveState():
 
 
 ################## RADIO STATION ##################
-@app.route('/api/radio/stationName', methods = ['GET','POST'])
+@app.route('/api/radio/stationName', methods = ['GET'])
 def radioStationName():
     if request.method == 'GET':
         return jsonify({
             'value': internetRadio.getRadioStationName()
             })
 
-@app.route('/api/radio/nextStation', methods = ['GET','POST'])
+@app.route('/api/radio/nextStation', methods = ['POST'])
 def nextRadioStation():
     if request.method == 'POST':
         internetRadio.setNextRadioStation()
@@ -232,7 +262,7 @@ def nextRadioStation():
             'value': internetRadio.getRadioStationName()
             })
 
-@app.route('/api/radio/prevStation', methods = ['GET','POST'])
+@app.route('/api/radio/prevStation', methods = ['POST'])
 def prevRadioStation():
     if request.method == 'POST':
         internetRadio.setNextRadioStation()
@@ -240,7 +270,7 @@ def prevRadioStation():
             'value': internetRadio.getRadioStationName()
             })
 
-@app.route('/api/radio/play', methods = ['GET','POST'])
+@app.route('/api/radio/play', methods = ['POST'])
 def playRadio():
     if request.method == 'POST':
         internetRadio.play()
@@ -248,7 +278,7 @@ def playRadio():
             'state': internetRadio.getRadioState()
             })
 
-@app.route('/api/radio/stop', methods = ['GET','POST'])
+@app.route('/api/radio/stop', methods = ['POST'])
 def stopRadio():
     if request.method == 'POST':
         internetRadio.stop()
@@ -256,7 +286,7 @@ def stopRadio():
             'state': internetRadio.getRadioState()
             })
 
-@app.route('/api/radio/state', methods = ['GET','POST'])
+@app.route('/api/radio/state', methods = ['GET'])
 def radioState():
     if request.method == 'GET':
         return jsonify({
@@ -277,7 +307,7 @@ def lightBrightness():
             'value': light.getBrightness()
             })
 
-@app.route('/api/light/on', methods = ['GET','POST'])
+@app.route('/api/light/on', methods = ['POST'])
 def setLightOn():
     if request.method == 'POST':
         light.turnLightOn()
@@ -285,7 +315,7 @@ def setLightOn():
             'state': light.getLightState()
             })
 
-@app.route('/api/light/off', methods = ['GET','POST'])
+@app.route('/api/light/off', methods = ['POST'])
 def setLightOff():
     if request.method == 'POST':
         light.turnLightOff()
@@ -293,14 +323,14 @@ def setLightOff():
             'state': light.getLightState()
             })
 
-@app.route('/api/light/state', methods = ['GET','POST'])
+@app.route('/api/light/state', methods = ['GET'])
 def getLightState():
     if request.method == 'GET':
         return jsonify({
             'state': light.getLightState()
             })
 
-@app.route('/api/light/ledStripe/on', methods = ['GET','POST'])
+@app.route('/api/light/ledStripe/on', methods = ['POST'])
 def setLedStripeOn():
     if request.method == 'POST':
         light.turnLedStripeOn()
@@ -308,7 +338,7 @@ def setLedStripeOn():
             'state': light.getLedStripeState()
             })
 
-@app.route('/api/light/ledStripe/off', methods = ['GET','POST'])
+@app.route('/api/light/ledStripe/off', methods = ['POST'])
 def setLedStripeOff():
     if request.method == 'POST':
         light.turnLedStripeOff()
@@ -316,7 +346,7 @@ def setLedStripeOff():
             'state': light.getLedStripeState()
             })
 
-@app.route('/api/light/ledStripe/state', methods = ['GET','POST'])
+@app.route('/api/light/ledStripe/state', methods = ['GET'])
 def getLedStripeState():
     if request.method == 'GET':
         return jsonify({
@@ -336,7 +366,7 @@ def sysVolume():
             'value': systemSettings.getVolume()
             })
 
-@app.route('/api/system/volume/mute/on', methods = ['GET','POST'])
+@app.route('/api/system/volume/mute/on', methods = ['POST'])
 def setSysMute():
     if request.method == 'POST':
         systemSettings.muteOn()
@@ -344,7 +374,7 @@ def setSysMute():
             'state': systemSettings.getMuteState()
             })
 
-@app.route('/api/system/volume/mute/off', methods = ['GET','POST'])
+@app.route('/api/system/volume/mute/off', methods = ['POST'])
 def setSysUnmute():
     if request.method == 'POST':
         systemSettings.muteOff()
@@ -352,7 +382,7 @@ def setSysUnmute():
             'state': systemSettings.getMuteState()
             })
 
-@app.route('/api/system/volume/mute/state', methods = ['GET','POST'])
+@app.route('/api/system/volume/mute/state', methods = ['GET'])
 def getSysMuteState():
     if request.method == 'GET':
         return jsonify({
@@ -372,7 +402,7 @@ def dispBrightness():
             'value': systemSettings.getDispBright()
             })
 
-@app.route('/api/system/display/on', methods = ['GET','POST'])
+@app.route('/api/system/display/on', methods = ['POST'])
 def setDispOn():
     if request.method == 'POST':
         systemSettings.setDispOn()
@@ -380,7 +410,7 @@ def setDispOn():
             'value': systemSettings.getDispState()
             })
 
-@app.route('/api/system/display/off', methods = ['GET','POST'])
+@app.route('/api/system/display/off', methods = ['POST'])
 def setDispOff():
     if request.method == 'POST':
         systemSettings.setDispOff()
@@ -395,7 +425,7 @@ def getDispState():
             'state': systemSettings.getDispState()
             })
 
-@app.route('/api/system/display/screensaver/on', methods = ['GET','POST'])
+@app.route('/api/system/display/screensaver/on', methods = ['POST'])
 def setDispScreensaverOn():
     if request.method == 'POST':
         systemSettings.setDispScreensaverOn()
@@ -403,7 +433,7 @@ def setDispScreensaverOn():
             'value': systemSettings.getDispScreensaverState()
             })
 
-@app.route('/api/system/display/screensaver/off', methods = ['GET','POST'])
+@app.route('/api/system/display/screensaver/off', methods = ['POST'])
 def setDispScreensaverOff():
     if request.method == 'POST':
         systemSettings.setDispScreensaverOff()

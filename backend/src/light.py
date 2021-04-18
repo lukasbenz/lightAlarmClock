@@ -16,8 +16,8 @@ class Light():
     __countLedStripe = 146      #here define amount of LED´s within the LED Stripe
 
     __brightness = 100          #brightness of the LEds
-    __colorSunset = (255,150,0) #custom color for sunset 
-    __colorOn = (255,255,120)     #standard color On
+    __colorSunset = (255,120,0) #custom color for sunset 
+    __colorOn = (255,200,100)     #standard color On
     __colorOff = (0,0,0)        #standard color Off
 
     threadSunsetLoopName = "threadSunsetLoop"
