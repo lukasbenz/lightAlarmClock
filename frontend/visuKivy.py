@@ -1,7 +1,7 @@
 
 from kivy.config import Config
 Config.set('graphics', 'resizable', 'False')
-Config.set('graphics', 'fullscreen','True')
+Config.set('graphics', 'fullscreen','False')
 Config.set('graphics', 'width', '800')
 Config.set('graphics', 'height', '480')
 Config.set('graphics','show_cursor','0')
@@ -253,6 +253,13 @@ class ScreenAlarmClock(Screen):
                         data = {'value': str(self.sunsetMinutes)}
                         r = requests.post(url+'alarmClock/sunsetTime', json=data)
          
+
+                def switchWeekendCallback(self, switchObject, switchValue):   
+                if(switchValue == True):
+                        requests.post(url+'alarmClock/') 
+                else:
+                        requests.post(url+'alarmClock/off') 
+
                 def btn_backHome(self, *args):
                         self.parent.current = "screenHomeID"
 
