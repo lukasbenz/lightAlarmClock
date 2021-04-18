@@ -15,11 +15,10 @@ class SystemSettings():
     def __init__(self,arduinoConnection):
         self.arduinoConnection = arduinoConnection
         scanCards = alsaaudio.cards()
-        print("cards:", scanCards)
+        print("soundcards:", scanCards)
         
         # i = 0
         # for card in scanCards:
-            
         #     print("cardname: " + str(card))
         #     scanMixers = alsaaudio.mixers(scanCards.index(card))
         #     print("mixers:", scanMixers)
@@ -30,8 +29,8 @@ class SystemSettings():
         #         self.mixer = alsaaudio.mixers(scanCards.index(card))
 
         self.mixer = alsaaudio.Mixer('Digital', cardindex=0)
-        #self.mixer.setvolume(20)
-        
+        self.setDispOn()
+
         print("init system settings class")
 
 

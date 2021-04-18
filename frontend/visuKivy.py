@@ -522,7 +522,7 @@ class VisuAlarmClock(App):
         
         def on_start(self):
                 self.eventCheckAlarm = Clock.schedule_interval(self.checkScreenSaver,1)
-                self.maxTimeWithputTouchingDisplay = 10 #60s
+                self.maxTimeWithputTouchingDisplay = 30 #60s
                 
         def checkScreenSaver(self, *args):
                 useScreensaver = False
