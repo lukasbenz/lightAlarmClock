@@ -142,6 +142,16 @@ def sunsetTime():
             'value': alarmClock.getSunsetTime()
             })
 
+@app.route('/api/alarmClock/alarmDayArray', methods = ['GET','POST'])
+def alarmDayArray():
+    if request.method == 'GET':
+        json.dump(alarmClock.getAlarmDayArray, outfile)
+        return outfile
+    elif request.method == 'POST':
+        alarmClock.setAlarmDayArray(json.loads(request.get_json)[0])
+        json.dump(alarmClock.getAlarmDayArray, outfile)
+        return outfile
+
 @app.route('/api/alarmClock/on', methods = ['GET','POST'])
 def alarmOn():
     if request.method == 'POST':

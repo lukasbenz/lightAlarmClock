@@ -2,8 +2,45 @@ import time
 from datetime import datetime, timedelta
 from flask.helpers import stream_with_context
 import pytz
-
 import threading
+
+
+switchDaysJson = {
+            0: "mon",
+            1: "tue",
+            2: "wed",
+            3: "thu",
+            4: "fri",
+            5: "sat",
+            6: "sun"
+            }
+
+
+switchDaysReadable = {
+            0: "Montag",
+            1: "Dienstag",
+            2: "Mittwoch",
+            3: "Donnerstag",
+            4: "Freitag",
+            5: "Samstag",
+            6: "Sonntag"
+            }
+
+switchMonthsReadable = {
+            1: "Januar",
+            2: "Februar",
+            3: "März",
+            4: "April",
+            5: "Mai",
+            6: "Juni",
+            7: "Juli",
+            8: "August",
+            9: "September",
+            10: "Oktober",
+            11: "November",
+            12: "Dezember"
+            }
+
 
 class AlarmClock():
     debugMode = False
@@ -12,7 +49,17 @@ class AlarmClock():
     snoozeTime = 10
 
     # init private Values
-    __snoozeState = False
+
+    __alarmDayArray= {
+    "mon": False,
+    "tue": False,
+    "wed": False,
+    "thu": False,
+    "fri": False,
+    "sat": False,
+    "sun": False
+    }
+
     __sunsetState = False
     __alarmClockState = False
     __alarmActiveState = False
@@ -28,34 +75,11 @@ class AlarmClock():
 
     def getDate(self):
 
-        switchDays = {
-            0: "Montag",
-            1: "Dienstag",
-            2: "Mittwoch",
-            3: "Donnerstag",
-            4: "Freitag",
-            5: "Samstag",
-            6: "Sonntag"}
-
-        switchMonths = {
-            1: "Januar",
-            2: "Februar",
-            3: "März",
-            4: "April",
-            5: "Mai",
-            6: "Juni",
-            7: "Juli",
-            8: "August",
-            9: "September",
-            10: "Oktober",
-            11: "November",
-            12: "Dezember"}
-
         dayDate = self.currentDate[8:11]
-        dayReadable = switchDays.get(int(self.currentDay), "errDay")
+        dayReadable = switchDaysReadable.get(int(self.currentDay), "errDay")
         
         monthDate = self.currentDate[5:7]
-        monthReadable = switchMonths.get(int(monthDate),"errMonth")
+        monthReadable = switchMonthsReadable.get(int(monthDate),"errMonth")
 
         year = self.currentDate[:4]
 
@@ -95,8 +119,16 @@ class AlarmClock():
         self.__alarmClockState = False
         print("set __alarmClockState: " + str(self.__alarmClockState))
 
+    def setAlarmDayArray(self,_input):
+        self.__alarmDayArray = _input
+        print("set __alarmDayArray: " + str(self.__alarmDayArray))
+
+    def getAlarmDayArray(self):
+        print("get alarmDayArray: " + str(self.__alarmDayArray))
+        return self.__alarmDayArray
+
     def getAlarmState(self):
-        #print("get alarmState: " + str(self.__alarmClockState))
+        print("get alarmState: " + str(self.__alarmClockState))
         return self.__alarmClockState
 
     def setSnoozeModeOn(self):
@@ -146,13 +178,16 @@ class AlarmClock():
 
             if(self.debugMode):
                 print("") 
+                print("current Day:" + self.currentDay)
                 print("current Time: " + self.currentTime)
                 print("wakeup Time: " + self.wakeUpTime)
                 print("sunset Time: " + sunsetStartTimeStr)
                 print("alarmClockState: " + str(self.__alarmClockState))
                 print("")
-
+            
             if(self.__alarmClockState == True):
+
+                ### if(self.__alarmDayArray[SwitchDaysJson] == True):
                 if(sunsetStartTimeStr == self.currentTime):
                     self.__sunsetState = True
 
