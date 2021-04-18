@@ -32,7 +32,7 @@ def loadConfig():
     #print("load config:")
 
     dir = os.path.dirname(__file__)
-    with open(dir + '/config.json') as json_file:
+    with open(dir + 'config.json') as json_file:
         data = json.load(json_file)
 
         alarmClock.setWakeUpTime(data["wakeUpTime"])
@@ -80,7 +80,7 @@ def saveConfig(): #save all 10s current state - if you turn the power on/off
         }
 
         dir = os.path.dirname(__file__)
-        with open(dir + '/config.json', 'w') as outfile:
+        with open(dir + 'config.json', 'w') as outfile:
             json.dump(jsonData, outfile)
         
         time.sleep(60)
